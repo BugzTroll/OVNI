@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 using Windows.Kinect;
+using System.Collections.Generic;
+using System.Linq;
 
 public class MyColorSourceManager : MonoBehaviour
 {
@@ -14,19 +16,30 @@ public class MyColorSourceManager : MonoBehaviour
     private Texture2D _Texture;
     private byte[] _Data;
 
-    private int xMin = 890;
-    private int yMin = 470;
-    private int xMax = 1030;
-    private int yMax = 610;
+   
+
+    static public int squareSize = 300;
+
+    private int xMin = 1920/2 - squareSize/2;
+    private int xMax = 1920/2 + squareSize/2;
+    private int yMin = 1080/2 - squareSize/2;
+    private int yMax = 1080/2 + squareSize/2;
 
     public enum Projectile
     {
-        red,
-        blue,
-        yellow,
-        green,
-        orange
+        red = 0,
+        blue = 1,
+        green = 2,
+        yellow = 3,
     }
+
+    private Color[] colors =
+    {
+        Color.red,
+        Color.blue,
+        Color.green,
+        Color.yellow
+    };
 
     public Texture2D GetColorTexture()
     {
@@ -73,9 +86,7 @@ public class MyColorSourceManager : MonoBehaviour
 
         if (DetectionActivated)
         {
-
-
-            for (int i = 0; i < 140; i++)
+            for (int i = 0; i < squareSize; i++)
             {
                 _Texture.SetPixel(xMin + i, yMin, Color.red);
                 _Texture.SetPixel(xMin + i, yMin - 1, Color.red);
@@ -89,6 +100,8 @@ public class MyColorSourceManager : MonoBehaviour
                 _Texture.SetPixel(xMax, yMin + i, Color.red);
                 _Texture.SetPixel(xMax + 1, yMin + i, Color.red);
             }
+
+            DetectProjectile();
         }
 
         _Texture.Apply();
@@ -115,9 +128,50 @@ public class MyColorSourceManager : MonoBehaviour
 
     public Projectile DetectProjectile()
     {
-        var _width = _Texture.width;
-        var _height = _Texture.height;
+        int[] colorMax = { 0, 0, 0, 0 };
 
-        return Projectile.blue;
+        for (int x = xMin + 1; x < xMax - 1; x++)
+        {
+            for (int y = yMin + 1; y < yMax - 1; y++)
+            {
+                Color current = _Texture.GetPixel(x, y);
+                short min = -1;
+                float distMin = float.MaxValue;
+
+                for (short c = 0; c < colors.Length; c++)
+                {
+                    float dist = (current.r - colors[c].r)*(current.r - colors[c].r) +
+                                 (current.g - colors[c].g)*(current.g - colors[c].g) +
+                                 (current.b - colors[c].b)*(current.b - colors[c].b);
+
+                    if (dist < distMin)
+                    {
+                        min = c;
+                        distMin = dist;
+                    }
+                }
+
+                _Texture.SetPixel(x, y, colors[min]);
+                colorMax[min] += 1;
+
+            }
+        }
+
+        int maxValue = colorMax.Max();
+        int maxIndex = colorMax.ToList().IndexOf(maxValue);
+        setZone(colors[maxIndex]);
+
+        return (Projectile)maxIndex;
+    }
+
+    public void setZone(Color color)
+    {
+        for (int x = 1; x < 50; x++)
+        {
+            for (int y = 1; y < 50; y++)
+            {
+                _Texture.SetPixel(x, y, color);
+            }
+        }
     }
 }
