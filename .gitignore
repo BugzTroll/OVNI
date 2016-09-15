@@ -29,3 +29,5 @@
 *.app
 
 *.meta
+*.csproj
+*.sln
