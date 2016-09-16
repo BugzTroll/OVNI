@@ -101,6 +101,7 @@ GameObject:
   - 33: {fileID: 172977061}
   - 135: {fileID: 172977060}
   - 23: {fileID: 172977059}
+  - 114: {fileID: 172977063}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -169,6 +170,17 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 3
+--- !u!114 &172977063
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 172977058}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8db4b81e77dd2764188e3a6090bd9a3f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &358889786
 GameObject:
   m_ObjectHideFlags: 0
