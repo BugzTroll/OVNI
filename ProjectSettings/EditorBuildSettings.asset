@@ -9,3 +9,5 @@ EditorBuildSettings:
     path: Assets/OVNI Assets/Scenes/MainMenu.unity
   - enabled: 1
     path: Assets/OVNI Assets/Scenes/LevelSelect.unity
+  - enabled: 1
+    path: Assets/OVNI Assets/Scenes/Level1Test.unity

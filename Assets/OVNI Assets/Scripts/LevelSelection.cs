@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class LevelSelection : MonoBehaviour {
 
@@ -13,14 +14,31 @@ public class LevelSelection : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
     {
-	
+	    if (Input.GetMouseButtonDown(0))
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit))
+            {
+                if (hit.collider.tag == "Clickable")
+                {
+                    //Destroy(gameObject);
+                    
+                    LoadLevel();
+                }
+                    
+            }
+        }
 	}
 
-    void onMouseDown()
+    void LoadLevel()
     {
         StartOptions opt = ui.GetComponent<StartOptions>();
         opt.sceneToStart = 2;
-        opt.Invoke("LoadDelayed", 3);
-        Destroy(gameObject);
+        opt.Invoke("StartButtonClicked", 0);
+
+        // temp
+        //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        
     }
 }
