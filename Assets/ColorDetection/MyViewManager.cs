@@ -5,7 +5,6 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
 using System.Runtime.InteropServices;
-using Windows.Kinect;
 using Color = UnityEngine.Color;
 
 public class MyViewManager : MonoBehaviour
@@ -128,8 +127,7 @@ public class MyViewManager : MonoBehaviour
         return 0;
     }
 
-    #region converters
-
+    #region Converters
     System.Drawing.Bitmap ByteArray2Bmp(Byte[] arr, int width, int height, PixelFormat format)
     {
         Bitmap img = new Bitmap(width, height, format);

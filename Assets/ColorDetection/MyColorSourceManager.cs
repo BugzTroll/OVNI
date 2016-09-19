@@ -2,16 +2,6 @@
 using UnityEngine;
 using System.Collections;
 using Windows.Kinect;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
-using AForge.Imaging.Filters;
-using AForge.Math;
-using UnityEngine.EventSystems;
-using Color = UnityEngine.Color;
 
 public class MyColorSourceManager : MonoBehaviour
 {
