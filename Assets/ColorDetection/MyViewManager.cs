@@ -2,10 +2,12 @@
 using UnityEngine;
 using System.Collections;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Linq;
 using System.Runtime.InteropServices;
 using Color = UnityEngine.Color;
+using WrapMode = UnityEngine.WrapMode;
 
 public class MyViewManager : MonoBehaviour
 {
@@ -13,6 +15,7 @@ public class MyViewManager : MonoBehaviour
     public GameObject DepthManager;
     public bool ShowDepth = false;
     public bool Detection = false;
+    public bool TakePicture = false;
     public int SquareSize = 300;
 
     private MyColorSourceManager _colorManager;
@@ -49,7 +52,26 @@ public class MyViewManager : MonoBehaviour
         _Texture = ShowDepth
             ? _depthManager.GetDepthTexture()
             : _colorManager.GetColorTexture();
-        var yeah = _Texture.GetPixel(10, 10);
+
+        if(TakePicture)
+        {
+            var bmp = ByteArray2Bmp(_colorManager.GetData(), 1920, 1080, PixelFormat.Format32bppArgb);
+            bmp.Save("C:\\Users\\nadm2208\\Desktop\\testOrig.bmp");
+            //var res = ResizeBmp(bmp, 300, 255);
+            //res.Save("C:\\Users\\nadm2208\\Desktop\\test.bmp");
+            TakePicture = false;
+        }
+        if (ShowDepth)
+        {
+            Detection = false;
+        }
+        else if (Detection)
+        {
+            DetectProjectile();
+        }
+
+        _Texture.Apply();
+
     }
 
     public Texture2D GetTexture()
@@ -62,10 +84,10 @@ public class MyViewManager : MonoBehaviour
         if (!ShowDepth)
         {
             // square drawing
-            int xMin = 1920 / 2 - SquareSize / 2;
-            int xMax = 1920 / 2 + SquareSize / 2;
-            int yMin = 1080 / 2 - SquareSize / 2;
-            int yMax = 1080 / 2 + SquareSize / 2;
+            int xMin = 1920/2 - SquareSize/2;
+            int xMax = 1920/2 + SquareSize/2;
+            int yMin = 1080/2 - SquareSize/2;
+            int yMax = 1080/2 + SquareSize/2;
 
             for (int i = 0; i < SquareSize; i++)
             {
@@ -83,7 +105,7 @@ public class MyViewManager : MonoBehaviour
             }
 
             // Detection
-            int[] colorMax = { 0, 0, 0, 0 };
+            int[] colorMax = {0, 0, 0, 0};
 
             for (int x = xMin + 1; x < xMax - 1; x++)
             {
@@ -95,9 +117,9 @@ public class MyViewManager : MonoBehaviour
 
                     for (short c = 0; c < colors.Length; c++)
                     {
-                        float dist = (current.r - colors[c].r) * (current.r - colors[c].r) +
-                                     (current.g - colors[c].g) * (current.g - colors[c].g) +
-                                     (current.b - colors[c].b) * (current.b - colors[c].b);
+                        float dist = (current.r - colors[c].r)*(current.r - colors[c].r) +
+                                     (current.g - colors[c].g)*(current.g - colors[c].g) +
+                                     (current.b - colors[c].b)*(current.b - colors[c].b);
 
                         if (dist < distMin)
                         {
@@ -122,13 +144,35 @@ public class MyViewManager : MonoBehaviour
                     _Texture.SetPixel(x, y, colors[maxIndex]);
                 }
             }
-            return (Projectile)maxIndex;
+            return (Projectile) maxIndex;
+        }
+        else
+        {
+            ShowDepth = false;
         }
         return 0;
     }
 
+    public static Bitmap ResizeBmp(Bitmap bmp, int width, int height)
+    {
+        var brush = new SolidBrush(System.Drawing.Color.Black);
+        var result = new Bitmap((int)width, (int)height);
+        var graph = System.Drawing.Graphics.FromImage(result);
+
+        // uncomment for higher quality output
+        //graph.InterpolationMode = InterpolationMode.High;
+        //graph.CompositingQuality = CompositingQuality.HighQuality;
+        //graph.SmoothingMode = SmoothingMode.AntiAlias;
+
+        graph.FillRectangle(brush, new RectangleF(0, 0, width, height));
+        graph.DrawImage(bmp, new Rectangle(0, 0, width, height));
+
+        return result;
+    }
+
     #region Converters
-    System.Drawing.Bitmap ByteArray2Bmp(Byte[] arr, int width, int height, PixelFormat format)
+
+    Bitmap ByteArray2Bmp(Byte[] arr, int width, int height, PixelFormat format)
     {
         Bitmap img = new Bitmap(width, height, format);
 

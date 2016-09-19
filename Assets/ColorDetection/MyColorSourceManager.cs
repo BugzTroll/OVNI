@@ -53,7 +53,6 @@ public class MyColorSourceManager : MonoBehaviour
                 frame = null;
             }
         }
-        _Texture.Apply();
     }
 
     void OnApplicationQuit()

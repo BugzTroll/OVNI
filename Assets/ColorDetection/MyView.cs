@@ -23,7 +23,6 @@ public class MyView : MonoBehaviour
         {
             return;
         }
-        var dbg = _viewManager.GetTexture();
         gameObject.GetComponent<Renderer>().material.mainTexture = _viewManager.GetTexture();
     }
 }
