@@ -1,18 +1,25 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Collections;
 using Windows.Kinect;
 
-public class MyDepthManager : MonoBehaviour
+public class MyDepthSourceManager : MonoBehaviour
 {
     private KinectSensor _Sensor;
     private DepthFrameReader _Reader;
     private Texture2D _Texture;
     private ushort[] _Data;
 
-    public ushort[] GetData()
+    public byte[] GetData()
     {
-        return _Data;
+        return ShortArray2ByteArray(_Data);
     }
+
+    public Texture2D GetDepthTexture()
+    {
+        return _Texture;
+    }
+
 
     void Start()
     {
@@ -21,17 +28,16 @@ public class MyDepthManager : MonoBehaviour
         if (_Sensor != null)
         {
             _Reader = _Sensor.DepthFrameSource.OpenReader();
+
+            var frameDesc = _Sensor.DepthFrameSource.FrameDescription;
+            _Texture = new Texture2D(frameDesc.Width, frameDesc.Height, TextureFormat.R16, false);
             _Data = new ushort[_Sensor.DepthFrameSource.FrameDescription.LengthInPixels];
+
+            if (!_Sensor.IsOpen)
+            {
+                _Sensor.Open();
+            }
         }
-
-        var frameDesc = _Sensor.ColorFrameSource.CreateFrameDescription(ColorImageFormat.Rgba);
-        _Texture = new Texture2D(frameDesc.Width, frameDesc.Height, TextureFormat.RGBA32, false);
-    }
-
-
-    public Texture2D GetDepthTexture()
-    {
-        return _Texture;
     }
 
     void Update()
@@ -42,10 +48,13 @@ public class MyDepthManager : MonoBehaviour
             if (frame != null)
             {
                 frame.CopyFrameDataToArray(_Data);
+                _Texture.LoadRawTextureData(ShortArray2ByteArray(_Data));
+                var yeah = _Texture.GetPixel(10, 10);
                 frame.Dispose();
                 frame = null;
             }
         }
+        _Texture.Apply();
     }
 
     void OnApplicationQuit()
@@ -65,5 +74,12 @@ public class MyDepthManager : MonoBehaviour
 
             _Sensor = null;
         }
+    }
+
+    byte[] ShortArray2ByteArray(ushort[] shortArray)
+    {
+        byte[] result = new byte[shortArray.Length * sizeof(short)];
+        Buffer.BlockCopy(shortArray, 0, result, 0, result.Length);
+        return result;
     }
 }
