@@ -1,6 +1,9 @@
 ﻿using System;
 using UnityEngine;
 using System.Collections;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.Runtime.InteropServices;
 using Windows.Kinect;
 
 public class MyColorSourceManager : MonoBehaviour
@@ -18,6 +21,12 @@ public class MyColorSourceManager : MonoBehaviour
     public Texture2D GetColorTexture()
     {
         return _Texture;
+
+    }
+
+    public FrameDescription GetDescriptor()
+    {
+        return _Sensor.ColorFrameSource.FrameDescription;
     }
 
     void Start()

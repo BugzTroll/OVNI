@@ -18,17 +18,25 @@ public class MyDepthSourceManager : MonoBehaviour
     {
         return ShortArray2ByteArray(_Data);
     }
+    public ushort[] GetRawData()
+    {
+        return _Data;
+    }
 
     public Texture2D GetDepthTexture()
     {
         return _Texture;
     }
 
+    public FrameDescription GetDescriptor()
+    {
+        return _Sensor.DepthFrameSource.FrameDescription;
+    }
 
     void Start()
     {
         _Sensor = KinectSensor.GetDefault();
-
+        
         if (_Sensor != null)
         {
             _Reader = _Sensor.DepthFrameSource.OpenReader();
@@ -50,7 +58,7 @@ public class MyDepthSourceManager : MonoBehaviour
         {
             var frame = _Reader.AcquireLatestFrame();
             if (frame != null)
-            {
+            {               
                 frame.CopyFrameDataToArray(_Data);
                 _Texture.LoadRawTextureData(ShortArray2ByteArray(_Data));
                 frame.Dispose();
