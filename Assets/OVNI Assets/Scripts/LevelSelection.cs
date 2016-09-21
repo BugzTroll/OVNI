@@ -4,11 +4,11 @@ using UnityEngine.SceneManagement;
 
 public class LevelSelection : MonoBehaviour {
 
-    private GameObject ui;
+    // add game states
+
 	// Use this for initialization
 	void Start ()
     {
-        ui = GameObject.Find("UI");
     }
 	
 	// Update is called once per frame
@@ -22,23 +22,10 @@ public class LevelSelection : MonoBehaviour {
             {
                 if (hit.collider.tag == "Clickable")
                 {
-                    //Destroy(gameObject);
-                    
-                    LoadLevel();
+                    GameManager.ChangeScene("Level1Test");
                 }
                     
             }
         }
 	}
-
-    void LoadLevel()
-    {
-        StartOptions opt = ui.GetComponent<StartOptions>();
-        opt.sceneToStart = 2;
-        opt.Invoke("StartButtonClicked", 0);
-
-        // temp
-        //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-        
-    }
 }
