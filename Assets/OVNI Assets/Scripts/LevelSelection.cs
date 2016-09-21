@@ -22,7 +22,7 @@ public class LevelSelection : MonoBehaviour {
             {
                 if (hit.collider.tag == "Clickable")
                 {
-                    GameManager.ChangeScene("Level1Test");
+                    GameManager.Instance.ChangeScene("Level1Test");
                 }
                     
             }
