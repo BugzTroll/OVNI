@@ -25,10 +25,13 @@ public class GameManager
 
     private GameState currentState;
 
+    private Scene currentScene;
+
     // make sure the constructor is private, so it can only be instantiated here
     private GameManager()
     {
         currentState = GameState.NONE;
+        currentScene = SceneManager.GetSceneAt(0);
     }
 
     public static GameManager Instance
@@ -70,12 +73,14 @@ public class GameManager
     {
         SceneManager.UnloadScene(SceneManager.GetActiveScene());
         SceneManager.LoadScene(sceneIndex);
+        currentScene = SceneManager.GetActiveScene();
     }
 
     public void ChangeScene(string sceneName)
     {
         SceneManager.UnloadScene(SceneManager.GetActiveScene());
         SceneManager.LoadScene(sceneName);
+        currentScene = SceneManager.GetActiveScene();
     }
 
     private void Quit()
