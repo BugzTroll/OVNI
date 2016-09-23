@@ -22,6 +22,10 @@ public class MyDepthSourceManager : MonoBehaviour
     {
         return _Data;
     }
+    public int GetRawSize()
+    {
+        return _Data.Length;
+    }
 
     public Texture2D GetDepthTexture()
     {

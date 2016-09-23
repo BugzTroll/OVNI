@@ -21,7 +21,10 @@ public class MyColorSourceManager : MonoBehaviour
     public Texture2D GetColorTexture()
     {
         return _Texture;
-
+    }
+    public int GetRawSize()
+    {
+        return _Sensor.ColorFrameSource.FrameDescription.Width * _Sensor.ColorFrameSource.FrameDescription.Height;
     }
 
     public FrameDescription GetDescriptor()

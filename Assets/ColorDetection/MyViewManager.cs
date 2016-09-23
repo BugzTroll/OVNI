@@ -8,6 +8,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using AForge.Imaging;
 using AForge.Imaging.Filters;
+using Windows.Kinect;
 using Color = UnityEngine.Color;
 using WrapMode = UnityEngine.WrapMode;
 
@@ -15,13 +16,25 @@ public class MyViewManager : MonoBehaviour
 {
     public GameObject ColorManager;
     public GameObject DepthManager;
+
     public bool ShowDepth = false;
+    public float ZBufferScale = 0.5f;
+
     public bool ZBufferEdgeDetection = false;
+
     public bool ZBufferHoughDetection = false;
+    public int ballRadius = 15;
+    public float circleRelativeIntensity = 0.95f;
+
     public bool Detection = false;
-    [Range(0, 600)] public int SquareSize = 300;
-    public bool TakePicture = false;
-    [Range(0, 1)] public float PictureScaleFactor = 0.5f;
+    [Range(0,3)]
+    public float ThresholdColor = 0.2f;
+
+
+    private HoughCircle[] circles;
+    //[Range(0, 600)] public int SquareSize = 300;
+    //public bool TakePicture = false;
+    //[Range(0, 1)] public float PictureScaleFactor = 0.5f;
 
     private MyColorSourceManager _colorManager;
     private MyDepthSourceManager _depthManager;
@@ -59,81 +72,64 @@ public class MyViewManager : MonoBehaviour
             ? _depthManager.GetDepthTexture()
             : _colorManager.GetColorTexture();
 
-        if (TakePicture)
-        {
-            var frameDexcriptor = _colorManager.GetDescriptor();
-            var bmp = ByteArray2Bmp(_colorManager.GetData(), frameDexcriptor.Width, frameDexcriptor.Height,
-                PixelFormat.Format32bppArgb);
-            var res = ResizeBmp(bmp, PictureScaleFactor);
-            res.Save("C:\\Users\\nadm2208\\Desktop\\Picture.bmp");
-            TakePicture = false;
-        }
+        //if (TakePicture)
+        //{
+        //    var frameDexcriptor = _colorManager.GetDescriptor();
+        //    var bmp = ByteArray2Bmp(_colorManager.GetData(), frameDexcriptor.Width, frameDexcriptor.Height,
+        //        PixelFormat.Format32bppArgb);
+        //    bmp.Save("C:\\Users\\nadm2208\\Desktop\\Picture.bmp");
+        //    TakePicture = false;
+        //}
+
+        circles = new HoughCircle[0];
 
         if (ShowDepth)
         {
             var frameDescriptor = _depthManager.GetDescriptor();
-            var zBuffer = new Bitmap(frameDescriptor.Width/2, frameDescriptor.Height/2, PixelFormat.Format32bppArgb);
-            var rawData = _depthManager.GetRawData();
-
-            for (int i = 0; i < frameDescriptor.Width; i += 2)
-            {
-                for (int j = 0; j < frameDescriptor.Height; j += 2)
-                {
-                    var pîxelGreyLvl = (short) ((rawData[i + j*frameDescriptor.Width]*255)/8000.0f);
-
-                    zBuffer.SetPixel(i/2, j/2, System.Drawing.Color.FromArgb(
-                        pîxelGreyLvl,
-                        pîxelGreyLvl,
-                        pîxelGreyLvl,
-                        255));
-                }
-            }
+            var zBuffer = ByteArray2Bmp(_depthManager.GetData(), frameDescriptor.Width, frameDescriptor.Height, PixelFormat.Format16bppGrayScale);
+            var resizeFilter = new ResizeNearestNeighbor((int)(ZBufferScale * frameDescriptor.Width), (int)(ZBufferScale * frameDescriptor.Height));
+            zBuffer = resizeFilter.Apply(zBuffer);
+            zBuffer = AForge.Imaging.Image.Convert16bppTo8bpp(zBuffer);
 
             if (ZBufferEdgeDetection)
             {
-                //ZBufferEdgeDetection = false;
-
-                zBuffer = Grayscale.CommonAlgorithms.BT709.Apply(zBuffer);
                 var filter = new CannyEdgeDetector();
                 filter.ApplyInPlace(zBuffer);
                 //temp.Save("C:\\Users\\nadm2208\\Desktop\\contour.bmp");
 
                 if (ZBufferHoughDetection)
                 {
-                    var trans = new HoughCircleTransformation(10);
+                    var trans = new HoughCircleTransformation(ballRadius);
                     trans.ProcessImage(zBuffer);
                     zBuffer = trans.ToBitmap();
+
                     //img.Save("C:\\Users\\nadm2208\\Desktop\\hough.bmp");
 
-                    HoughCircle[] circles = trans.GetCirclesByRelativeIntensity(0.9);
-                    int a = 0;
+                    circles = trans.GetCirclesByRelativeIntensity(circleRelativeIntensity);
                 }
-
-                var convert = new GrayscaleToRGB();
-                zBuffer = convert.Apply(zBuffer);
-                //zBuffer.Save("C:\\Users\\nadm2208\\Desktop\\RBG.bmp");
-
-                byte[] arr = Bmp2ByteArray(zBuffer);
-                _Texture = new Texture2D(zBuffer.Width, zBuffer.Height, TextureFormat.RGB24, false);
-                _Texture.LoadRawTextureData(arr);
             }
             else
             {
-                byte[] arr = Bmp2ByteArray(zBuffer);
-                _Texture = new Texture2D(zBuffer.Width, zBuffer.Height, TextureFormat.ARGB32, false);
-                _Texture.LoadRawTextureData(arr);
                 ZBufferHoughDetection = false;
             }
-            Detection = false;
+
+            var convert = new GrayscaleToRGB();
+            zBuffer = convert.Apply(zBuffer);
+
+            byte[] arr = Bmp2ByteArray(zBuffer);
+            _Texture = new Texture2D(zBuffer.Width, zBuffer.Height, TextureFormat.RGB24, false);
+            _Texture.LoadRawTextureData(arr);
+
         }
         else 
         {
             ZBufferEdgeDetection = false;
             ZBufferHoughDetection = false;
-            if (Detection)
-            {
-                DetectProjectile();
-            }
+        }
+
+        if (ShowDepth && ZBufferEdgeDetection && ZBufferHoughDetection && Detection)
+        {
+            DetectProjectile();
         }
 
         _Texture.Apply();
@@ -146,109 +142,148 @@ public class MyViewManager : MonoBehaviour
 
     private Projectile DetectProjectile()
     {
-        if (!ShowDepth)
+
+        var colorTexture = _colorManager.GetColorTexture();
+        var colorFrameDesc = _colorManager.GetDescriptor();
+
+        // temp
+        for (int i = 0; i < circles.Length; i++)
         {
-            // square drawing
-            int xMin = 1920/2 - SquareSize/2;
-            int xMax = 1920/2 + SquareSize/2;
-            int yMin = 1080/2 - SquareSize/2;
-            int yMax = 1080/2 + SquareSize/2;
-
-            for (int i = 0; i < SquareSize; i++)
+            for (int x = -5; x < 5; x++)
             {
-                _Texture.SetPixel(xMin + i, yMin, Color.red);
-                _Texture.SetPixel(xMin + i, yMin - 1, Color.red);
-
-                _Texture.SetPixel(xMin + i, yMax, Color.red);
-                _Texture.SetPixel(xMin + i, yMax + 1, Color.red);
-
-                _Texture.SetPixel(xMin, yMin + i, Color.red);
-                _Texture.SetPixel(xMin - 1, yMin + i, Color.red);
-
-                _Texture.SetPixel(xMax, yMin + i, Color.red);
-                _Texture.SetPixel(xMax + 1, yMin + i, Color.red);
-            }
-
-            // Detection
-            int[] colorMax = {0, 0, 0, 0};
-
-            for (int x = xMin + 1; x < xMax - 1; x++)
-            {
-                for (int y = yMin + 1; y < yMax - 1; y++)
+                for (int y = -5; y < 5; y++)
                 {
-                    Color current = _Texture.GetPixel(x, y);
-                    short min = -1;
-                    float distMin = float.MaxValue;
-
-                    for (short c = 0; c < colors.Length; c++)
+                    if (x > 0 && x < _Texture.width && y > 0 && y < _Texture.height)
                     {
-                        float dist = (current.r - colors[c].r)*(current.r - colors[c].r) +
-                                     (current.g - colors[c].g)*(current.g - colors[c].g) +
-                                     (current.b - colors[c].b)*(current.b - colors[c].b);
+                        _Texture.SetPixel(circles[i].X + x, circles[i].Y + y, Color.red);
+                    }
+                }
+            }
+        }
 
-                        if (dist < distMin)
+        for (int i = 0; i < circles.Length; i++)
+        {
+            var depthDesc = _depthManager.GetDescriptor();
+            var sensor = KinectSensor.GetDefault();
+            DepthSpacePoint point = new DepthSpacePoint();
+            point.X = (int)(circles[i].X/ZBufferScale);
+            point.Y = (int)(circles[i].Y/ZBufferScale);
+
+            var z = _depthManager.GetRawData()[(int)(point.X + point.Y * depthDesc.Width)];
+            var csp = sensor.CoordinateMapper.MapDepthPointToColorSpace(point, z);
+            if (!float.IsNegativeInfinity(csp.X) && !float.IsNegativeInfinity(csp.Y))
+            {
+                var color = colorTexture.GetPixel((int)csp.X, (int)csp.Y);
+                if (ColorSquareDiff(color, Color.red) < ThresholdColor)
+                {
+                    for (int x = -5; x < 5; x++)
+                    {
+                        for (int y = -5; y < 5; y++)
                         {
-                            min = c;
-                            distMin = dist;
+                            if (x > 0 && x < _Texture.width && y > 0 && y < _Texture.height)
+                            {
+                                _Texture.SetPixel(circles[i].X + x, circles[i].Y + y, Color.green);
+                            }
                         }
                     }
-
-                    _Texture.SetPixel(x, y, colors[min]);
-                    colorMax[min] += 1;
                 }
             }
-
-            int maxValue = colorMax.Max();
-            int maxIndex = colorMax.ToList().IndexOf(maxValue);
-
-            // set zone in top left corner
-            for (int x = 1; x < 50; x++)
-            {
-                for (int y = 1; y < 50; y++)
-                {
-                    _Texture.SetPixel(x, y, colors[maxIndex]);
-                }
-            }
-            return (Projectile) maxIndex;
-        }
-        else
-        {
-            ShowDepth = false;
         }
         return Projectile.None;
     }
 
-    public static Bitmap ResizeBmp(Bitmap bmp, float scale)
+    float ColorSquareDiff(Color col1, Color col2)
     {
-        var width = (int) (bmp.Width*scale);
-        var height = (int) (bmp.Height*scale);
-        var brush = new SolidBrush(System.Drawing.Color.Black);
-        var result = new Bitmap((int) width, (int) height);
-        var graph = System.Drawing.Graphics.FromImage(result);
-
-        // uncomment for higher quality output
-        //graph.InterpolationMode = InterpolationMode.High;
-        //graph.CompositingQuality = CompositingQuality.HighQuality;
-        //graph.SmoothingMode = SmoothingMode.AntiAlias;
-
-        graph.FillRectangle(brush, new RectangleF(0, 0, width, height));
-        graph.DrawImage(bmp, new Rectangle(0, 0, width, height));
-
-        return result;
+        return (col1.r - col2.r)*(col1.r - col2.r) +
+             (col1.g - col2.g)*(col1.g - col2.g) +
+             (col1.b - col2.b)*(col1.b - col2.b);
     }
+
+    //private Projectile AnalyseSquare()
+    //{
+    //    if (!ShowDepth)
+    //    {
+    //        // square drawing
+    //        int xMin = 1920/2 - SquareSize/2;
+    //        int xMax = 1920/2 + SquareSize/2;
+    //        int yMin = 1080/2 - SquareSize/2;
+    //        int yMax = 1080/2 + SquareSize/2;
+
+    //        for (int i = 0; i < SquareSize; i++)
+    //        {
+    //            _Texture.SetPixel(xMin + i, yMin, Color.red);
+    //            _Texture.SetPixel(xMin + i, yMin - 1, Color.red);
+
+    //            _Texture.SetPixel(xMin + i, yMax, Color.red);
+    //            _Texture.SetPixel(xMin + i, yMax + 1, Color.red);
+
+    //            _Texture.SetPixel(xMin, yMin + i, Color.red);
+    //            _Texture.SetPixel(xMin - 1, yMin + i, Color.red);
+
+    //            _Texture.SetPixel(xMax, yMin + i, Color.red);
+    //            _Texture.SetPixel(xMax + 1, yMin + i, Color.red);
+    //        }
+
+    //        // Detection
+    //        int[] colorMax = {0, 0, 0, 0};
+
+    //        for (int x = xMin + 1; x < xMax - 1; x++)
+    //        {
+    //            for (int y = yMin + 1; y < yMax - 1; y++)
+    //            {
+    //                Color current = _Texture.GetPixel(x, y);
+    //                short min = -1;
+    //                float distMin = float.MaxValue;
+
+    //                for (short c = 0; c < colors.Length; c++)
+    //                {
+    //                    float dist = (current.r - colors[c].r)*(current.r - colors[c].r) +
+    //                                 (current.g - colors[c].g)*(current.g - colors[c].g) +
+    //                                 (current.b - colors[c].b)*(current.b - colors[c].b);
+
+    //                    if (dist < distMin)
+    //                    {
+    //                        min = c;
+    //                        distMin = dist;
+    //                    }
+    //                }
+
+    //                _Texture.SetPixel(x, y, colors[min]);
+    //                colorMax[min] += 1;
+    //            }
+    //        }
+
+    //        int maxValue = colorMax.Max();
+    //        int maxIndex = colorMax.ToList().IndexOf(maxValue);
+
+    //        // set zone in top left corner
+    //        for (int x = 1; x < 50; x++)
+    //        {
+    //            for (int y = 1; y < 50; y++)
+    //            {
+    //                _Texture.SetPixel(x, y, colors[maxIndex]);
+    //            }
+    //        }
+    //        return (Projectile) maxIndex;
+    //    }
+    //    else
+    //    {
+    //        ShowDepth = false;
+    //    }
+    //    return Projectile.None;
+    //}
 
     #region Converters
     Bitmap ByteArray2Bmp(Byte[] arr, int width, int height, PixelFormat format)
     {
         Bitmap img = new Bitmap(width, height, format);
 
-        // Bmp->ByteArray
         BitmapData bitmapData = img.LockBits(
             new Rectangle(0, 0, width, height),
-            ImageLockMode.ReadOnly,
+            ImageLockMode.ReadWrite,
             img.PixelFormat);
 
-        // Copy bitmap to byte[]
+        // Copy byte[] to bitmap
         Marshal.Copy(arr, 0, bitmapData.Scan0, arr.Length);
         img.UnlockBits(bitmapData);
 
@@ -259,11 +294,12 @@ public class MyViewManager : MonoBehaviour
     {
         BitmapData bitmapData = img.LockBits(
             new Rectangle(0, 0, img.Width, img.Height),
-            ImageLockMode.WriteOnly,
+            ImageLockMode.ReadOnly,
             img.PixelFormat);
 
         byte[] result = new byte[System.Math.Abs(bitmapData.Stride)*bitmapData.Height];
 
+        // Copy Bitmap to byte[]
         Marshal.Copy(bitmapData.Scan0, result, 0, result.Length);
         img.UnlockBits(bitmapData);
 
@@ -271,3 +307,5 @@ public class MyViewManager : MonoBehaviour
     }
     #endregion
 }
+
+//zBuffer = Grayscale.CommonAlgorithms.BT709.Apply(zBuffer);
