@@ -25,7 +25,7 @@ public class ProjectileShooter : MonoBehaviour {
 
            // Velocity
             Rigidbody rb = projectile.GetComponent<Rigidbody>();
-            rb.velocity = Camera.main.transform.forward * 110;
+            rb.velocity = Camera.main.transform.forward * 10;
         }
 
 	
