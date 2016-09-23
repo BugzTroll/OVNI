@@ -27,11 +27,45 @@ public class GameManager
 
     private Scene currentScene;
 
+    private GameObject KinectMenuInteraction;
+
     // make sure the constructor is private, so it can only be instantiated here
     private GameManager()
     {
         currentState = GameState.NONE;
         currentScene = SceneManager.GetSceneAt(0);
+        SceneManager.activeSceneChanged += OnSceneChanged; // unsubscribe
+
+        //InitKIM();
+
+        Debug.Log("GameManager was created");
+
+    }
+
+    public void InitIfNeeded()
+    {
+        if (GameObject.FindGameObjectsWithTag("Kinect").Length == 0)
+        {
+            //InitKIM();
+            //UnityEngine.Object.Instantiate(KinectMenuInteraction);
+        }
+        Debug.Log("GameManager exists");
+    }
+
+    private void InitKIM()
+    {
+        KinectMenuInteraction = new GameObject();
+        KinectManager km = KinectMenuInteraction.AddComponent<KinectManager>();
+        InteractionManager im = KinectMenuInteraction.AddComponent<InteractionManager>();
+        KinectMenuInteraction.tag = "Kinect";
+        im.controlMouseCursor = true;
+        im.controlMouseDrag = true;
+        KinectMenuInteraction.name = "KinectInteractionManager";
+        Debug.Log("-----" + KinectMenuInteraction.scene.buildIndex);
+
+        Debug.Log("Kinect Interaction Manager was created");
+
+        // textures
     }
 
     public static GameManager Instance
@@ -71,16 +105,24 @@ public class GameManager
 
     public void ChangeScene(int sceneIndex)
     {
-        SceneManager.UnloadScene(SceneManager.GetActiveScene());
+        //SceneManager.UnloadScene(SceneManager.GetActiveScene());
         SceneManager.LoadScene(sceneIndex);
         currentScene = SceneManager.GetActiveScene();
     }
 
     public void ChangeScene(string sceneName)
     {
-        SceneManager.UnloadScene(SceneManager.GetActiveScene());
+        //SceneManager.UnloadScene(SceneManager.GetActiveScene());
         SceneManager.LoadScene(sceneName);
         currentScene = SceneManager.GetActiveScene();
+    }
+
+    void OnSceneChanged(Scene oldScene, Scene newScene)
+    {
+        Debug.Log("New scene loaded: " + newScene.buildIndex + ", " + newScene.name);
+
+
+
     }
 
     private void Quit()
@@ -97,6 +139,8 @@ public class GameManager
         UnityEditor.EditorApplication.isPlaying = false;
 #endif
     }
+
+
 
 }
 

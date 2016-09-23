@@ -342,20 +342,20 @@ public class InteractionManager : MonoBehaviour
 		interactionInited = true;
 
 		// try to automatically detect the available gesture listeners in the scene
-		if(interactionListeners.Count == 0)
-		{
-			MonoBehaviour[] monoScripts = FindObjectsOfType(typeof(MonoBehaviour)) as MonoBehaviour[];
+//		if(interactionListeners.Count == 0)
+//		{
+//			MonoBehaviour[] monoScripts = FindObjectsOfType(typeof(MonoBehaviour)) as MonoBehaviour[];
 
-			foreach(MonoBehaviour monoScript in monoScripts)
-			{
-//				if(typeof(InteractionListenerInterface).IsAssignableFrom(monoScript.GetType()) &&
-//					monoScript.enabled)
-				if((monoScript is InteractionListenerInterface) && monoScript.enabled)
-				{
-					interactionListeners.Add(monoScript);
-				}
-			}
-		}
+//			foreach(MonoBehaviour monoScript in monoScripts)
+//			{
+////				if(typeof(InteractionListenerInterface).IsAssignableFrom(monoScript.GetType()) &&
+////					monoScript.enabled)
+//				if((monoScript is InteractionListenerInterface) && monoScript.enabled)
+//				{
+//					interactionListeners.Add(monoScript);
+//				}
+//			}
+//		}
 
 	}
 	
