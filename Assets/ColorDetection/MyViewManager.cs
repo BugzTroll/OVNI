@@ -17,25 +17,27 @@ public class MyViewManager : MonoBehaviour
     public GameObject ColorManager;
     public GameObject DepthManager;
 
-    public bool ShowDepth = false;
+    [Range(0, 1)]
     public float ZBufferScale = 0.5f;
-
+    public bool ShowDepth = false;
     public bool ZBufferEdgeDetection = false;
-
-    public bool ZBufferHoughDetection = false;
+    [Range(1, 15)]
     public int ballRadius = 15;
+    [Range(0, 1)]
     public float circleRelativeIntensity = 0.95f;
-
-    public bool Detection = false;
-    [Range(0,3)]
+    [Range(0, 3)]
     public float ThresholdColor = 0.2f;
+    public bool ZBufferHoughDetection = false;
+    public bool ShowDetection = false;
+    [Range(0, 600)]
+    public int ColorCheckSquareSize = 300;
+    public bool AnalyseSquareForColor = false;
 
+    //public bool TakePicture = false;
+    //[Range(0, 1)]
+    //public float PictureScaleFactor = 0.5f;
 
     private HoughCircle[] circles;
-    //[Range(0, 600)] public int SquareSize = 300;
-    //public bool TakePicture = false;
-    //[Range(0, 1)] public float PictureScaleFactor = 0.5f;
-
     private MyColorSourceManager _colorManager;
     private MyDepthSourceManager _depthManager;
     private Texture2D _Texture;
@@ -51,11 +53,16 @@ public class MyViewManager : MonoBehaviour
 
     private UnityEngine.Color[] colors =
     {
-        Color.red,
-        Color.blue,
-        Color.green,
-        Color.yellow
+        new Color(0.765f, 0.220f, 0.114f, 1.000f),
+        new Color(0.106f, 0.369f, 0.102f, 1.000f),
+        new Color(0.016f, 0.318f, 0.702f, 1.000f),
+        new Color(0.729f, 0.796f, 0.196f, 1.000f)
     };
+
+    public Texture2D GetTexture()
+    {
+        return _Texture;
+    }
 
     void Start()
     {
@@ -95,15 +102,12 @@ public class MyViewManager : MonoBehaviour
             {
                 var filter = new CannyEdgeDetector();
                 filter.ApplyInPlace(zBuffer);
-                //temp.Save("C:\\Users\\nadm2208\\Desktop\\contour.bmp");
 
                 if (ZBufferHoughDetection)
                 {
                     var trans = new HoughCircleTransformation(ballRadius);
                     trans.ProcessImage(zBuffer);
                     zBuffer = trans.ToBitmap();
-
-                    //img.Save("C:\\Users\\nadm2208\\Desktop\\hough.bmp");
 
                     circles = trans.GetCirclesByRelativeIntensity(circleRelativeIntensity);
                 }
@@ -121,13 +125,17 @@ public class MyViewManager : MonoBehaviour
             _Texture.LoadRawTextureData(arr);
 
         }
-        else 
+        else
         {
+            if (AnalyseSquareForColor)
+            {
+                AnalyseSquare();
+            }
             ZBufferEdgeDetection = false;
             ZBufferHoughDetection = false;
         }
 
-        if (ShowDepth && ZBufferEdgeDetection && ZBufferHoughDetection && Detection)
+        if (ShowDepth && ZBufferEdgeDetection && ZBufferHoughDetection && ShowDetection)
         {
             DetectProjectile();
         }
@@ -135,10 +143,6 @@ public class MyViewManager : MonoBehaviour
         _Texture.Apply();
     }
 
-    public Texture2D GetTexture()
-    {
-        return _Texture;
-    }
 
     private Projectile DetectProjectile()
     {
@@ -146,8 +150,7 @@ public class MyViewManager : MonoBehaviour
         var colorTexture = _colorManager.GetColorTexture();
         var colorFrameDesc = _colorManager.GetDescriptor();
 
-        // temp
-        for (int i = 0; i < circles.Length; i++)
+        foreach (HoughCircle circle in circles)
         {
             for (int x = -5; x < 5; x++)
             {
@@ -155,34 +158,38 @@ public class MyViewManager : MonoBehaviour
                 {
                     if (x > 0 && x < _Texture.width && y > 0 && y < _Texture.height)
                     {
-                        _Texture.SetPixel(circles[i].X + x, circles[i].Y + y, Color.red);
+                        _Texture.SetPixel(circle.X + x, circle.Y + y, Color.magenta);
                     }
                 }
             }
         }
 
-        for (int i = 0; i < circles.Length; i++)
+        foreach (HoughCircle circle in circles)
         {
             var depthDesc = _depthManager.GetDescriptor();
             var sensor = KinectSensor.GetDefault();
-            DepthSpacePoint point = new DepthSpacePoint();
-            point.X = (int)(circles[i].X/ZBufferScale);
-            point.Y = (int)(circles[i].Y/ZBufferScale);
 
+            DepthSpacePoint point = new DepthSpacePoint();
+            point.X = (int)(circle.X/ZBufferScale);
+            point.Y = (int)(circle.Y/ZBufferScale);
             var z = _depthManager.GetRawData()[(int)(point.X + point.Y * depthDesc.Width)];
-            var csp = sensor.CoordinateMapper.MapDepthPointToColorSpace(point, z);
-            if (!float.IsNegativeInfinity(csp.X) && !float.IsNegativeInfinity(csp.Y))
+            var colorSpacePoint = sensor.CoordinateMapper.MapDepthPointToColorSpace(point, z);
+
+            if (!float.IsNegativeInfinity(colorSpacePoint.X) && !float.IsNegativeInfinity(colorSpacePoint.Y))
             {
-                var color = colorTexture.GetPixel((int)csp.X, (int)csp.Y);
-                if (ColorSquareDiff(color, Color.red) < ThresholdColor)
+                var pixColor = colorTexture.GetPixel((int)colorSpacePoint.X, (int)colorSpacePoint.Y);
+                foreach (Color color in colors)
                 {
-                    for (int x = -5; x < 5; x++)
+                    if (ColorSquareDiff(pixColor, color) < ThresholdColor)
                     {
-                        for (int y = -5; y < 5; y++)
+                        for (int x = -5; x < 5; x++)
                         {
-                            if (x > 0 && x < _Texture.width && y > 0 && y < _Texture.height)
+                            for (int y = -5; y < 5; y++)
                             {
-                                _Texture.SetPixel(circles[i].X + x, circles[i].Y + y, Color.green);
+                                if (x > 0 && x < _Texture.width && y > 0 && y < _Texture.height)
+                                {
+                                    _Texture.SetPixel(circle.X + x, circle.Y + y, pixColor);
+                                }
                             }
                         }
                     }
@@ -192,86 +199,81 @@ public class MyViewManager : MonoBehaviour
         return Projectile.None;
     }
 
-    float ColorSquareDiff(Color col1, Color col2)
+    private Projectile AnalyseSquare()
     {
-        return (col1.r - col2.r)*(col1.r - col2.r) +
-             (col1.g - col2.g)*(col1.g - col2.g) +
-             (col1.b - col2.b)*(col1.b - col2.b);
+        if (!ShowDepth)
+        {
+            // square drawing
+            int xMin = 1920 / 2 - ColorCheckSquareSize / 2;
+            int xMax = 1920 / 2 + ColorCheckSquareSize / 2;
+            int yMin = 1080 / 2 - ColorCheckSquareSize / 2;
+            int yMax = 1080 / 2 + ColorCheckSquareSize / 2;
+
+            for (int i = 0; i < ColorCheckSquareSize; i++)
+            {
+                _Texture.SetPixel(xMin + i, yMin, Color.red);
+                _Texture.SetPixel(xMin + i, yMin - 1, Color.red);
+
+                _Texture.SetPixel(xMin + i, yMax, Color.red);
+                _Texture.SetPixel(xMin + i, yMax + 1, Color.red);
+
+                _Texture.SetPixel(xMin, yMin + i, Color.red);
+                _Texture.SetPixel(xMin - 1, yMin + i, Color.red);
+
+                _Texture.SetPixel(xMax, yMin + i, Color.red);
+                _Texture.SetPixel(xMax + 1, yMin + i, Color.red);
+            }
+
+            // Detection
+            int[] colorMax = { 0, 0, 0, 0 };
+
+            for (int x = xMin + 1; x < xMax - 1; x++)
+            {
+                for (int y = yMin + 1; y < yMax - 1; y++)
+                {
+                    Color current = _Texture.GetPixel(x, y);
+                    short min = -1;
+                    float distMin = float.MaxValue;
+
+                    for (short c = 0; c < colors.Length; c++)
+                    {
+                        float dist = ColorSquareDiff(current, colors[c]);
+
+                        if (dist < distMin)
+                        {
+                            min = c;
+                            distMin = dist;
+                        }
+                    }
+
+                    _Texture.SetPixel(x, y, colors[min]);
+                    colorMax[min] += 1;
+                }
+            }
+
+            int maxValue = colorMax.Max();
+            int maxIndex = colorMax.ToList().IndexOf(maxValue);
+
+            // set zone in top left corner
+            //for (int x = 1; x < 50; x++)
+            //{
+            //    for (int y = 1; y < 50; y++)
+            //    {
+            //        _Texture.SetPixel(x, y, colors[maxIndex]);
+            //    }
+            //}
+
+            return (Projectile)maxIndex;
+        }
+        return Projectile.None;
     }
 
-    //private Projectile AnalyseSquare()
-    //{
-    //    if (!ShowDepth)
-    //    {
-    //        // square drawing
-    //        int xMin = 1920/2 - SquareSize/2;
-    //        int xMax = 1920/2 + SquareSize/2;
-    //        int yMin = 1080/2 - SquareSize/2;
-    //        int yMax = 1080/2 + SquareSize/2;
-
-    //        for (int i = 0; i < SquareSize; i++)
-    //        {
-    //            _Texture.SetPixel(xMin + i, yMin, Color.red);
-    //            _Texture.SetPixel(xMin + i, yMin - 1, Color.red);
-
-    //            _Texture.SetPixel(xMin + i, yMax, Color.red);
-    //            _Texture.SetPixel(xMin + i, yMax + 1, Color.red);
-
-    //            _Texture.SetPixel(xMin, yMin + i, Color.red);
-    //            _Texture.SetPixel(xMin - 1, yMin + i, Color.red);
-
-    //            _Texture.SetPixel(xMax, yMin + i, Color.red);
-    //            _Texture.SetPixel(xMax + 1, yMin + i, Color.red);
-    //        }
-
-    //        // Detection
-    //        int[] colorMax = {0, 0, 0, 0};
-
-    //        for (int x = xMin + 1; x < xMax - 1; x++)
-    //        {
-    //            for (int y = yMin + 1; y < yMax - 1; y++)
-    //            {
-    //                Color current = _Texture.GetPixel(x, y);
-    //                short min = -1;
-    //                float distMin = float.MaxValue;
-
-    //                for (short c = 0; c < colors.Length; c++)
-    //                {
-    //                    float dist = (current.r - colors[c].r)*(current.r - colors[c].r) +
-    //                                 (current.g - colors[c].g)*(current.g - colors[c].g) +
-    //                                 (current.b - colors[c].b)*(current.b - colors[c].b);
-
-    //                    if (dist < distMin)
-    //                    {
-    //                        min = c;
-    //                        distMin = dist;
-    //                    }
-    //                }
-
-    //                _Texture.SetPixel(x, y, colors[min]);
-    //                colorMax[min] += 1;
-    //            }
-    //        }
-
-    //        int maxValue = colorMax.Max();
-    //        int maxIndex = colorMax.ToList().IndexOf(maxValue);
-
-    //        // set zone in top left corner
-    //        for (int x = 1; x < 50; x++)
-    //        {
-    //            for (int y = 1; y < 50; y++)
-    //            {
-    //                _Texture.SetPixel(x, y, colors[maxIndex]);
-    //            }
-    //        }
-    //        return (Projectile) maxIndex;
-    //    }
-    //    else
-    //    {
-    //        ShowDepth = false;
-    //    }
-    //    return Projectile.None;
-    //}
+    float ColorSquareDiff(Color col1, Color col2)
+    {
+        return (col1.r - col2.r) * (col1.r - col2.r) +
+             (col1.g - col2.g) * (col1.g - col2.g) +
+             (col1.b - col2.b) * (col1.b - col2.b);
+    }
 
     #region Converters
     Bitmap ByteArray2Bmp(Byte[] arr, int width, int height, PixelFormat format)
@@ -307,5 +309,3 @@ public class MyViewManager : MonoBehaviour
     }
     #endregion
 }
-
-//zBuffer = Grayscale.CommonAlgorithms.BT709.Apply(zBuffer);
