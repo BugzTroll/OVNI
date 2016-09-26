@@ -18,7 +18,8 @@ public class MyViewManager : MonoBehaviour
     [Range(0, 1)] public float ZBufferScale = 0.5f;
     public bool ShowDepth = false;
     public bool ZBufferEdgeDetection = false;
-    [Range(1, 15)] public int ballRadius = 15;
+    [Range(1, 15)] public int ballRadius1 = 5;
+    [Range(1, 15)] public int ballRadius2 = 10;
     [Range(0, 1)] public float circleRelativeIntensity = 0.95f;
     [Range(0, 3)] public float ThresholdColor = 0.2f;
     public bool ZBufferHoughDetection = false;
@@ -100,11 +101,22 @@ public class MyViewManager : MonoBehaviour
 
                 if (ZBufferHoughDetection)
                 {
-                    var trans = new HoughCircleTransformation(ballRadius);
-                    trans.ProcessImage(zBuffer);
-                    zBuffer = trans.ToBitmap();
+                    var temp = zBuffer;
+                    var trans1 = new HoughCircleTransformation(ballRadius1);
+                    trans1.ProcessImage(temp);
+                    //zBuffer = trans1.ToBitmap();
+                    circles = circles.Concat(trans1.GetCirclesByRelativeIntensity(circleRelativeIntensity)).ToArray();
 
-                    circles = trans.GetCirclesByRelativeIntensity(circleRelativeIntensity);
+                    temp = zBuffer;
+                    var trans2 = new HoughCircleTransformation(ballRadius2);
+                    trans2.ProcessImage(temp);
+                    zBuffer = trans2.ToBitmap();
+                    circles = circles.Concat(trans2.GetCirclesByRelativeIntensity(circleRelativeIntensity)).ToArray();
+
+                    //var trans3 = new HoughCircleTransformation(ballRadius);
+                    //trans3.ProcessImage(zBuffer);
+                    ////zBuffer = trans3.ToBitmap();
+                    //circles = trans3.GetCirclesByRelativeIntensity(circleRelativeIntensity);
                 }
             }
             else
@@ -118,6 +130,11 @@ public class MyViewManager : MonoBehaviour
             byte[] arr = Bmp2ByteArray(zBuffer);
             _Texture = new Texture2D(zBuffer.Width, zBuffer.Height, TextureFormat.RGB24, false);
             _Texture.LoadRawTextureData(arr);
+
+            if (ShowDetection)
+            {
+                DetectProjectile();
+            }
         }
         else
         {
@@ -127,11 +144,6 @@ public class MyViewManager : MonoBehaviour
             }
             ZBufferEdgeDetection = false;
             ZBufferHoughDetection = false;
-        }
-
-        if (ShowDepth && ZBufferEdgeDetection && ZBufferHoughDetection && ShowDetection)
-        {
-            DetectProjectile();
         }
 
         _Texture.Apply();
@@ -170,22 +182,22 @@ public class MyViewManager : MonoBehaviour
             if (!float.IsNegativeInfinity(colorSpacePoint.X) && !float.IsNegativeInfinity(colorSpacePoint.Y))
             {
                 var pixColor = colorTexture.GetPixel((int) colorSpacePoint.X, (int) colorSpacePoint.Y);
-                //foreach (Color color in colors)
-                //{
-                //    if (ColorSquareDiff(pixColor, color) < ThresholdColor)
-                //    {
-                //        for (int x = -5; x < 5; x++)
-                //        {
-                //            for (int y = -5; y < 5; y++)
-                //            {
-                //                if (x > 0 && x < _Texture.width && y > 0 && y < _Texture.height)
-                //                {
-                //                    _Texture.SetPixel(circle.X + x, circle.Y + y, pixColor);
-                //                }
-                //            }
-                //        }
-                //    }
-                //}
+                foreach (Color color in colors)
+                {
+                    if (ColorSquareDiff(pixColor, color) < ThresholdColor)
+                    {
+                        for (int x = -5; x < 5; x++)
+                        {
+                            for (int y = -5; y < 5; y++)
+                            {
+                                if (x > 0 && x < _Texture.width && y > 0 && y < _Texture.height)
+                                {
+                                    _Texture.SetPixel(circle.X + x, circle.Y + y, pixColor);
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
         return Projectile.None;
