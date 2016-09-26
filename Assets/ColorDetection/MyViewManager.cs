@@ -2,7 +2,6 @@
 using UnityEngine;
 using System.Collections;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -10,27 +9,21 @@ using AForge.Imaging;
 using AForge.Imaging.Filters;
 using Windows.Kinect;
 using Color = UnityEngine.Color;
-using WrapMode = UnityEngine.WrapMode;
 
 public class MyViewManager : MonoBehaviour
 {
     public GameObject ColorManager;
     public GameObject DepthManager;
 
-    [Range(0, 1)]
-    public float ZBufferScale = 0.5f;
+    [Range(0, 1)] public float ZBufferScale = 0.5f;
     public bool ShowDepth = false;
     public bool ZBufferEdgeDetection = false;
-    [Range(1, 15)]
-    public int ballRadius = 15;
-    [Range(0, 1)]
-    public float circleRelativeIntensity = 0.95f;
-    [Range(0, 3)]
-    public float ThresholdColor = 0.2f;
+    [Range(1, 15)] public int ballRadius = 15;
+    [Range(0, 1)] public float circleRelativeIntensity = 0.95f;
+    [Range(0, 3)] public float ThresholdColor = 0.2f;
     public bool ZBufferHoughDetection = false;
     public bool ShowDetection = false;
-    [Range(0, 600)]
-    public int ColorCheckSquareSize = 300;
+    [Range(0, 600)] public int ColorCheckSquareSize = 300;
     public bool AnalyseSquareForColor = false;
 
     //public bool TakePicture = false;
@@ -46,17 +39,17 @@ public class MyViewManager : MonoBehaviour
     {
         None = -1,
         red = 0,
-        blue = 1,
-        green = 2,
+        green = 1,
+        blue = 2,
         yellow = 3,
     }
 
     private UnityEngine.Color[] colors =
     {
-        new Color(0.765f, 0.220f, 0.114f, 1.000f),
-        new Color(0.106f, 0.369f, 0.102f, 1.000f),
-        new Color(0.016f, 0.318f, 0.702f, 1.000f),
-        new Color(0.729f, 0.796f, 0.196f, 1.000f)
+        new Color(0.765f, 0.220f, 0.114f, 1.000f),      //r
+        new Color(0.106f, 0.469f, 0.102f, 1.000f),      //g
+        new Color(0.016f, 0.318f, 0.702f, 1.000f),      //b
+        new Color(0.729f, 0.796f, 0.196f, 1.000f)       //y
     };
 
     public Texture2D GetTexture()
@@ -93,8 +86,10 @@ public class MyViewManager : MonoBehaviour
         if (ShowDepth)
         {
             var frameDescriptor = _depthManager.GetDescriptor();
-            var zBuffer = ByteArray2Bmp(_depthManager.GetData(), frameDescriptor.Width, frameDescriptor.Height, PixelFormat.Format16bppGrayScale);
-            var resizeFilter = new ResizeNearestNeighbor((int)(ZBufferScale * frameDescriptor.Width), (int)(ZBufferScale * frameDescriptor.Height));
+            var zBuffer = ByteArray2Bmp(_depthManager.GetData(), frameDescriptor.Width, frameDescriptor.Height,
+                PixelFormat.Format16bppGrayScale);
+            var resizeFilter = new ResizeNearestNeighbor((int) (ZBufferScale*frameDescriptor.Width),
+                (int) (ZBufferScale*frameDescriptor.Height));
             zBuffer = resizeFilter.Apply(zBuffer);
             zBuffer = AForge.Imaging.Image.Convert16bppTo8bpp(zBuffer);
 
@@ -123,7 +118,6 @@ public class MyViewManager : MonoBehaviour
             byte[] arr = Bmp2ByteArray(zBuffer);
             _Texture = new Texture2D(zBuffer.Width, zBuffer.Height, TextureFormat.RGB24, false);
             _Texture.LoadRawTextureData(arr);
-
         }
         else
         {
@@ -146,9 +140,7 @@ public class MyViewManager : MonoBehaviour
 
     private Projectile DetectProjectile()
     {
-
         var colorTexture = _colorManager.GetColorTexture();
-        var colorFrameDesc = _colorManager.GetDescriptor();
 
         foreach (HoughCircle circle in circles)
         {
@@ -170,30 +162,30 @@ public class MyViewManager : MonoBehaviour
             var sensor = KinectSensor.GetDefault();
 
             DepthSpacePoint point = new DepthSpacePoint();
-            point.X = (int)(circle.X/ZBufferScale);
-            point.Y = (int)(circle.Y/ZBufferScale);
-            var z = _depthManager.GetRawData()[(int)(point.X + point.Y * depthDesc.Width)];
+            point.X = (int) (circle.X/ZBufferScale);
+            point.Y = (int) (circle.Y/ZBufferScale);
+            var z = _depthManager.GetRawData()[(int) (point.X + point.Y*depthDesc.Width)];
             var colorSpacePoint = sensor.CoordinateMapper.MapDepthPointToColorSpace(point, z);
 
             if (!float.IsNegativeInfinity(colorSpacePoint.X) && !float.IsNegativeInfinity(colorSpacePoint.Y))
             {
-                var pixColor = colorTexture.GetPixel((int)colorSpacePoint.X, (int)colorSpacePoint.Y);
-                foreach (Color color in colors)
-                {
-                    if (ColorSquareDiff(pixColor, color) < ThresholdColor)
-                    {
-                        for (int x = -5; x < 5; x++)
-                        {
-                            for (int y = -5; y < 5; y++)
-                            {
-                                if (x > 0 && x < _Texture.width && y > 0 && y < _Texture.height)
-                                {
-                                    _Texture.SetPixel(circle.X + x, circle.Y + y, pixColor);
-                                }
-                            }
-                        }
-                    }
-                }
+                var pixColor = colorTexture.GetPixel((int) colorSpacePoint.X, (int) colorSpacePoint.Y);
+                //foreach (Color color in colors)
+                //{
+                //    if (ColorSquareDiff(pixColor, color) < ThresholdColor)
+                //    {
+                //        for (int x = -5; x < 5; x++)
+                //        {
+                //            for (int y = -5; y < 5; y++)
+                //            {
+                //                if (x > 0 && x < _Texture.width && y > 0 && y < _Texture.height)
+                //                {
+                //                    _Texture.SetPixel(circle.X + x, circle.Y + y, pixColor);
+                //                }
+                //            }
+                //        }
+                //    }
+                //}
             }
         }
         return Projectile.None;
@@ -204,10 +196,10 @@ public class MyViewManager : MonoBehaviour
         if (!ShowDepth)
         {
             // square drawing
-            int xMin = 1920 / 2 - ColorCheckSquareSize / 2;
-            int xMax = 1920 / 2 + ColorCheckSquareSize / 2;
-            int yMin = 1080 / 2 - ColorCheckSquareSize / 2;
-            int yMax = 1080 / 2 + ColorCheckSquareSize / 2;
+            int xMin = 1920/2 - ColorCheckSquareSize/2;
+            int xMax = 1920/2 + ColorCheckSquareSize/2;
+            int yMin = 1080/2 - ColorCheckSquareSize/2;
+            int yMax = 1080/2 + ColorCheckSquareSize/2;
 
             for (int i = 0; i < ColorCheckSquareSize; i++)
             {
@@ -225,7 +217,7 @@ public class MyViewManager : MonoBehaviour
             }
 
             // Detection
-            int[] colorMax = { 0, 0, 0, 0 };
+            int[] colorMax = {0, 0, 0, 0};
 
             for (int x = xMin + 1; x < xMax - 1; x++)
             {
@@ -263,19 +255,24 @@ public class MyViewManager : MonoBehaviour
             //    }
             //}
 
-            return (Projectile)maxIndex;
+            return (Projectile) maxIndex;
         }
         return Projectile.None;
     }
 
+    #region Helpers
+
     float ColorSquareDiff(Color col1, Color col2)
     {
-        return (col1.r - col2.r) * (col1.r - col2.r) +
-             (col1.g - col2.g) * (col1.g - col2.g) +
-             (col1.b - col2.b) * (col1.b - col2.b);
+        return Math.Abs(col1.r - col2.r) +
+               Math.Abs(col1.g - col2.g) +
+               Math.Abs(col1.b - col2.b);
     }
 
+    #endregion
+
     #region Converters
+
     Bitmap ByteArray2Bmp(Byte[] arr, int width, int height, PixelFormat format)
     {
         Bitmap img = new Bitmap(width, height, format);
@@ -307,5 +304,6 @@ public class MyViewManager : MonoBehaviour
 
         return result;
     }
+
     #endregion
 }
