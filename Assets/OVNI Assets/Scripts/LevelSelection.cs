@@ -23,6 +23,7 @@ public class LevelSelection : MonoBehaviour {
                 if (hit.collider.tag == "Clickable")
                 {
                     GameManager.Instance.ChangeScene("Level1Test");
+                    GameVariables.ammunition = 5;
                 }
                     
             }
