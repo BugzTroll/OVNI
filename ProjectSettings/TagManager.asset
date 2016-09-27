@@ -7,6 +7,8 @@ TagManager:
   - Clickable
   - Fire
   - Kinect
+  - Destructable
+  - Wall
   layers:
   - Default
   - TransparentFX
