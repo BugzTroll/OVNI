@@ -60,6 +60,9 @@ public class ProjectileShooter : MonoBehaviour {
 
         if (Input.GetMouseButtonDown(0))
         {
+            if (UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
+                return;
+
             if (GameVariables.current_weapon == "bomb")
             {
                 if (GameVariables.bomb > 0)
