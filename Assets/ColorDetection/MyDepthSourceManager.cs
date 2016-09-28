@@ -3,6 +3,7 @@ using UnityEngine;
 using System.Collections;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Linq;
 using System.Runtime.InteropServices;
 using Windows.Kinect;
 using AForge.Imaging;
@@ -13,6 +14,8 @@ public class MyDepthSourceManager : MonoBehaviour
     private DepthFrameReader _Reader;
     private Texture2D _Texture;
     private ushort[] _Data;
+    private ushort[] _Background;
+    private int cpt = 2;
 
     public byte[] GetData()
     {
@@ -25,6 +28,12 @@ public class MyDepthSourceManager : MonoBehaviour
     public int GetRawSize()
     {
         return _Data.Length;
+    }
+
+    public ushort GetRawZ(int i, int j)
+    {
+        return (ushort) (_Background[(int) (i + j*GetDescriptor().Width)] -
+                         _Data[(int) (i + j*GetDescriptor().Width)]);
     }
 
     public Texture2D GetDepthTexture()
@@ -48,6 +57,7 @@ public class MyDepthSourceManager : MonoBehaviour
             var frameDesc = _Sensor.DepthFrameSource.FrameDescription;
             _Texture = new Texture2D(frameDesc.Width, frameDesc.Height, TextureFormat.R16, false);
             _Data = new ushort[_Sensor.DepthFrameSource.FrameDescription.LengthInPixels];
+            _Background = new ushort[_Sensor.DepthFrameSource.FrameDescription.LengthInPixels];
 
             if (!_Sensor.IsOpen)
             {
@@ -64,9 +74,22 @@ public class MyDepthSourceManager : MonoBehaviour
             if (frame != null)
             {               
                 frame.CopyFrameDataToArray(_Data);
+
+                for (int i = 0; i < _Data.Length; ++i)
+                {
+                    _Data[i] = (ushort)Math.Max((_Background[i] - _Data[i]), 0);
+                }
+
                 _Texture.LoadRawTextureData(ShortArray2ByteArray(_Data));
+
+                cpt--;
+                if (cpt == 0)
+                {
+                    frame.CopyFrameDataToArray(_Background);
+                }
                 frame.Dispose();
                 frame = null;
+
             }
         }
     }

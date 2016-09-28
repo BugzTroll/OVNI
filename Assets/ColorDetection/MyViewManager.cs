@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography.X509Certificates;
 using AForge.Imaging;
 using AForge.Imaging.Filters;
 using Windows.Kinect;
@@ -28,6 +29,8 @@ public class MyViewManager : MonoBehaviour
     public bool showColorFilter = false;
     [Range(0, 600)] public int ColorCheckSquareSize = 300;
     public bool AnalyseSquareForColor = false;
+    //[Range(0, Byte.MaxValue)] public byte lowThresh = 50;
+    //[Range(0, Byte.MaxValue)] public byte hightThresh = 50;
 
     //public bool TakePicture = false;
     //[Range(0, 1)]
@@ -49,10 +52,10 @@ public class MyViewManager : MonoBehaviour
 
     private UnityEngine.Color[] colors =
     {
-        new Color(0.765f, 0.220f, 0.114f, 1.000f),      //r
-        new Color(0.106f, 0.469f, 0.102f, 1.000f),      //g
-        new Color(0.016f, 0.318f, 0.702f, 1.000f),      //b
-        new Color(0.729f, 0.796f, 0.196f, 1.000f)       //y
+        new Color(0.765f, 0.220f, 0.114f, 1.000f), //r
+        new Color(0.106f, 0.469f, 0.102f, 1.000f), //g
+        new Color(0.016f, 0.318f, 0.702f, 1.000f), //b
+        new Color(0.729f, 0.796f, 0.196f, 1.000f) //y
     };
 
     public Texture2D GetTexture()
@@ -86,17 +89,6 @@ public class MyViewManager : MonoBehaviour
 
         circles = new HoughCircle[0];
 
-        //if (showColorFilter)
-        //{
-        //    HSLFiltering filter = new HSLFiltering();
-        //    // set color ranges to keep
-        //    filter.Hue = new IntRange(335, 0);
-        //    filter.Saturation = new Range(0.6f, 1);
-        //    filter.Luminance = new Range(0.1f, 1);
-        //    // apply the filter
-        //    filter.ApplyInPlace(image);
-        //}
-
         if (ShowDepth)
         {
             var frameDescriptor = _depthManager.GetDescriptor();
@@ -110,7 +102,33 @@ public class MyViewManager : MonoBehaviour
             if (ZBufferEdgeDetection)
             {
                 var filter = new CannyEdgeDetector();
+                //filter.LowThreshold = lowThresh;
+                //filter.HighThreshold = hightThresh;
                 filter.ApplyInPlace(zBuffer);
+
+                //var filter = new DifferenceEdgeDetector();
+                //filter.ApplyInPlace(zBuffer);
+
+                //var filter2 = new Threshold();
+                //filter2.ThresholdValue = lowThresh;
+                //filter2.ApplyInPlace(zBuffer);
+
+                //var bob = new BlobsFiltering();
+                //bob.CoupledSizeFiltering = true;
+                //bob.MinHeight = 8;
+                //bob.MinWidth = 8;
+                //bob.MaxHeight = 22;
+                //bob.MaxWidth = 22;
+                //bob.ApplyInPlace(zBuffer);
+                 
+                //int[,] kernel =
+                //{
+                //    {0, -1, 0},
+                //    {-1, 4, -1},
+                //    {0, -1, 0}
+                //};
+                //var filter = new Convolution(kernel);
+                //filter.ApplyInPlace(zBuffer);
 
                 if (ZBufferHoughDetection)
                 {
@@ -118,18 +136,13 @@ public class MyViewManager : MonoBehaviour
                     var trans1 = new HoughCircleTransformation(ballRadius1);
                     trans1.ProcessImage(temp);
                     //zBuffer = trans1.ToBitmap();
-                    circles = circles.Concat(trans1.GetCirclesByRelativeIntensity(circleRelativeIntensity)).ToArray();
+                    circles = circles.Concat(trans1.GetMostIntensiveCircles(1)).ToArray();
 
                     temp = zBuffer;
                     var trans2 = new HoughCircleTransformation(ballRadius2);
                     trans2.ProcessImage(temp);
                     zBuffer = trans2.ToBitmap();
-                    circles = circles.Concat(trans2.GetCirclesByRelativeIntensity(circleRelativeIntensity)).ToArray();
-
-                    //var trans3 = new HoughCircleTransformation(ballRadius);
-                    //trans3.ProcessImage(zBuffer);
-                    ////zBuffer = trans3.ToBitmap();
-                    //circles = trans3.GetCirclesByRelativeIntensity(circleRelativeIntensity);
+                    circles = circles.Concat(trans2.GetMostIntensiveCircles(1)).ToArray();
                 }
             }
             else
@@ -165,18 +178,16 @@ public class MyViewManager : MonoBehaviour
 
     private Projectile DetectProjectile()
     {
-        var colorTexture = _colorManager.GetColorTexture();
-
         //Display a red square were we detect a potential circle
         foreach (HoughCircle circle in circles)
         {
-            for (int x = -2; x < 2; x++)
+            for (int x = -5; x < 5; x++)
             {
-                for (int y = -2; y < 2; y++)
+                for (int y = -5; y < 5; y++)
                 {
                     if (x > 0 && x < _Texture.width && y > 0 && y < _Texture.height)
                     {
-                        _Texture.SetPixel(circle.X + x, circle.Y + y, Color.magenta);
+                        _Texture.SetPixel(circle.X + x, circle.Y + y, new Color(1.0f, 0.5f, 0.45f));
                     }
                 }
             }
@@ -185,24 +196,30 @@ public class MyViewManager : MonoBehaviour
         //Display a colored square were we detect a ball (the color of the square = color of the ball detected)
         foreach (HoughCircle circle in circles)
         {
-            var depthDesc = _depthManager.GetDescriptor();
             var sensor = KinectSensor.GetDefault();
             DepthSpacePoint point = new DepthSpacePoint();
             point.X = (int) (circle.X/ZBufferScale);
             point.Y = (int) (circle.Y/ZBufferScale);
 
-            var pixColor = ColorAverage(point, depthDesc, colorTexture, sensor);//TEST
-            foreach (Color color in colors)
+            var z = _depthManager.GetRawZ((int) point.X, (int) point.Y);
+            var colorSpacePoint = sensor.CoordinateMapper.MapDepthPointToColorSpace(point, z);
+
+            if (!float.IsNegativeInfinity(colorSpacePoint.X) && !float.IsNegativeInfinity(colorSpacePoint.Y))
             {
-                if (ColorSquareDiff(pixColor, color) < ThresholdColor)
+                var pixColor = ColorAverage((int) colorSpacePoint.X, (int) colorSpacePoint.Y);
+                foreach (Color color in colors)
                 {
-                    for (int x = -5; x < 5; x++)
+                    if (ColorSquareDiff(pixColor, color) < ThresholdColor)
                     {
-                        for (int y = -5; y < 5; y++)
+                        for (int x = -5; x < 5; x++)
                         {
-                            if (x > 0 && x < _Texture.width && y > 0 && y < _Texture.height)
+                            for (int y = -5; y < 5; y++)
                             {
-                                _Texture.SetPixel(circle.X + x, circle.Y + y, pixColor);
+                                if (x > 0 && x < _Texture.width && y > 0 && y < _Texture.height)
+                                {
+                                    _Texture.SetPixel(circle.X + x, circle.Y + y, pixColor);
+                                    Debug.Log("BALLE !!!");
+                                }
                             }
                         }
                     }
@@ -290,37 +307,20 @@ public class MyViewManager : MonoBehaviour
                Math.Abs(col1.b - col2.b);
     }
 
-    Color ColorAverage(DepthSpacePoint centerPoint, FrameDescription depthDesc, Texture2D colorTexture, KinectSensor sensor)
+    Color ColorAverage(int x, int y)
     {
         Color avColor = Color.black;
-        DepthSpacePoint pt = centerPoint;
-
-        ushort z = _depthManager.GetRawData()[(int)(centerPoint.X + centerPoint.Y * depthDesc.Width)];
-        var colorSpacePoint = sensor.CoordinateMapper.MapDepthPointToColorSpace(centerPoint, z);
-        int cpt = 0;
-
-        for (int x = -1; x <= 1; x++)
+        for (int i = -1; i < 2; i++)
         {
-            for (int y = -1; y <= 1; y++)
+            for (int j = -1; j < 2; j++)
             {
-                pt.X = centerPoint.X + x;
-                pt.Y = centerPoint.Y + y;
-
-                z = _depthManager.GetRawData()[(int)(pt.X + pt.Y * depthDesc.Width)];
-                colorSpacePoint = sensor.CoordinateMapper.MapDepthPointToColorSpace(pt, z);
-                if (!float.IsNegativeInfinity(colorSpacePoint.X) && !float.IsNegativeInfinity(colorSpacePoint.Y))
-                {
-                    cpt += 1;
-                    Color pixColor = colorTexture.GetPixel((int)colorSpacePoint.X, (int)colorSpacePoint.Y);
-                    avColor += pixColor;
-                }
+                avColor += _colorManager.GetColorTexture().GetPixel(x + i, y + j);
+                ;
             }
         }
-
-        avColor /= cpt;
+        avColor /= 9;
         return avColor;
     }
-        
 
     #endregion
 
