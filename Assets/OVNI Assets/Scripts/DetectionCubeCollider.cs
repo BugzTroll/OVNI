@@ -10,7 +10,7 @@ public class DetectionCubeCollider : MonoBehaviour {
 
     void OnTriggerExit(Collider other)
     {
-        if (other.tag == "destructable")
+        if (other.tag == "Destructable")
         {
             Destroy(other.gameObject);
         }

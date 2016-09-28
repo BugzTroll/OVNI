@@ -24,7 +24,7 @@ GameObject:
   - 23: {fileID: 23000012728926516}
   - 54: {fileID: 54000010980350292}
   m_Layer: 0
-  m_Name: projectile
+  m_Name: tomato
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
