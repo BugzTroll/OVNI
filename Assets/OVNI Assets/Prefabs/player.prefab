@@ -21,7 +21,6 @@ GameObject:
   - 4: {fileID: 4000010107583382}
   - 114: {fileID: 114000013988874362}
   - 114: {fileID: 114000013089697994}
-  - 114: {fileID: 114000014151750598}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -64,15 +63,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea9aeea090e8128408344d21db028d9f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tomatoPrefab: {fileID: 1000012715797112, guid: b332305ce86fc9b419459c0fad936138,
+    type: 2}
+  bombPrefab: {fileID: 1000010377066388, guid: 728970f7225f57b4587d117fdf68ae2b, type: 2}
+  tomatoCount: 5
+  bombCount: 3
   speed: 20
---- !u!114 &114000014151750598
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000012078928316}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d4be32dd50c6e7740bc4739e7b1b4f87, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

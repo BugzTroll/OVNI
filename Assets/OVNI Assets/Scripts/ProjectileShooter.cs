@@ -3,59 +3,52 @@ using System.Collections;
 
 public class ProjectileShooter : MonoBehaviour {
 
-    GameObject tomatoPrefab;
-    GameObject bombPrefab;
-    public float speed = 100;
-    Rect rect;
-    Texture texturebomb;
-    Texture texturetomate;
-
-
-    // Used to create the projectile and create the GUI for remaining ammos
-    void Start ()
+    public enum ProjectileType
     {
-        // Load Ammo Prefabs
-        tomatoPrefab = Resources.Load("tomato") as GameObject;
-        bombPrefab = Resources.Load("bomb") as GameObject;
-
-        // Load Textures
-        texturebomb = Resources.Load("Texture/bomb") as Texture;
-        texturetomate = Resources.Load("Texture/Tomate") as Texture;
-
-        // Picutre Draw Frame
-        rect = new Rect(Screen.width * 0.03f, Screen.height * 0.80f, Screen.width * 0.03f, Screen.width * 0.03f);
-
+        TOMATO,
+        BOMB,
+        TYPE_COUNT
+        // TO BE CONTINUED
     }
 
-    void OnGUI()
+    public GameObject tomatoPrefab;
+    public GameObject bombPrefab;
+
+    public int tomatoCount;
+    public int bombCount;
+
+    // change per prefab
+    public float speed = 100;
+
+    //Rect rect;
+    //Texture texturebomb;
+    //Texture texturetomate;
+
+    private ProjectileType equippedProjectile;
+
+
+    // Used to create projectiles and create the GUI for remaining ammo
+    void Start ()
     {
-        // For each remaining bomb draw a picture
-        for (int i = 0; i < GameVariables.bomb; i++)
-        {
-            Rect newRect = new Rect(rect.x+40, rect.y - i * Screen.width * 0.03f, rect.width, rect.width);
-            GUI.DrawTexture(newRect, texturebomb);
-        }
-        // For each remaining tomato draw a picture
-        for (int i = 0; i < GameVariables.tomato; i++)
-        {
-            Rect newRect = new Rect(rect.x-20, rect.y - i * Screen.width * 0.03f, rect.width, rect.width);
-            GUI.DrawTexture(newRect, texturetomate);
-        }
+        //// Load Textures
+        //texturebomb = Resources.Load("Textures/Bomb") as Texture;
+        //texturetomate = Resources.Load("Textures/Tomate") as Texture;
+
+        //// Picutre Draw Frame
+        //rect = new Rect(Screen.width * 0.03f, Screen.height * 0.80f, Screen.width * 0.03f, Screen.width * 0.03f);
+
+        equippedProjectile = ProjectileType.TOMATO;
     }
 
     // Update is called once per frame
-    void Update ()
+    void FixedUpdate ()
     {
-        if (Input.GetKeyDown("space"))
+        if (Input.GetKeyDown("space")) // find kinect gesture eventually ?
         {
-            if (GameVariables.current_weapon == "tomato")
-            {
-                GameVariables.current_weapon = "bomb";
-            }
-            else
-            {
-                GameVariables.current_weapon = "tomato";
-            }
+            // cycle between available projectile types
+            int nextType = ((int)equippedProjectile) + 1;
+            nextType = nextType % ((int)ProjectileType.TYPE_COUNT);
+            equippedProjectile = (ProjectileType)nextType;
         }
 
         if (Input.GetMouseButtonDown(0))
@@ -63,36 +56,37 @@ public class ProjectileShooter : MonoBehaviour {
             if (UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
                 return;
 
-            if (GameVariables.current_weapon == "bomb")
+
+            // make a switch (equippedProjectile) if we ever have too many types
+            if (equippedProjectile == ProjectileType.BOMB)
             {
-                if (GameVariables.bomb > 0)
+                if (bombCount > 0)
                 {
-                    GameObject bomb = Instantiate(bombPrefab) as GameObject;
-                    Vector3 positions2 = Input.mousePosition;
-                    positions2.z = 3;
-                    Vector3 position = Camera.main.ScreenToWorldPoint(positions2);
-                    bomb.transform.position = position;
-                    GameVariables.bomb -= 1;
-                    //Velocity
-                    Rigidbody rb = bomb.GetComponent<Rigidbody>();
-                    rb.velocity = Camera.main.transform.forward * speed;
+                    CreateProjectile(bombPrefab);
+                    bombCount--;
                 }
             }
-            if (GameVariables.current_weapon == "tomato")
+            if (equippedProjectile == ProjectileType.TOMATO)
             {
-                if (GameVariables.tomato > 0)
+                if (tomatoCount > 0)
                 {
-                    GameObject tomato = Instantiate(tomatoPrefab) as GameObject;
-                    Vector3 positions2 = Input.mousePosition;
-                    positions2.z = 3;
-                    Vector3 position = Camera.main.ScreenToWorldPoint(positions2);
-                    tomato.transform.position = position;
-                    GameVariables.tomato -= 1;
-                    //Velocity
-                    Rigidbody rb = tomato.GetComponent<Rigidbody>();
-                    rb.velocity = Camera.main.transform.forward * speed;
+                    CreateProjectile(tomatoPrefab);
+                    tomatoCount--;
                 }
             }
         }
+    }
+
+    void CreateProjectile(GameObject projectilePrefab)
+    {
+        GameObject projectile = Instantiate(projectilePrefab) as GameObject;
+        Vector3 positions2 = Input.mousePosition;
+        positions2.z = 3;
+        Vector3 position = Camera.main.ScreenToWorldPoint(positions2);
+        projectile.transform.position = position;
+        
+        //Velocity
+        Rigidbody rb = projectile.GetComponent<Rigidbody>();
+        rb.velocity = Camera.main.transform.forward * speed;
     }
 }

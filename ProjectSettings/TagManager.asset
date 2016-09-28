@@ -9,6 +9,7 @@ TagManager:
   - Kinect
   - Wall
   - Destructable
+  - Projectile
   layers:
   - Default
   - TransparentFX

@@ -9,47 +9,47 @@ Prefab:
     m_Modifications: []
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
-  m_RootGameObject: {fileID: 1000010377066388}
+  m_RootGameObject: {fileID: 1000011220599006}
   m_IsPrefabParent: 1
---- !u!1 &1000010377066388
+--- !u!1 &1000011220599006
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 4
   m_Component:
-  - 4: {fileID: 4000010504327254}
-  - 33: {fileID: 33000013159155864}
-  - 65: {fileID: 65000011019458494}
-  - 23: {fileID: 23000013805059768}
-  - 54: {fileID: 54000010257564860}
-  - 114: {fileID: 114000012335346972}
+  - 4: {fileID: 4000010019968784}
+  - 33: {fileID: 33000011671011714}
+  - 65: {fileID: 65000011996202542}
+  - 23: {fileID: 23000013045465350}
+  - 54: {fileID: 54000013500387740}
+  - 114: {fileID: 114000010757309134}
   m_Layer: 0
-  m_Name: bomb
-  m_TagString: Untagged
+  m_Name: CubeObstacle
+  m_TagString: Destructable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4000010504327254
+--- !u!4 &4000010019968784
 Transform:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000010377066388}
+  m_GameObject: {fileID: 1000011220599006}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.729489, y: 3.315427, z: -0.18572164}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2, y: 2, z: 2}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
---- !u!23 &23000013805059768
+--- !u!23 &23000013045465350
 MeshRenderer:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000010377066388}
+  m_GameObject: {fileID: 1000011220599006}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -57,7 +57,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: f3bb0853e387acb4bac664f569c85e0d, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_ProbeAnchor: {fileID: 0}
@@ -73,19 +73,19 @@ MeshRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingOrder: 0
---- !u!33 &33000013159155864
+--- !u!33 &33000011671011714
 MeshFilter:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000010377066388}
-  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
---- !u!54 &54000010257564860
+  m_GameObject: {fileID: 1000011220599006}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!54 &54000013500387740
 Rigidbody:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000010377066388}
+  m_GameObject: {fileID: 1000011220599006}
   serializedVersion: 2
   m_Mass: 1
   m_Drag: 0
@@ -95,26 +95,27 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!65 &65000011019458494
+--- !u!65 &65000011996202542
 BoxCollider:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000010377066388}
+  m_GameObject: {fileID: 1000011220599006}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &114000012335346972
+--- !u!114 &114000010757309134
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000010377066388}
+  m_GameObject: {fileID: 1000011220599006}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 318d2a31e1ee40d4da30f0340bfb6f2e, type: 3}
+  m_Script: {fileID: 11500000, guid: f61f86042ee44b14e8b071afdd592121, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pointsWhenDestroyed: 200

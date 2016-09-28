@@ -22,14 +22,8 @@ public class LevelSelection : MonoBehaviour {
             {
                 if (hit.collider.tag == "Clickable")
                 {
+                    // change to scene associated to planet
                     GameManager.Instance.ChangeScene("Level1Test");
-
-                    // Devoir changer par lvl
-                    GameVariables.current_weapon = "tomato";
-                    GameVariables.tomato = 5;
-                    GameVariables.bomb = 3;
-                    GameVariables.player_points = 0;
-                    GameVariables.lvl_point = 200;
                 }
                     
             }

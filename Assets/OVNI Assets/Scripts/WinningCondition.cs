@@ -14,11 +14,11 @@ public class WinningCondition : MonoBehaviour
     void OnGUI()
     {
         // Check if player has reached to point needed
-        if (GameVariables.player_points > GameVariables.lvl_point)
-        {
-            win = new Rect(Screen.width * 0.25f, Screen.height * 0.45f, Screen.width * 0.1f, Screen.width * 0.1f);
-            GUI.Box(win, "YOU WIN THE GAME");
-        }
+        //if (GameVariables.player_points > GameVariables.lvl_point)
+        //{
+        //    win = new Rect(Screen.width * 0.25f, Screen.height * 0.45f, Screen.width * 0.1f, Screen.width * 0.1f);
+        //    GUI.Box(win, "YOU WIN THE GAME");
+        //}
     }
 }
 	
