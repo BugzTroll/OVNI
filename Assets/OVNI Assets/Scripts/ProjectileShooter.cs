@@ -43,7 +43,7 @@ public class ProjectileShooter : MonoBehaviour {
     // Update is called once per frame
     void FixedUpdate ()
     {
-        if (Input.GetKeyDown("space")) // find kinect gesture eventually ? Auto detected by color of the sphere by the kinect later
+        if (Input.GetKeyDown("space")) // find kinect gesture eventually ?
         {
             // cycle between available projectile types
             int nextType = ((int)equippedProjectile) + 1;
