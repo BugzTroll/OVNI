@@ -18,6 +18,7 @@ public class MyViewManager : MonoBehaviour
     public GameObject DepthManager;
 
     [Range(0, 1)] public float ZBufferScale = 0.5f;
+    [Range(0, 1)] public float ColorBlobScale = 0.15f;
     public bool ShowDepth = false;
     public bool ZBufferEdgeDetection = false;
     [Range(1, 15)] public int ballRadius1 = 5;
@@ -106,36 +107,11 @@ public class MyViewManager : MonoBehaviour
                 //filter.HighThreshold = hightThresh;
                 filter.ApplyInPlace(zBuffer);
 
-                //var filter = new DifferenceEdgeDetector();
-                //filter.ApplyInPlace(zBuffer);
-
-                //var filter2 = new Threshold();
-                //filter2.ThresholdValue = lowThresh;
-                //filter2.ApplyInPlace(zBuffer);
-
-                //var bob = new BlobsFiltering();
-                //bob.CoupledSizeFiltering = true;
-                //bob.MinHeight = 8;
-                //bob.MinWidth = 8;
-                //bob.MaxHeight = 22;
-                //bob.MaxWidth = 22;
-                //bob.ApplyInPlace(zBuffer);
-                 
-                //int[,] kernel =
-                //{
-                //    {0, -1, 0},
-                //    {-1, 4, -1},
-                //    {0, -1, 0}
-                //};
-                //var filter = new Convolution(kernel);
-                //filter.ApplyInPlace(zBuffer);
-
                 if (ZBufferHoughDetection)
                 {
                     var temp = zBuffer;
                     var trans1 = new HoughCircleTransformation(ballRadius1);
                     trans1.ProcessImage(temp);
-                    //zBuffer = trans1.ToBitmap();
                     circles = circles.Concat(trans1.GetMostIntensiveCircles(1)).ToArray();
 
                     temp = zBuffer;
@@ -172,12 +148,40 @@ public class MyViewManager : MonoBehaviour
             ZBufferHoughDetection = false;
         }
 
+        //DetectProjectile();
+
         _Texture.Apply();
     }
 
 
     private Projectile DetectProjectile()
     {
+        /// Blob detection on color image to check if detected circles are balls
+        /*
+        var frameDescriptor = _colorManager.GetDescriptor();
+        var colorImg = ByteArray2Bmp(_colorManager.GetData(),
+            frameDescriptor.Width,
+            frameDescriptor.Height,
+            PixelFormat.Format32bppArgb);
+
+        var resizeFilter = new ResizeNearestNeighbor((int)(ColorBlobScale * frameDescriptor.Width),
+            (int)(ColorBlobScale * frameDescriptor.Height));
+
+        colorImg = resizeFilter.Apply(colorImg);
+        //colorImg.Save("C:\\Users\\nadm2208\\Desktop\\img.bmp");
+
+        var bob = new BlobsFiltering();
+        bob.CoupledSizeFiltering = true;
+        bob.MinHeight = ballRadius1*2;
+        bob.MinWidth = ballRadius1*2;
+        bob.MaxHeight = ballRadius2*2;
+        bob.MaxWidth = ballRadius2*2;
+        bob.ApplyInPlace(colorImg);
+        //colorImg.Save("C:\\Users\\nadm2208\\Desktop\\blob.bmp");
+        //_Texture = new Texture2D(colorImg.Width, colorImg.Height, TextureFormat.BGRA32, false);
+        //_Texture.LoadRawTextureData(Bmp2ByteArray(colorImg));
+        */
+
         //Display a red square were we detect a potential circle
         foreach (HoughCircle circle in circles)
         {
@@ -315,7 +319,6 @@ public class MyViewManager : MonoBehaviour
             for (int j = -1; j < 2; j++)
             {
                 avColor += _colorManager.GetColorTexture().GetPixel(x + i, y + j);
-                ;
             }
         }
         avColor /= 9;

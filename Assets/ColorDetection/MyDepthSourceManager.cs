@@ -7,6 +7,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using Windows.Kinect;
 using AForge.Imaging;
+using AForge.Imaging.Filters;
 
 public class MyDepthSourceManager : MonoBehaviour
 {
@@ -89,7 +90,6 @@ public class MyDepthSourceManager : MonoBehaviour
                 }
                 frame.Dispose();
                 frame = null;
-
             }
         }
     }
@@ -117,6 +117,13 @@ public class MyDepthSourceManager : MonoBehaviour
     {
         byte[] result = new byte[shortArray.Length * sizeof(short)];
         Buffer.BlockCopy(shortArray, 0, result, 0, result.Length);
+        return result;
+    }
+
+    ushort[] ByteArray2ShortArray(byte[] bytes)
+    {
+        ushort[] result = new ushort[bytes.Length / sizeof(ushort)];
+        Buffer.BlockCopy(bytes, 0, result, 0, result.Length);
         return result;
     }
 
