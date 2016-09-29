@@ -53,11 +53,17 @@ public class MyViewManager : MonoBehaviour
 
     private UnityEngine.Color[] colors =
     {
-        new Color(0.765f, 0.220f, 0.114f, 1.000f), //r
-        new Color(0.106f, 0.469f, 0.102f, 1.000f), //g
-        new Color(0.016f, 0.318f, 0.702f, 1.000f), //b
-        new Color(0.729f, 0.796f, 0.196f, 1.000f) //y
+        //new Color(0.765f, 0.220f, 0.114f, 1.000f), //r
+        //new Color(0.106f, 0.469f, 0.102f, 1.000f), //g
+        //new Color(0.016f, 0.318f, 0.702f, 1.000f), //b
+        //new Color(0.729f, 0.796f, 0.196f, 1.000f) //y
+
+        Color.red, //r
+        Color.green, //g
+        Color.blue, //b
+        Color.yellow //y
     };
+
 
     public Texture2D GetTexture()
     {
@@ -157,7 +163,6 @@ public class MyViewManager : MonoBehaviour
     private Projectile DetectProjectile()
     {
         /// Blob detection on color image to check if detected circles are balls
-        /*
         var frameDescriptor = _colorManager.GetDescriptor();
         var colorImg = ByteArray2Bmp(_colorManager.GetData(),
             frameDescriptor.Width,
@@ -168,19 +173,39 @@ public class MyViewManager : MonoBehaviour
             (int)(ColorBlobScale * frameDescriptor.Height));
 
         colorImg = resizeFilter.Apply(colorImg);
-        //colorImg.Save("C:\\Users\\nadm2208\\Desktop\\img.bmp");
+        //colorImg.Save("C:\\Users\\dubm3114\\Desktop\\img.bmp");
 
-        var bob = new BlobsFiltering();
-        bob.CoupledSizeFiltering = true;
-        bob.MinHeight = ballRadius1*2;
-        bob.MinWidth = ballRadius1*2;
-        bob.MaxHeight = ballRadius2*2;
-        bob.MaxWidth = ballRadius2*2;
-        bob.ApplyInPlace(colorImg);
-        //colorImg.Save("C:\\Users\\nadm2208\\Desktop\\blob.bmp");
-        //_Texture = new Texture2D(colorImg.Width, colorImg.Height, TextureFormat.BGRA32, false);
-        //_Texture.LoadRawTextureData(Bmp2ByteArray(colorImg));
-        */
+        //var bob = new BlobsFiltering();
+        //bob.CoupledSizeFiltering = true;
+        //bob.MinHeight = ballRadius1 * 2;
+        //bob.MinWidth = ballRadius1 * 2;
+        //bob.MaxHeight = ballRadius2 * 2;
+        //bob.MaxWidth = ballRadius2 * 2;
+        //bob.Apply(colorImg);
+
+        // Test with Color filter 
+        EuclideanColorFiltering filter = new EuclideanColorFiltering();
+        filter.CenterColor = new RGB(215, 30, 30);
+        filter.FillOutside = false;
+        filter.FillColor = new RGB(255, 0, 0);
+        filter.Radius = 100;
+        filter.ApplyInPlace(colorImg);
+        filter.CenterColor = new RGB(30, 30, 215);
+        filter.FillColor = new RGB(0, 0, 255);
+        filter.Radius = 100;
+        filter.ApplyInPlace(colorImg);
+        filter.CenterColor = new RGB(30, 180, 30);
+        filter.FillColor = new RGB(0, 255, 0);
+        filter.Radius = 100;
+        filter.ApplyInPlace(colorImg);
+        filter.CenterColor = new RGB(215, 215, 30);
+        filter.FillColor = new RGB(255, 255, 0);
+        filter.Radius = 100;
+        filter.ApplyInPlace(colorImg);
+
+        colorImg.Save("C:\\Users\\dubm3114\\Desktop\\Combo.bmp");
+        _Texture = new Texture2D(colorImg.Width, colorImg.Height, TextureFormat.BGRA32, false);
+        _Texture.LoadRawTextureData(Bmp2ByteArray(colorImg));
 
         //Display a red square were we detect a potential circle
         foreach (HoughCircle circle in circles)
@@ -191,7 +216,7 @@ public class MyViewManager : MonoBehaviour
                 {
                     if (x > 0 && x < _Texture.width && y > 0 && y < _Texture.height)
                     {
-                        _Texture.SetPixel(circle.X + x, circle.Y + y, new Color(1.0f, 0.5f, 0.45f));
+                       // _Texture.SetPixel(circle.X + x, circle.Y + y, new Color(1.0f, 0.5f, 0.45f));
                     }
                 }
             }
@@ -207,6 +232,8 @@ public class MyViewManager : MonoBehaviour
 
             var z = _depthManager.GetRawZ((int) point.X, (int) point.Y);
             var colorSpacePoint = sensor.CoordinateMapper.MapDepthPointToColorSpace(point, z);
+            colorSpacePoint.X *= ColorBlobScale;
+            colorSpacePoint.Y *= ColorBlobScale;
 
             if (!float.IsNegativeInfinity(colorSpacePoint.X) && !float.IsNegativeInfinity(colorSpacePoint.Y))
             {
@@ -221,8 +248,8 @@ public class MyViewManager : MonoBehaviour
                             {
                                 if (x > 0 && x < _Texture.width && y > 0 && y < _Texture.height)
                                 {
-                                    _Texture.SetPixel(circle.X + x, circle.Y + y, pixColor);
-                                    Debug.Log("BALLE !!!");
+                                    _Texture.SetPixel((int)colorSpacePoint.X + x, (int)colorSpacePoint.Y + y, Color.cyan);
+                                    //Debug.Log("BALLE !!!");
                                 }
                             }
                         }
@@ -318,7 +345,8 @@ public class MyViewManager : MonoBehaviour
         {
             for (int j = -1; j < 2; j++)
             {
-                avColor += _colorManager.GetColorTexture().GetPixel(x + i, y + j);
+                avColor += _Texture.GetPixel(x + i, y + j);
+                _Texture.SetPixel(x + i, y + j, Color.black);
             }
         }
         avColor /= 9;

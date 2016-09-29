@@ -12,6 +12,8 @@ public class MyColorSourceManager : MonoBehaviour
     private ColorFrameReader _Reader;
     private Texture2D _Texture;
     private byte[] _Data;
+    private byte[] _Background;
+    private int cpt = 2;
 
     public byte[] GetData()
     {
@@ -43,6 +45,7 @@ public class MyColorSourceManager : MonoBehaviour
             var frameDesc = _Sensor.ColorFrameSource.CreateFrameDescription(ColorImageFormat.Bgra);
             _Texture = new Texture2D(frameDesc.Width, frameDesc.Height, TextureFormat.BGRA32, false);
             _Data = new byte[frameDesc.BytesPerPixel*frameDesc.LengthInPixels];
+            _Background = new byte[frameDesc.BytesPerPixel * frameDesc.LengthInPixels];
 
             if (!_Sensor.IsOpen)
             {
@@ -60,7 +63,19 @@ public class MyColorSourceManager : MonoBehaviour
             if (frame != null)
             {
                 frame.CopyConvertedFrameDataToArray(_Data, ColorImageFormat.Bgra);
+
+                //for (int i = 0; i < _Data.Length; ++i)
+                //{
+                //    _Data[i] = (byte)Math.Max((_Background[i] - _Data[i]), 0);
+                //}
                 _Texture.LoadRawTextureData(_Data);
+
+            cpt--;
+            if (cpt == 0)
+            {
+                frame.CopyConvertedFrameDataToArray(_Background, ColorImageFormat.Bgra);
+            }
+
                 frame.Dispose();
                 frame = null;
             }
