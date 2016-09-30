@@ -9,7 +9,8 @@ public class GameLevelController : MonoBehaviour {
     public UnityEngine.UI.Text tomateText;
     public UnityEngine.UI.Text bombText;
 
-    private int score = 0;
+    public int score = 0;
+    public int scoreToWin;
 
 	// Use this for initialization
 	void Start () {
@@ -18,10 +19,6 @@ public class GameLevelController : MonoBehaviour {
         if (projectileShooterObject != null)
         {
             shooter = projectileShooterObject.GetComponent<ProjectileShooter>();
-        }
-        if (shooter == null)
-        {
-            Debug.Log("Cannot find 'ProjectileShooter' script");
         }
 
         score = 0;
