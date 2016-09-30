@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class LevelEnd : MonoBehaviour {
 
@@ -8,6 +9,7 @@ public class LevelEnd : MonoBehaviour {
 
     public GameObject levelEndPanel;                         //Store a reference to the Game Object pausePanel 
     public GameObject optionsTint;
+    public GameObject pauseBtn;
 
     // Use this for initialization
     void Start ()
@@ -33,15 +35,11 @@ public class LevelEnd : MonoBehaviour {
     public void RetryButtonClicked()
     {
         // Able Panel  + OptionTint when condition is met
-           
-     
-
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
     public void ReturnButtonClicked()
     {
-
-
-
+        GameManager.Instance.ChangeScene("LevelSelect");
     }
     void CheckAmmoCount()
     {
@@ -49,6 +47,7 @@ public class LevelEnd : MonoBehaviour {
         {
             levelEndPanel.SetActive(true);
             optionsTint.SetActive(true);
+            pauseBtn.SetActive(false);
         }
       
     }
