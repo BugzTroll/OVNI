@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
@@ -26,18 +27,19 @@ public class MyViewManager : MonoBehaviour
     [Range(0, 3)] public float ThresholdColor = 0.2f;
     [Range(0, 600)] public int ColorCheckSquareSize = 300;
     [Range(0, 600)] public int size = 300;
+    [Range(0, 30)] public int FrameCount = 10;
 
     public bool AnalyseSquareForColor = false;
     public bool AnalyseDepth = false;
     public bool ShowDepth = false;
     public bool ShowBlobDetection = false;
-    public bool ShowCannyEdgeDetection = false;
-    public bool ShowHoughDetection = false;
     public bool ShowDetection = false;
     public bool ShowColorFilter = false;
 
-
-    private HoughCircle[] circles;
+    private Blob[] blobs;
+    private bool isTracking = false;
+    private int TrackingLostCpt;
+    private List<Vector3> trajectory = new List<Vector3>(); 
     private MyColorSourceManager _colorManager;
     private MyDepthSourceManager _depthManager;
     private Texture2D _Texture;
@@ -72,6 +74,8 @@ public class MyViewManager : MonoBehaviour
         _Texture = ShowDepth
             ? _depthManager.GetDepthTexture()
             : _colorManager.GetColorTexture();
+
+        TrackingLostCpt = FrameCount;
     }
 
     void Update()
@@ -79,8 +83,6 @@ public class MyViewManager : MonoBehaviour
         _Texture = ShowDepth
             ? _depthManager.GetDepthTexture()
             : _colorManager.GetColorTexture();
-
-        circles = new HoughCircle[0];
 
         if (AnalyseDepth)
         {
@@ -94,49 +96,21 @@ public class MyViewManager : MonoBehaviour
 
             if (ShowBlobDetection)
             {
+
+                Threshold treshFilter = new Threshold(ThresoldBlob);
+                treshFilter.ApplyInPlace(zBuffer);
+
                 var blobFilter = new BlobCounter();
                 blobFilter.CoupledSizeFiltering = true;
+                blobFilter.FilterBlobs = true;
                 blobFilter.MinHeight = MinSizeBlob;
                 blobFilter.MinWidth = MinSizeBlob;
                 blobFilter.MaxHeight = MaxSizeBlob;
                 blobFilter.MaxWidth = MaxSizeBlob;
                 blobFilter.ProcessImage(zBuffer);
-
-                Threshold treshFilter = new Threshold(ThresoldBlob);
-                treshFilter.ApplyInPlace(zBuffer);
-
-                // create filter
-                ExtractBiggestBlob filter = new ExtractBiggestBlob();
-                // apply the filter
-                Bitmap biggestBlobsImage = filter.Apply(zBuffer);
-                if (biggestBlobsImage.Width *biggestBlobsImage.Height > size)
-                {
-                    biggestBlobsImage.Save("C:\\users\\dubm3114\\desktop\\gros_hobbit_jouflue.bmp");
-                }
-
-                if (ShowCannyEdgeDetection)
-                {
-                    //var filter = new CannyEdgeDetector();
-                    ////filter.LowThreshold = lowThresh;
-                    ////filter.HighThreshold = hightThresh;
-                    //filter.ApplyInPlace(zBuffer);
-
-                    if (ShowHoughDetection)
-                    {
-                        var temp = zBuffer;
-                        var trans1 = new HoughCircleTransformation(ballRadius1);
-                        trans1.ProcessImage(temp);
-                        circles = circles.Concat(trans1.GetMostIntensiveCircles(1)).ToArray();
-
-                        temp = zBuffer;
-                        var trans2 = new HoughCircleTransformation(ballRadius2);
-                        trans2.ProcessImage(temp);
-                        zBuffer = trans2.ToBitmap();
-                        circles = circles.Concat(trans2.GetMostIntensiveCircles(1)).ToArray();
-                        zBuffer = temp;
-                    }
-                }
+                blobs = blobFilter.GetObjectsInformation();
             }
+
             var convert = new GrayscaleToRGB();
             zBuffer = convert.Apply(zBuffer);
 
@@ -176,37 +150,26 @@ public class MyViewManager : MonoBehaviour
         colorImg = resizeFilter.Apply(colorImg);
         //colorImg.Save("C:\\Users\\dubm3114\\Desktop\\img.bmp");
 
-        //var blobFilter = new BlobsFiltering();
-        //blobFilter.CoupledSizeFiltering = true;
-        //blobFilter.MinHeight = ballRadius1 * 2;
-        //blobFilter.MinWidth = ballRadius1 * 2;
-        //blobFilter.MaxHeight = ballRadius2 * 2;
-        //blobFilter.MaxWidth = ballRadius2 * 2;
-        //blobFilter.Apply(colorImg);
-
         // Test with Color filter 
-        EuclideanColorFiltering filter = new EuclideanColorFiltering();
-        filter.CenterColor = new RGB(215, 30, 30);
-        filter.FillOutside = false;
-        filter.FillColor = new RGB(255, 0, 0);
-        filter.Radius = 100;
-        filter.ApplyInPlace(colorImg);
-        filter.CenterColor = new RGB(30, 30, 215);
-        filter.FillColor = new RGB(0, 0, 255);
-        filter.Radius = 100;
-        filter.ApplyInPlace(colorImg);
-        filter.CenterColor = new RGB(30, 180, 30);
-        filter.FillColor = new RGB(0, 255, 0);
-        filter.Radius = 100;
-        filter.ApplyInPlace(colorImg);
-        filter.CenterColor = new RGB(215, 215, 30);
-        filter.FillColor = new RGB(255, 255, 0);
-        filter.Radius = 100;
-        filter.ApplyInPlace(colorImg);
+        //EuclideanColorFiltering filter = new EuclideanColorFiltering();
+        //filter.CenterColor = new RGB(215, 30, 30);
+        //filter.FillOutside = false;
+        //filter.FillColor = new RGB(255, 0, 0);
+        //filter.Radius = 100;
+        //filter.ApplyInPlace(colorImg);
+        //filter.CenterColor = new RGB(30, 30, 215);
+        //filter.FillColor = new RGB(0, 0, 255);
+        //filter.Radius = 100;
+        //filter.ApplyInPlace(colorImg);
+        //filter.CenterColor = new RGB(30, 180, 30);
+        //filter.FillColor = new RGB(0, 255, 0);
+        //filter.Radius = 100;
+        //filter.ApplyInPlace(colorImg);
+        //filter.CenterColor = new RGB(215, 215, 30);
+        //filter.FillColor = new RGB(255, 255, 0);
+        //filter.Radius = 100;
+        //filter.ApplyInPlace(colorImg);
 
-
-
-        colorImg.Save("C:\\Users\\dubm3114\\Desktop\\Combo.bmp");
         var _ColorTexture = new Texture2D(colorImg.Width, colorImg.Height, TextureFormat.BGRA32, false);
         _ColorTexture.LoadRawTextureData(Bmp2ByteArray(colorImg));
 
@@ -215,50 +178,66 @@ public class MyViewManager : MonoBehaviour
             _Texture = _ColorTexture;
         }
 
-        //Display a red square were we detect a potential circle
-        foreach (HoughCircle circle in circles)
+        Blob TheBlob = getBiggestBlob();
+
+        if (TheBlob != null)
         {
-            for (int x = -5; x < 5; x++)
+            if (!isTracking)
             {
-                for (int y = -5; y < 5; y++)
+                TrackingLostCpt = FrameCount;
+                isTracking = true;
+            }
+
+            int z = _depthManager.GetRawZ((int)TheBlob.CenterOfGravity.X, (int)TheBlob.CenterOfGravity.Y);
+            Vector3 currentPos = new Vector3(TheBlob.CenterOfGravity.X,TheBlob.CenterOfGravity.Y, z);
+            trajectory.Add(currentPos);
+
+            if (ShowDepth)
+            {
+                foreach (Vector3 position in trajectory)
                 {
-                    if (x > 0 && x < _Texture.width && y > 0 && y < _Texture.height)
+                    for (int x = -5; x < 5; x++)
                     {
-                       _Texture.SetPixel(circle.X + x, circle.Y + y, new Color(1.0f, 0.5f, 0.45f));
+                        for (int y = -5; y < 5; y++)
+                        {
+                            if (x > 0 && x < _Texture.width && y > 0 && y < _Texture.height)
+                            {
+                                _Texture.SetPixel((int)(position[0]) + x, (int)(position[1]) + y, Color.red);
+                            }
+                        }
                     }
                 }
             }
-        }
+            
+            //Display a colored square were we detect a ball (the color of the square = color of the ball detected)
 
-        //Display a colored square were we detect a ball (the color of the square = color of the ball detected)
-        foreach (HoughCircle circle in circles)
-        {
-            var sensor = KinectSensor.GetDefault();
-            DepthSpacePoint point = new DepthSpacePoint();
-            point.X = (int) (circle.X/ZBufferScale);
-            point.Y = (int) (circle.Y/ZBufferScale);
-
-            var z = _depthManager.GetRawZ((int) point.X, (int) point.Y);
-            var colorSpacePoint = sensor.CoordinateMapper.MapDepthPointToColorSpace(point, z);
-            colorSpacePoint.X *= ColorBlobScale;
-            colorSpacePoint.Y *= ColorBlobScale;
-
-            if (!float.IsNegativeInfinity(colorSpacePoint.X) && !float.IsNegativeInfinity(colorSpacePoint.Y))
+            if (ShowColorFilter)
             {
-                var pixColor = ColorAverage((int) colorSpacePoint.X, (int) colorSpacePoint.Y, 1, _ColorTexture);
-                foreach (Color color in colors)
+                
+                var sensor = KinectSensor.GetDefault();
+                DepthSpacePoint point = new DepthSpacePoint();
+                point.X = (int)(TheBlob.CenterOfGravity.X / ZBufferScale);
+                point.Y = (int)(TheBlob.CenterOfGravity.Y / ZBufferScale);
+
+                var zDepth = _depthManager.GetRawZ((int)point.X, (int)point.Y);
+
+                var colorSpacePoint = sensor.CoordinateMapper.MapDepthPointToColorSpace(point, zDepth);
+                colorSpacePoint.X *= ColorBlobScale;
+                colorSpacePoint.Y *= ColorBlobScale;
+
+                if (!float.IsNegativeInfinity(colorSpacePoint.X) && !float.IsNegativeInfinity(colorSpacePoint.Y))
                 {
-                    if (ColorSquareDiff(pixColor, color) < ThresholdColor)
+                    var pixColor = ColorAverage((int)colorSpacePoint.X, (int)colorSpacePoint.Y, 1, _ColorTexture);
+
+                    if (true)//ColorSquareDiff(pixColor, color) < ThresholdColor
                     {
-                        for (int x = -5; x < 5; x++)
+                        for (int x = -1; x < 2; x++)
                         {
-                            for (int y = -5; y < 5; y++)
+                            for (int y = -1; y < 2; y++)
                             {
                                 if (x > 0 && x < _Texture.width && y > 0 && y < _Texture.height)
                                 {
-                                    _Texture.SetPixel((int)colorSpacePoint.X + x, (int)colorSpacePoint.Y + y, Color.cyan);
-                                    Debug.Log("X: " + colorSpacePoint.X);
-                                    Debug.Log("Y: " + colorSpacePoint.Y);
+                                    _Texture.SetPixel((int)colorSpacePoint.X + x, (int)colorSpacePoint.Y + y, Color.red);
                                 }
                             }
                         }
@@ -266,6 +245,17 @@ public class MyViewManager : MonoBehaviour
                 }
             }
         }
+        else if (isTracking)
+        {
+            TrackingLostCpt--;
+            if(TrackingLostCpt == 0)
+            {
+                isTracking = false;
+                trajectory.Clear();
+            }
+        }
+
+
         return Projectile.None;
     }
     
@@ -344,6 +334,22 @@ public class MyViewManager : MonoBehaviour
         return Math.Abs(col1.r - col2.r) +
                Math.Abs(col1.g - col2.g) +
                Math.Abs(col1.b - col2.b);
+    }
+
+    Blob getBiggestBlob()
+    {
+        Blob biggestBlob = null;
+        int maxArea = -1;
+
+        foreach (Blob element in blobs)
+        {
+            if (element.Area > maxArea)
+            {
+                maxArea = element.Area;
+                biggestBlob = element;
+            }
+        }
+        return biggestBlob;
     }
 
     Color ColorAverage(int x, int y, int radius, Texture2D texture)

@@ -31,8 +31,8 @@ public class MyDepthSourceManager : MonoBehaviour
 
     public ushort GetRawZ(int i, int j)
     {
-        return (ushort)((_BackgroundMean[i + j * GetDescriptor().Width] -
-                         _Data[i + j * GetDescriptor().Width]) / ScalingFactorZBuffer);
+        return (ushort)(_BackgroundMean[i + j * GetDescriptor().Width] -
+                         _Data[i + j * GetDescriptor().Width]/ScalingFactorZBuffer);
     }
 
     public Texture2D GetDepthTexture()
@@ -91,7 +91,6 @@ public class MyDepthSourceManager : MonoBehaviour
                         _BackgroundMean[i] = 0;
                         for (int j = 0; j < SizeOfBackgroundSuppression; ++j)
                         {
-                            
                             _BackgroundMean[i] += (ushort)(_Background[j, i] / (float)SizeOfBackgroundSuppression);
                         }
                     }
