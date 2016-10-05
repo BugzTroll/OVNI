@@ -10,6 +10,7 @@ TagManager:
   - Wall
   - Destructable
   - Projectile
+  - LockedLevel
   layers:
   - Default
   - TransparentFX

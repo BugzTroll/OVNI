@@ -9,6 +9,7 @@ using UnityEngine;
 
 public class GameManager
 {
+
     public enum GameState
     {
         NONE = -1,
@@ -20,8 +21,18 @@ public class GameManager
         QUIT = 5
         //OTHERS
     }
-
+    public enum GameLevel
+    {
+        Planete1 = 1,
+        Planete2,
+        Planete3,
+        Planete4,
+        Planete5,
+        //OTHERS PLANETS
+    }
     private static GameManager instance = new GameManager();
+
+    public List<GameLevel> LevelProgression = new List<GameLevel>();
 
     private GameState currentState;
 
@@ -120,9 +131,6 @@ public class GameManager
     void OnSceneChanged(Scene oldScene, Scene newScene)
     {
         Debug.Log("New scene loaded: " + newScene.buildIndex + ", " + newScene.name);
-
-
-
     }
 
     private void Quit()
