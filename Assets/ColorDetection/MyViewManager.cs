@@ -20,8 +20,8 @@ public class MyViewManager : MonoBehaviour
     public bool ShowDepth = false;
     public bool ShowThresholdedZBuffer = false;
     public bool ShowCurrentPos = false;
+    public bool ShowPositionOnTrajectory = false;
     public bool ShowTrajectory = false;
-
 
     private MyColorSourceManager _colorManager;
     private MyDepthSourceManager _depthManager;
@@ -38,17 +38,13 @@ public class MyViewManager : MonoBehaviour
         _depthManager = DepthManager.GetComponent<MyDepthSourceManager>();
         _colorManager = ColorManager.GetComponent<MyColorSourceManager>();
         _blobTracker = BlobTracker.GetComponent<MyBlobTracker>();
-
-        _texture = ShowDepth
-            ? _depthManager.GetDepthTexture()
-            : _colorManager.GetColorTexture();
     }
 
     void Update()
     {
         DisplayMode displayMode = ShowCurrentPos
             ? DisplayMode.CurrentPos
-            : ShowTrajectory
+            : ShowPositionOnTrajectory
                 ? DisplayMode.AllPosOnTrajectory
                 : DisplayMode.None;
 
@@ -70,51 +66,71 @@ public class MyViewManager : MonoBehaviour
             _texture = new Texture2D(bmp.Width, bmp.Height, TextureFormat.BGRA32, false);
             _texture.LoadRawTextureData(MyConverter.Bmp2ByteArray(bmp));
         }
-    
+
         int radius = 2;
 
         switch (displayMode)
         {
             case DisplayMode.AllPosOnTrajectory:
+            {
+                var trajectory = ShowDepth || ShowThresholdedZBuffer
+                    ? _blobTracker.GetDepthTrajectory()
+                    : _blobTracker.GetColorTrajectory();
+                foreach (var pos in trajectory)
                 {
-                    var trajectory = ShowDepth || ShowThresholdedZBuffer ? _blobTracker.GetDepthTrajectory() : _blobTracker.GetColorTrajectory();
-                    foreach (var pos in trajectory)
-                    {
-                        int iMax = pos[0] + radius < _texture.width ? (int)pos[0] + radius : _texture.width;
-                        int jMax = pos[1] + radius < _texture.height ? (int)pos[1] + radius : _texture.height;
+                    int iMax = pos[0] + radius < _texture.width ? (int) pos[0] + radius : _texture.width;
+                    int jMax = pos[1] + radius < _texture.height ? (int) pos[1] + radius : _texture.height;
 
-                        for (int i = pos[0] - radius > 0 ? (int)pos[0] - radius : 0; i <= iMax; i++)
+                    for (int i = pos[0] - radius > 0 ? (int) pos[0] - radius : 0; i <= iMax; i++)
+                    {
+                        for (int j = pos[1] - radius > 0 ? (int) pos[1] - radius : 0; j <= jMax; j++)
                         {
-                            for (int j = pos[1] - radius > 0 ? (int)pos[1] - radius : 0; j <= jMax; j++)
-                            {
-                                _texture.SetPixel(i, j, Color.red);
-                            }
+                            _texture.SetPixel(i, j, Color.red);
                         }
                     }
-                    break;
                 }
+                break;
+            }
             case DisplayMode.CurrentPos:
             {
-                var trajectory = ShowDepth || ShowThresholdedZBuffer ? _blobTracker.GetDepthTrajectory() : _blobTracker.GetColorTrajectory();
-                    if (trajectory.Count > 0)
-                    {
-                        var pos = trajectory.Last();
-                        int iMax = pos[0] + radius < _texture.width ? (int) pos[0] + radius : _texture.width;
-                        int jMax = pos[1] + radius < _texture.height ? (int) pos[1] + radius : _texture.height;
+                var trajectory = ShowDepth || ShowThresholdedZBuffer
+                    ? _blobTracker.GetDepthTrajectory()
+                    : _blobTracker.GetColorTrajectory();
+                if (trajectory.Count > 0)
+                {
+                    var pos = trajectory.Last();
+                    int iMax = pos[0] + radius < _texture.width ? (int) pos[0] + radius : _texture.width;
+                    int jMax = pos[1] + radius < _texture.height ? (int) pos[1] + radius : _texture.height;
 
-                        for (int i = pos[0] - radius > 0 ? (int) pos[0] - radius : 0; i <= iMax; i++)
+                    for (int i = pos[0] - radius > 0 ? (int) pos[0] - radius : 0; i <= iMax; i++)
+                    {
+                        for (int j = pos[1] - radius > 0 ? (int) pos[1] - radius : 0; j <= jMax; j++)
                         {
-                            for (int j = pos[1] - radius > 0 ? (int) pos[1] - radius : 0; j <= jMax; j++)
-                            {
-                                _texture.SetPixel(i, j, Color.red);
-                            }
+                            _texture.SetPixel(i, j, Color.red);
                         }
                     }
-                    break;
                 }
+                break;
+            }
         }
 
-    _texture.Apply();
+        if (ShowTrajectory)
+        {
+            var polyX = _blobTracker.GetPolyX();
+            var polyY = _blobTracker.GetPolyY();
+
+            for (int z = 1000; z < 4500; z+=5)
+            {
+                int x = (int) (polyX[0] + polyX[1]*z + polyX[2]*z*z/* + polyX[3]*z*z*z*/);
+                int y = (int) (polyY[0] + polyY[1]*z + polyY[2]*z*z /*+ polyY[3]*z*z*z*/);
+                if (x > 0 && x < _texture.width && y > 0 && y < _texture.height)
+                {
+                    _texture.SetPixel(x, y, Color.cyan);
+                }
+            }
+        }
+
+        _texture.Apply();
     }
 }
 

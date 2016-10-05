@@ -8,6 +8,9 @@ using System.Linq;
 using Windows.Kinect;
 using AForge.Imaging;
 using AForge.Imaging.Filters;
+using MathNet.Numerics;
+using MathNet.Numerics.LinearAlgebra;
+using MathNet.Numerics.LinearRegression;
 
 public class MyBlobTracker : MonoBehaviour
 {
@@ -31,6 +34,8 @@ public class MyBlobTracker : MonoBehaviour
     private GrayscaleToRGB _grey2Rgb;
     private List<Vector3> _trajectory;
     private Blob[] _blobs;
+    private double[] _polyY;
+    private double[] _polyX;
     private int _framesWithoutBlob;
 
     public List<Vector3> GetDepthTrajectory()
@@ -60,6 +65,15 @@ public class MyBlobTracker : MonoBehaviour
         return colorTrajectory;
     }
 
+    public double[] GetPolyY()
+    {
+        return _polyY;
+    }
+
+    public double[] GetPolyX()
+    {
+        return _polyX;
+    }
 
     public Bitmap GetResizedZBuffer()
     {
@@ -84,10 +98,15 @@ public class MyBlobTracker : MonoBehaviour
         _blobs = new Blob[0];
         _trajectory = new List<Vector3>();
         _framesWithoutBlob = 0;
+        _polyX = new double[] {0.0, 0.0, 0.0, 0.0};
+        _polyY = new double[] {0.0, 0.0, 0.0, 0.0};
     }
 
     void Update()
     {
+        _polyX = new double[] {0.0, 0.0, 0.0, 0.0};
+        _polyY = new double[] {0.0, 0.0, 0.0, 0.0};
+
         var depthFrameDescriptor = _depthManager.GetDescriptor();
 
         // Create Z-Buffer Bitmap From Depth Manager Data (16 bit/pixel greyscale)
@@ -141,6 +160,24 @@ public class MyBlobTracker : MonoBehaviour
             }
         }
 
+        if (_trajectory.Count > 3)
+        {
+            double[] xDouble = new double[_trajectory.Count];
+            double[] yDouble = new double[_trajectory.Count];
+            double[] zDouble = new double[_trajectory.Count];
+
+            for (int i = 0; i < _trajectory.Count; i++)
+            {
+                var pos = _trajectory[i];
+                xDouble[i] = pos[0];
+                yDouble[i] = pos[1];
+                zDouble[i] = pos[2];
+            }
+
+            _polyY = Fit.Polynomial(zDouble, yDouble, 2);
+            _polyX = Fit.Polynomial(zDouble, xDouble, 2);
+        }
+
         // Color Analysis
         var colorFrameDescriptor = _colorManager.GetDescriptor();
 
@@ -149,8 +186,8 @@ public class MyBlobTracker : MonoBehaviour
             colorFrameDescriptor.Height,
             PixelFormat.Format32bppArgb);
 
-        var resizeFilter = new ResizeNearestNeighbor((int) (ColorScale* colorFrameDescriptor.Width),
-            (int) (ColorScale* colorFrameDescriptor.Height));
+        var resizeFilter = new ResizeNearestNeighbor((int) (ColorScale*colorFrameDescriptor.Width),
+            (int) (ColorScale*colorFrameDescriptor.Height));
 
         _resizedColor = resizeFilter.Apply(colorImg);
     }
