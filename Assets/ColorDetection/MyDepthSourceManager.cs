@@ -1,148 +1,138 @@
 ﻿using System;
-using UnityEngine;
-using System.Collections;
-using System.Drawing;
 using System.Drawing.Imaging;
-using System.Linq;
-using System.Runtime.InteropServices;
+using UnityEngine;
 using Windows.Kinect;
-using AForge.Imaging;
 using AForge.Imaging.Filters;
 
 public class MyDepthSourceManager : MonoBehaviour
 {
-    public float ScalingFactorZBuffer = 10.0f;
-    public ushort SizeOfBackgroundSuppression = 5;
+    [Range(0, 100)] public float ScalingFactorZBuffer = 10.0f;
+    [Range(1, 30)] public ushort NbFrameForBackgroundSuppression = 5;
 
-    private KinectSensor _Sensor;
-    private DepthFrameReader _Reader;
-    private Texture2D _Texture;
-
-    private ushort[] _Data;
-    private ushort[,] _Background;
-    private ushort[] _BackgroundMean;
-    private int FrameCounter = 0;
-    private uint BufferSize;
+    private KinectSensor _sensor;
+    private DepthFrameReader _reader;
+    private Texture2D _texture;
+    private ushort[] _data;
+    private ushort[,] _background;
+    private ushort[] _backgroundMean;
+    private int _framecounter;
+    private uint _bufferSize;
 
     public byte[] GetData()
     {
-        return ShortArray2ByteArray(_Data);
+        return MyConverter.ShortArray2ByteArray(_data);
     }
 
     public ushort GetRawZ(int i, int j)
     {
-        return (ushort)(_BackgroundMean[i + j * GetDescriptor().Width] -
-                         _Data[i + j * GetDescriptor().Width]/ScalingFactorZBuffer);
+        return (ushort) (_backgroundMean[i + j*GetDescriptor().Width] -
+                         _data[i + j*GetDescriptor().Width]/ScalingFactorZBuffer);
     }
 
     public Texture2D GetDepthTexture()
     {
-        return _Texture;
+        return _texture;
     }
 
     public FrameDescription GetDescriptor()
     {
-        return _Sensor.DepthFrameSource.FrameDescription;
+        return _sensor.DepthFrameSource.FrameDescription;
     }
 
     void Start()
     {
-        _Sensor = KinectSensor.GetDefault();
-        
-        if (_Sensor != null)
-        {
-            _Reader = _Sensor.DepthFrameSource.OpenReader();
-            var frameDesc = _Sensor.DepthFrameSource.FrameDescription;
-            BufferSize = _Sensor.DepthFrameSource.FrameDescription.LengthInPixels;
+        _framecounter = 0;
+        _sensor = KinectSensor.GetDefault();
 
-            _Texture = new Texture2D(frameDesc.Width, frameDesc.Height, TextureFormat.R16, false);
-            _Data = new ushort[BufferSize];
-            _Background = new ushort[SizeOfBackgroundSuppression, BufferSize];
-            _BackgroundMean = new ushort[BufferSize];
-            if (!_Sensor.IsOpen)
+        if (_sensor != null)
+        {
+            _reader = _sensor.DepthFrameSource.OpenReader();
+            var frameDesc = _sensor.DepthFrameSource.FrameDescription;
+            _bufferSize = _sensor.DepthFrameSource.FrameDescription.LengthInPixels;
+
+            _texture = new Texture2D(frameDesc.Width, frameDesc.Height, TextureFormat.RGB24, false);
+            _data = new ushort[_bufferSize];
+
+            _background = new ushort[NbFrameForBackgroundSuppression, _bufferSize];
+            _backgroundMean = new ushort[_bufferSize];
+            if (!_sensor.IsOpen)
             {
-                _Sensor.Open();
+                _sensor.Open();
             }
         }
     }
 
     void Update()
     {
-        if (_Reader != null)
+        if (_reader != null)
         {
-            var frame = _Reader.AcquireLatestFrame();
+            var frame = _reader.AcquireLatestFrame();
             if (frame != null)
             {
-                // Get current Frame Data
-                frame.CopyFrameDataToArray(_Data);
+                var desc = frame.FrameDescription;
 
-                var a = (int)BufferSize * (FrameCounter % SizeOfBackgroundSuppression);
+                // Get current Frame Data
+                frame.CopyFrameDataToArray(_data);
+
+                var a = (int) _bufferSize*(_framecounter%NbFrameForBackgroundSuppression);
 
                 // Fill buffer for background supression
-                Buffer.BlockCopy(_Data, 0, _Background,
-                    (int)BufferSize * 2 * (FrameCounter % SizeOfBackgroundSuppression),
-                    (int)BufferSize * 2);
+                Buffer.BlockCopy(_data, 0, _background,
+                    (int) _bufferSize*2*(_framecounter%NbFrameForBackgroundSuppression),
+                    (int) _bufferSize*2);
 
                 // After the first N frame (aka when the backgroud supression buffer is full)
-                if (FrameCounter >= SizeOfBackgroundSuppression)
+                if (_framecounter >= NbFrameForBackgroundSuppression)
                 {
-                    for (int i = 0; i < BufferSize; ++i)
+                    for (int i = 0; i < _bufferSize; ++i)
                     {
-                        _BackgroundMean[i] = 0;
-                        for (int j = 0; j < SizeOfBackgroundSuppression; ++j)
+                        _backgroundMean[i] = 0;
+
+                        // Compute the background mean over the N saved frames
+                        for (int j = 0; j < NbFrameForBackgroundSuppression; ++j)
                         {
-                            _BackgroundMean[i] += (ushort)(_Background[j, i] / (float)SizeOfBackgroundSuppression);
+                            _backgroundMean[i] += (ushort) (_background[j, i]/(float) NbFrameForBackgroundSuppression);
                         }
                     }
 
                     // compute mean of backgrounds to supress
-                    for (int i = 0; i < BufferSize; ++i)
+                    for (int i = 0; i < _bufferSize; ++i)
                     {
-                        _Data[i] = (ushort)Math.Max((_BackgroundMean[i] - _Data[i]) * ScalingFactorZBuffer, 0);
+                        _data[i] = (ushort) Math.Max((_backgroundMean[i] - _data[i])*ScalingFactorZBuffer, 0);
                     }
                 }
+                var zBuffer = AForge.Imaging.Image.Convert16bppTo8bpp(MyConverter.ByteArray2Bmp(MyConverter.ShortArray2ByteArray(_data), 
+                    desc.Width,
+                    desc.Height,
+                    PixelFormat.Format16bppGrayScale));
+                var grey2Rgb = new GrayscaleToRGB();
+                zBuffer = grey2Rgb.Apply(zBuffer);
 
-                _Texture.LoadRawTextureData(ShortArray2ByteArray(_Data));
+                _texture.LoadRawTextureData(MyConverter.Bmp2ByteArray(zBuffer));
 
                 frame.Dispose();
                 frame = null;
-                FrameCounter++;
+                _framecounter++;
             }
         }
     }
 
     void OnApplicationQuit()
     {
-        if (_Reader != null)
+        if (_reader != null)
         {
-            _Reader.Dispose();
-            _Reader = null;
+            _reader.Dispose();
+            _reader = null;
         }
 
-        if (_Sensor != null)
+        if (_sensor != null)
         {
-            if (_Sensor.IsOpen)
+            if (_sensor.IsOpen)
             {
-                _Sensor.Close();
+                _sensor.Close();
             }
 
-            _Sensor = null;
+            _sensor = null;
         }
     }
-
-    #region Converter
-    byte[] ShortArray2ByteArray(ushort[] shortArray)
-    {
-        byte[] result = new byte[shortArray.Length * sizeof(short)];
-        Buffer.BlockCopy(shortArray, 0, result, 0, result.Length);
-        return result;
-    }
-
-    ushort[] ByteArray2ShortArray(byte[] bytes)
-    {
-        ushort[] result = new ushort[bytes.Length / sizeof(ushort)];
-        Buffer.BlockCopy(bytes, 0, result, 0, result.Length);
-        return result;
-    }
-    #endregion
 }

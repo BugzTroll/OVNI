@@ -1,81 +1,57 @@
-﻿using System;
-using UnityEngine;
-using System.Collections;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.Runtime.InteropServices;
+﻿using UnityEngine;
 using Windows.Kinect;
 
 public class MyColorSourceManager : MonoBehaviour
 {
-    private KinectSensor _Sensor;
-    private ColorFrameReader _Reader;
-    private Texture2D _Texture;
-    private byte[] _Data;
-    private byte[] _Background;
-    private int cpt = 2;
+    private KinectSensor _sensor;
+    private ColorFrameReader _reader;
+    private Texture2D _texture;
+    private byte[] _data;
 
     public byte[] GetData()
     {
-        return _Data;
+        return _data;
     }
 
     public Texture2D GetColorTexture()
     {
-        return _Texture;
-    }
-    public int GetRawSize()
-    {
-        return _Sensor.ColorFrameSource.FrameDescription.Width * _Sensor.ColorFrameSource.FrameDescription.Height;
+        return _texture;
     }
 
     public FrameDescription GetDescriptor()
     {
-        return _Sensor.ColorFrameSource.FrameDescription;
+        return _sensor.ColorFrameSource.FrameDescription;
     }
 
     void Start()
     {
-        _Sensor = KinectSensor.GetDefault();
+        _sensor = KinectSensor.GetDefault();
 
-        if (_Sensor != null)
+        if (_sensor != null)
         {
-            _Reader = _Sensor.ColorFrameSource.OpenReader();
+            _reader = _sensor.ColorFrameSource.OpenReader();
 
-            var frameDesc = _Sensor.ColorFrameSource.CreateFrameDescription(ColorImageFormat.Bgra);
-            _Texture = new Texture2D(frameDesc.Width, frameDesc.Height, TextureFormat.BGRA32, false);
-            _Data = new byte[frameDesc.BytesPerPixel*frameDesc.LengthInPixels];
-            _Background = new byte[frameDesc.BytesPerPixel * frameDesc.LengthInPixels];
+            var frameDesc = _sensor.ColorFrameSource.CreateFrameDescription(ColorImageFormat.Bgra);
+            _texture = new Texture2D(frameDesc.Width, frameDesc.Height, TextureFormat.BGRA32, false);
+            _data = new byte[frameDesc.BytesPerPixel*frameDesc.LengthInPixels];
 
-            if (!_Sensor.IsOpen)
+            if (!_sensor.IsOpen)
             {
-                _Sensor.Open();
+                _sensor.Open();
             }
         }
     }
 
     void Update()
     {
-        if (_Reader != null)
+        if (_reader != null)
         {
-            var frame = _Reader.AcquireLatestFrame();
+            var frame = _reader.AcquireLatestFrame();
 
             if (frame != null)
             {
-                frame.CopyConvertedFrameDataToArray(_Data, ColorImageFormat.Bgra);
-
-                //for (int i = 0; i < _Data.Length; ++i)
-                //{
-                //    _Data[i] = (byte)Math.Max((_Background[i] - _Data[i]), 0);
-                //}
-                _Texture.LoadRawTextureData(_Data);
-
-            cpt--;
-            if (cpt == 0)
-            {
-                frame.CopyConvertedFrameDataToArray(_Background, ColorImageFormat.Bgra);
-            }
-
+                frame.CopyConvertedFrameDataToArray(_data, ColorImageFormat.Bgra);
+                _texture.LoadRawTextureData(_data);
                 frame.Dispose();
                 frame = null;
             }
@@ -84,20 +60,20 @@ public class MyColorSourceManager : MonoBehaviour
 
     void OnApplicationQuit()
     {
-        if (_Reader != null)
+        if (_reader != null)
         {
-            _Reader.Dispose();
-            _Reader = null;
+            _reader.Dispose();
+            _reader = null;
         }
 
-        if (_Sensor != null)
+        if (_sensor != null)
         {
-            if (_Sensor.IsOpen)
+            if (_sensor.IsOpen)
             {
-                _Sensor.Close();
+                _sensor.Close();
             }
 
-            _Sensor = null;
+            _sensor = null;
         }
     }
 }

@@ -1,16 +1,15 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class MyView : MonoBehaviour
 {
     public GameObject ViewManager;
     private MyViewManager _viewManager;
-    
-    void Start ()
+
+    void Start()
     {
         gameObject.GetComponent<Renderer>().material.SetTextureScale("_MainTex", new Vector2(-1, 1));
     }
-    
+
     void Update()
     {
         if (ViewManager == null)
