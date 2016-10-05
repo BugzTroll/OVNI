@@ -24,6 +24,7 @@ GameObject:
   - 23: {fileID: 23000013045465350}
   - 54: {fileID: 54000013500387740}
   - 114: {fileID: 114000010757309134}
+  - 114: {fileID: 114000010339205546}
   m_Layer: 0
   m_Name: CubeObstacle
   m_TagString: Destructable
@@ -107,6 +108,18 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &114000010339205546
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000011220599006}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 503f70b9954d1924f89eb08a127bb7e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseDamage: 20
 --- !u!114 &114000010757309134
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -119,3 +132,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pointsWhenDestroyed: 200
+  durability: 400

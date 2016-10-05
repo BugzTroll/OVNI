@@ -49,6 +49,7 @@ public class ProjectileShooter : MonoBehaviour {
             int nextType = ((int)equippedProjectile) + 1;
             nextType = nextType % ((int)ProjectileType.TYPE_COUNT);
             equippedProjectile = (ProjectileType)nextType;
+            Debug.Log("Switched to: " + equippedProjectile.ToString());
         }
 
         if (Input.GetMouseButtonDown(0))

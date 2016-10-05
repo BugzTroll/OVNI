@@ -6,7 +6,7 @@ public class DurabilityManager : MonoBehaviour
     private GameLevelController gameController;
 
     public int pointsWhenDestroyed;
-    public int durability;
+    public float durability;
 
 
     void Start()
@@ -24,23 +24,37 @@ public class DurabilityManager : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        GameObject projectile;
+        float damageDone = 0;
+        GameObject projectileObject = collision.gameObject;
+        Projectile proj = projectileObject.GetComponent<Projectile>();
 
-        if (collision.gameObject.tag == "Projectile")
+        if (projectileObject.tag == "Projectile" && proj)
         {
-            projectile = collision.gameObject;
+            if (proj.destroyOnFirstHit)
+            {
+                Destroy(projectileObject);
+            }
         }
-        Debug.Log(collision.relativeVelocity.magnitude);
-        //if (collision.collider.gameObject.tag == "Projectile")
-        //{
 
-        if (collision.relativeVelocity.magnitude > 10)
+        DamageDealer damageDealer = collision.gameObject.GetComponent<DamageDealer>();
+        if (damageDealer)
+        {
+            int dmg = damageDealer.baseDamage;
+
+            damageDone += (dmg * collision.relativeVelocity.magnitude);
+            durability -= damageDone;
+
+            Debug.Log("Damage done: " + damageDone);
+            Debug.Log("Remaining durability: " + durability);
+        }
+
+        if (durability <= 0)
+        {
+            Destroy(gameObject);
+            // Destruction animation (?) would go here
             gameController.AddScore(pointsWhenDestroyed);
 
-        // temp
-        //Destroy(collision.collider.gameObject);
-        //Destroy(gameObject);
-        //}
-
+            Debug.Log("Object destroyed! Points earned: " + pointsWhenDestroyed);
+        }
     }
 }
