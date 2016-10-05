@@ -18,7 +18,7 @@ public class ProjectileShooter : MonoBehaviour {
     public int bombCount;
 
     // change per prefab
-    public float speed = 100;
+    public float speed;
 
     //Rect rect;
     //Texture texturebomb;

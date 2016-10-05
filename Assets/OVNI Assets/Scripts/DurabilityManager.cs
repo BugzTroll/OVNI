@@ -1,10 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class OnDestroyPoints : MonoBehaviour
+public class DurabilityManager : MonoBehaviour
 {
     private GameLevelController gameController;
+
     public int pointsWhenDestroyed;
+    public int durability;
+
 
     void Start()
     {
@@ -21,14 +24,23 @@ public class OnDestroyPoints : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        if (collision.collider.gameObject.tag == "Projectile")
+        GameObject projectile;
+
+        if (collision.gameObject.tag == "Projectile")
         {
+            projectile = collision.gameObject;
+        }
+        Debug.Log(collision.relativeVelocity.magnitude);
+        //if (collision.collider.gameObject.tag == "Projectile")
+        //{
+
+        if (collision.relativeVelocity.magnitude > 10)
             gameController.AddScore(pointsWhenDestroyed);
 
-            // temp
-            Destroy(collision.collider.gameObject);
-            Destroy(gameObject);
-        }
-        
+        // temp
+        //Destroy(collision.collider.gameObject);
+        //Destroy(gameObject);
+        //}
+
     }
 }

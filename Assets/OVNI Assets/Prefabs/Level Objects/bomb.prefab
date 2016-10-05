@@ -24,6 +24,7 @@ GameObject:
   - 23: {fileID: 23000013805059768}
   - 54: {fileID: 54000010257564860}
   - 114: {fileID: 114000012335346972}
+  - 114: {fileID: 114000013816609652}
   m_Layer: 0
   m_Name: bomb
   m_TagString: Projectile
@@ -38,7 +39,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000010377066388}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.729489, y: 3.315427, z: -0.18572164}
+  m_LocalPosition: {x: 0, y: 1.562, z: -1.821}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
@@ -118,3 +119,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 318d2a31e1ee40d4da30f0340bfb6f2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  explosionPrefab: {fileID: 1000012420320784, guid: 0a985fd0f05306249a3e317dd6e8e79f,
+    type: 2}
+--- !u!114 &114000013816609652
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000010377066388}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 503f70b9954d1924f89eb08a127bb7e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseDamage: 50

@@ -3,6 +3,8 @@ using System.Collections;
 
 public class ExplodingProjectile : MonoBehaviour {
 
+    public GameObject explosionPrefab;
+
 	// Use this for initialization
 	void Start () {
 	
@@ -10,15 +12,11 @@ public class ExplodingProjectile : MonoBehaviour {
 
     void OnCollisionEnter(Collision col)
     {
-        //if (GameVariables.current_weapon == "bomb")
-        //{
-        //    GameObject prefab = Resources.Load("Explosion") as GameObject;
-        //    GameObject Bomb = Instantiate(prefab) as GameObject;
-        //    Bomb.transform.position = transform.position;
+        //GameObject prefab = Resources.Load("Explosion") as GameObject;
+        GameObject explosion = Instantiate(explosionPrefab) as GameObject;
+        explosion.transform.position = transform.position;
 
-        //    Destroy(Bomb, 5);
-        //    Destroy(gameObject);
-
-        //}
+        Destroy(explosion, 5);
+        Destroy(gameObject);
     }
 }
