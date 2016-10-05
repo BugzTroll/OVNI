@@ -121,8 +121,8 @@ public class MyViewManager : MonoBehaviour
 
             for (int z = 1000; z < 4500; z+=5)
             {
-                int x = (int) (polyX[0] + polyX[1]*z + polyX[2]*z*z/* + polyX[3]*z*z*z*/);
-                int y = (int) (polyY[0] + polyY[1]*z + polyY[2]*z*z /*+ polyY[3]*z*z*z*/);
+                int x = (int) (polyX[0] + polyX[1]*z + polyX[2]*z*z + polyX[3]*z*z*z);
+                int y = (int) (polyY[0] + polyY[1]*z + polyY[2]*z*z + polyY[3]*z*z*z);
                 if (x > 0 && x < _texture.width && y > 0 && y < _texture.height)
                 {
                     _texture.SetPixel(x, y, Color.cyan);

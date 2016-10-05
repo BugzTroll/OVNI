@@ -160,7 +160,7 @@ public class MyBlobTracker : MonoBehaviour
             }
         }
 
-        if (_trajectory.Count > 3)
+        if (_trajectory.Count > 4)
         {
             double[] xDouble = new double[_trajectory.Count];
             double[] yDouble = new double[_trajectory.Count];
@@ -174,8 +174,8 @@ public class MyBlobTracker : MonoBehaviour
                 zDouble[i] = pos[2];
             }
 
-            _polyY = Fit.Polynomial(zDouble, yDouble, 2);
-            _polyX = Fit.Polynomial(zDouble, xDouble, 2);
+            _polyY = Fit.Polynomial(zDouble, yDouble, 3);
+            _polyX = Fit.Polynomial(zDouble, xDouble, 3);
         }
 
         // Color Analysis
