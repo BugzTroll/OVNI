@@ -33,27 +33,27 @@ public class LevelSelection : MonoBehaviour {
             {
                 if (hit.collider.tag == "Clickable")
                 {
-                    if (hit.collider.name == "Level1SelectSphere")
+                    if (hit.collider.name == "Planete1")
                     {
                         // change to scene associated to planet
                         GameManager.Instance.ChangeScene("Planete1");                      
                     }
-                    if (hit.collider.name == "Level2SelectSphere")
+                    if (hit.collider.name == "Planete2")
                     {
                         // change to scene associated to planet
                         GameManager.Instance.ChangeScene("Planete2");
                     }
-                    if (hit.collider.name == "Level3SelectSphere")
+                    if (hit.collider.name == "Planete3")
                     {
                         // change to scene associated to planet
                         GameManager.Instance.ChangeScene("Planete3");
                     }
-                    if (hit.collider.name == "Level4SelectSphere")
+                    if (hit.collider.name == "Planete4")
                     {
                         // change to scene associated to planet
                         GameManager.Instance.ChangeScene("Planete4");
                     }
-                    if (hit.collider.name == "Level5SelectSphere")
+                    if (hit.collider.name == "Planete5")
                     {
                         // change to scene associated to planet
                         GameManager.Instance.ChangeScene("Planete5");
