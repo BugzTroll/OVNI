@@ -116,16 +116,19 @@ public class MyViewManager : MonoBehaviour
 
         if (ShowTrajectory)
         {
-            var polyX = _blobTracker.GetPolyX();
-            var polyY = _blobTracker.GetPolyY();
-
-            for (int z = 1000; z < 4500; z+=5)
+            var poly = _blobTracker.GetPoly();
+            var linearCoef = _blobTracker.GetLinX();
+            if (poly != null && linearCoef != null)
             {
-                int x = (int) (polyX[0] + polyX[1]*z + polyX[2]*z*z + polyX[3]*z*z*z);
-                int y = (int) (polyY[0] + polyY[1]*z + polyY[2]*z*z + polyY[3]*z*z*z);
-                if (x > 0 && x < _texture.width && y > 0 && y < _texture.height)
+                for (int z = 500; z < 2500; z++)
                 {
-                    _texture.SetPixel(x, y, Color.cyan);
+                    int x = (int) (linearCoef[0]*z + linearCoef[1]);
+                    int y = (int) (poly[0] + poly[1]*z + poly[2]*z*z);
+
+                    if (x > 0 && x < _texture.width && y > 0 && y < _texture.height)
+                    {
+                        _texture.SetPixel(x, y, Color.cyan);
+                    }
                 }
             }
         }

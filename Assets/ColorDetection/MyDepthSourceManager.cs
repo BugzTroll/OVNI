@@ -74,8 +74,6 @@ public class MyDepthSourceManager : MonoBehaviour
                 // Get current Frame Data
                 frame.CopyFrameDataToArray(_data);
 
-                var a = (int) _bufferSize*(_framecounter%NbFrameForBackgroundSuppression);
-
                 // Fill buffer for background supression
                 Buffer.BlockCopy(_data, 0, _background,
                     (int) _bufferSize*2*(_framecounter%NbFrameForBackgroundSuppression),

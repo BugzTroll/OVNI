@@ -22,6 +22,7 @@ public class MyBlobTracker : MonoBehaviour
     [Range(1, 30)] public int MinSizeBlob = 6;
     [Range(1, 50)] public int MaxSizeBlob = 20;
     [Range(0, 255)] public int ThresholdBlob = 30;
+    [Range(0, 50)] public int ThresholdTrajectory = 10;
     [Range(0, 30)] public int FramesWithoutBlobNeededToClear = 10;
 
     private MyDepthSourceManager _depthManager;
@@ -34,8 +35,9 @@ public class MyBlobTracker : MonoBehaviour
     private GrayscaleToRGB _grey2Rgb;
     private List<Vector3> _trajectory;
     private Blob[] _blobs;
-    private double[] _polyY;
-    private double[] _polyX;
+    private double[] _poly;
+    private float[] _lin;
+    private float _lastDist;
     private int _framesWithoutBlob;
 
     public List<Vector3> GetDepthTrajectory()
@@ -65,14 +67,14 @@ public class MyBlobTracker : MonoBehaviour
         return colorTrajectory;
     }
 
-    public double[] GetPolyY()
+    public double[] GetPoly()
     {
-        return _polyY;
+        return _poly;
     }
 
-    public double[] GetPolyX()
+    public float[] GetLinX()
     {
-        return _polyX;
+        return _lin;
     }
 
     public Bitmap GetResizedZBuffer()
@@ -98,15 +100,13 @@ public class MyBlobTracker : MonoBehaviour
         _blobs = new Blob[0];
         _trajectory = new List<Vector3>();
         _framesWithoutBlob = 0;
-        _polyX = new double[] {0.0, 0.0, 0.0, 0.0};
-        _polyY = new double[] {0.0, 0.0, 0.0, 0.0};
+        _lin = null;
+        _poly = null;
+        _lastDist = 0;
     }
 
     void Update()
     {
-        _polyX = new double[] {0.0, 0.0, 0.0, 0.0};
-        _polyY = new double[] {0.0, 0.0, 0.0, 0.0};
-
         var depthFrameDescriptor = _depthManager.GetDescriptor();
 
         // Create Z-Buffer Bitmap From Depth Manager Data (16 bit/pixel greyscale)
@@ -147,9 +147,28 @@ public class MyBlobTracker : MonoBehaviour
             _framesWithoutBlob = 0;
             int x = (int) biggestBlob.CenterOfGravity.X;
             int y = (int) biggestBlob.CenterOfGravity.Y;
-            int z = _depthManager.GetRawZ(x, y);
-            var pos = new Vector3(x, y, z);
-            _trajectory.Add(pos);
+            int z = _depthManager.GetRawZ((int)(x/ZBufferScale), (int)(y/ZBufferScale));
+            if (z > KinectSensor.GetDefault().DepthFrameSource.DepthMinReliableDistance &&
+                z < KinectSensor.GetDefault().DepthFrameSource.DepthMaxReliableDistance &&
+                z > _lastDist)
+            {
+                if (_trajectory.Count > 2 && _poly != null && _lin != null)
+                {
+                    int xcheck = (int)(_lin[0] * z + _lin[1]);
+                    int ycheck = (int)(_poly[0] + _poly[1] * z + _poly[2] * z * z);
+                    if (Math.Abs(x - xcheck) < ThresholdTrajectory && Math.Abs(y - ycheck) < ThresholdTrajectory)
+                    {
+                        _trajectory.Add(new Vector3(x, y, z));
+                        _lastDist = z;
+                    }
+                }
+                else if (_trajectory.Count < 3)
+                {
+                    _trajectory.Add(new Vector3(x, y, z));
+                    _lastDist = z;
+                }
+            }
+
         }
         else
         {
@@ -157,25 +176,31 @@ public class MyBlobTracker : MonoBehaviour
             if (_framesWithoutBlob >= FramesWithoutBlobNeededToClear)
             {
                 _trajectory.Clear();
+                _lastDist = 0;
+                _poly = null;
+                _lin = null;
             }
         }
 
-        if (_trajectory.Count > 4)
+        if (_trajectory.Count > 2)
         {
-            double[] xDouble = new double[_trajectory.Count];
-            double[] yDouble = new double[_trajectory.Count];
-            double[] zDouble = new double[_trajectory.Count];
+            _lin = new float[2];
+            _lin[0] = (_trajectory[0][0] - _trajectory.Last()[0])/(_trajectory[0][2] - _trajectory.Last()[2]);
+            _lin[1] = _trajectory[0][0] - _lin[0]*_trajectory[0][2];
+
+            // generate parametric data for the polynomial regression
+            double[] zData = new double[_trajectory.Count];
+            double[] yData = new double[_trajectory.Count];
 
             for (int i = 0; i < _trajectory.Count; i++)
             {
                 var pos = _trajectory[i];
-                xDouble[i] = pos[0];
-                yDouble[i] = pos[1];
-                zDouble[i] = pos[2];
+                zData[i] = pos[2];
+                yData[i] = pos[1];
             }
 
-            _polyY = Fit.Polynomial(zDouble, yDouble, 3);
-            _polyX = Fit.Polynomial(zDouble, xDouble, 3);
+            // find polynomial coefficients
+            _poly = Fit.Polynomial(zData, yData, 2);
         }
 
         // Color Analysis
