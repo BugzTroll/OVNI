@@ -39,6 +39,7 @@ public class MyBlobTracker : MonoBehaviour
     private float[] _lin;
     private float _lastDist;
     private int _framesWithoutBlob;
+    private System.Drawing.Color BlobColor;
 
     public List<Vector3> GetDepthTrajectory()
     {
@@ -51,18 +52,27 @@ public class MyBlobTracker : MonoBehaviour
         List<Vector3> colorTrajectory = new List<Vector3>();
         foreach (var pos in _trajectory)
         {
+            int cpt = 0;
             DepthSpacePoint point = new DepthSpacePoint();
-            point.X = (int) (pos[0]/ZBufferScale);
-            point.Y = (int) (pos[1]/ZBufferScale);
+            point.X = (int)(pos[0] / ZBufferScale);
+            point.Y = (int)(pos[1] / ZBufferScale);
 
-            var z = _depthManager.GetRawZ((int) point.X, (int) point.Y);
+            var z = _depthManager.GetRawZ((int)point.X, (int)point.Y);
 
             var colorSpacePoint = sensor.CoordinateMapper.MapDepthPointToColorSpace(point, z);
-            colorSpacePoint.X *= ColorScale;
-            colorSpacePoint.Y *= ColorScale;
 
-            colorTrajectory.Add(new Vector3(colorSpacePoint.X, colorSpacePoint.Y, 0.0f));
+            if (!float.IsNegativeInfinity(colorSpacePoint.X) && !float.IsNegativeInfinity(colorSpacePoint.Y))
+            {
+                colorSpacePoint.X *= ColorScale;
+                colorSpacePoint.Y *= ColorScale;
+                colorTrajectory.Add(new Vector3(colorSpacePoint.X, colorSpacePoint.Y, 0.0f));
+            }
+            else
+            {
+                cpt++;
+            }
         }
+        Debug.Log("cpt\n");
 
         return colorTrajectory;
     }
@@ -215,8 +225,48 @@ public class MyBlobTracker : MonoBehaviour
             (int) (ColorScale*colorFrameDescriptor.Height));
 
         _resizedColor = resizeFilter.Apply(colorImg);
+
+        if (_trajectory.Count > 2)
+            BlobColor = getBallColor();
     }
 
+    private System.Drawing.Color getBallColor()
+    {
+        int[] colorMax = {0, 0, 0};
+        System.Drawing.Color[] colors = {System.Drawing.Color.Red, System.Drawing.Color.Green, System.Drawing.Color.Blue};
+        List <Vector3> colorTrajectory = GetColorTrajectory();
+
+        foreach (Vector3 ballPosition in colorTrajectory)
+        {
+            for (int x = -1; x < 2; x++)
+            {
+                for (int y = -1; y < 2; y++)
+                {
+                    System.Drawing.Color current = _resizedColor.GetPixel((int)ballPosition[0] + x, (int)ballPosition[1] + y);
+
+                    short min = -1;
+                    float distMin = float.MaxValue;
+
+                    for (short c = 0; c < colors.Length; c++)
+                    {
+                        float dist = MyHelper.ColorSquareDiff(current, colors[c]);
+
+                        if (dist < distMin)
+                        {
+                            min = c;
+                            distMin = dist;
+                        }
+                    }
+
+                    colorMax[min] += 1;
+                }
+            }  
+        }
+
+        int maxValue = colorMax.Max();
+        int maxIndex = colorMax.ToList().IndexOf(maxValue);
+        return colors[maxIndex];
+    }
     private Blob GetBiggestBlob()
     {
         Blob biggestBlob = null;

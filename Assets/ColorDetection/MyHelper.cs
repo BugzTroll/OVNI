@@ -3,11 +3,11 @@ using UnityEngine;
 
 public class MyHelper : MonoBehaviour
 {
-    public static float ColorSquareDiff(Color col1, Color col2)
+    public static float ColorSquareDiff(System.Drawing.Color col1, System.Drawing.Color col2)
     {
-        return Math.Abs(col1.r - col2.r) +
-               Math.Abs(col1.g - col2.g) +
-               Math.Abs(col1.b - col2.b);
+        return Math.Abs(col1.R - col2.R) +
+               Math.Abs(col1.G - col2.G) +
+               Math.Abs(col1.B - col2.B);
     }
 
     public static Color ColorAverage(int x, int y, int radius, Texture2D texture)
