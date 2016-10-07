@@ -47,7 +47,11 @@ public class DurabilityManager : MonoBehaviour
             Debug.Log("Damage done: " + damageDone);
             Debug.Log("Remaining durability: " + durability);
         }
+    }
 
+
+    void Update()
+    {
         if (durability <= 0)
         {
             Destroy(gameObject);

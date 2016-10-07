@@ -122,6 +122,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   explosionPrefab: {fileID: 1000012420320784, guid: 0a985fd0f05306249a3e317dd6e8e79f,
     type: 2}
+  explosionForce: 2
+  particleMultiplier: 1
 --- !u!114 &114000013590158488
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -145,4 +147,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 503f70b9954d1924f89eb08a127bb7e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseDamage: 50
+  baseDamage: 100

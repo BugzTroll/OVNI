@@ -123,6 +123,7 @@ GameObject:
   - 4: {fileID: 4000011431405872}
   - 114: {fileID: 114000013768208164}
   - 114: {fileID: 114000012705971328}
+  - 114: {fileID: 114000013309177040}
   m_Layer: 0
   m_Name: Explosion
   m_TagString: Untagged
@@ -331,7 +332,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 039587c051912eb4ead9e58344c5f3ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  multiplier: 2
+  multiplier: 1
+--- !u!114 &114000013309177040
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000012420320784}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b4400db647dbf84a8b11f8995bf7f6a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damageAtCenter: 0
+  damageAtRadius: 0
 --- !u!114 &114000013768208164
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -343,7 +357,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ac1691131a8c844dafe8b6ace6a172a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  explosionForce: 4
+  explosionForce: 1
 --- !u!198 &198000010139553260
 ParticleSystem:
   m_ObjectHideFlags: 1
@@ -16010,7 +16024,7 @@ ParticleSystemRenderer:
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
-  m_SelectedWireframeHidden: 0
+  m_SelectedWireframeHidden: 1
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
@@ -16054,7 +16068,7 @@ ParticleSystemRenderer:
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
-  m_SelectedWireframeHidden: 0
+  m_SelectedWireframeHidden: 1
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89

@@ -11,9 +11,13 @@ public class GameLevelController : MonoBehaviour {
 
     public int score = 0;
     public int scoreToWin;
+    public GameObject targetObjects;
 
 	// Use this for initialization
 	void Start () {
+
+        if (targetObjects != null)
+            scoreToWin = 1000000000;
 
         GameObject projectileShooterObject = GameObject.Find("Player");
         if (projectileShooterObject != null)
@@ -31,6 +35,9 @@ public class GameLevelController : MonoBehaviour {
 	void Update () {
         UpdateScoreText();
         UpdateAmmoCount();
+
+        // it would be better here than in LevelEnd
+        //CheckIfAllTargetsDestroyed(targetObjects);
 	}
 
     void UpdateScoreText()
@@ -47,6 +54,27 @@ public class GameLevelController : MonoBehaviour {
     public void AddScore(int addScore)
     {
         score += addScore;
+    }
+
+    public bool CheckIfAllTargetsDestroyed()
+    {
+        int remainingObjects = 0;
+        foreach (Transform child in targetObjects.transform)
+        {
+            if (child.gameObject.tag == "Container")
+            {
+                remainingObjects += child.childCount;
+            }
+
+            else
+                remainingObjects++;
+
+            if (remainingObjects > 0)
+                return false;
+
+        }
+
+        return true;
     }
 
 }

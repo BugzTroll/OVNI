@@ -6,7 +6,6 @@ using UnityEngine.UI;
 
 public class LevelEnd : MonoBehaviour {
 
-
     private ProjectileShooter shooter;
     private GameLevelController gameLvlController;
     public GameObject levelEndPanel;                         //Store a reference to the Game Object pausePanel 
@@ -27,7 +26,7 @@ public class LevelEnd : MonoBehaviour {
         }
 
         GameObject GameLevelControllerObject = GameObject.Find("GameLevelController");
-        if (projectileShooterObject != null)
+        if (GameLevelControllerObject != null)
         {
             gameLvlController = GameLevelControllerObject.GetComponent<GameLevelController>();
         }
@@ -37,7 +36,7 @@ public class LevelEnd : MonoBehaviour {
     void Update ()
     {
         CheckAmmoCount();
-        CheckPointCount();
+        CheckWinCondition();
 
     }
     public void RetryButtonClicked()
@@ -59,37 +58,51 @@ public class LevelEnd : MonoBehaviour {
         }
       
     }
-    void CheckPointCount()
+    void CheckWinCondition()
     {
 
-       if (gameLvlController.score > gameLvlController.scoreToWin)
+        if (gameLvlController.score > gameLvlController.scoreToWin
+            || gameLvlController.CheckIfAllTargetsDestroyed())
         {
-            levelEndPanel.SetActive(true);
-            optionsTint.SetActive(true);
-            pauseBtn.SetActive(false);
-            RetryBtn.SetActive(false);
-            LvlSelect.SetActive(true);
-            PanelText.text = " You have passed the level, Congratulasion ! ";
-            // Ajoute la planète a la liste de progression
-            switch (SceneManager.GetActiveScene().name)
-            {
-                case "Planete1":
-                    GameManager.Instance.LevelProgression.Add(GameManager.GameLevel.Planete1);
-                    break;
-                case "Planete2":
-                    GameManager.Instance.LevelProgression.Add(GameManager.GameLevel.Planete2);
-                    break;
-                case "Planete3":
-                    GameManager.Instance.LevelProgression.Add(GameManager.GameLevel.Planete3);
-                    break;
-                case "Planete4":
-                    GameManager.Instance.LevelProgression.Add(GameManager.GameLevel.Planete4);
-                    break;
-                case "Planete5":
-                    GameManager.Instance.LevelProgression.Add(GameManager.GameLevel.Planete5);
-                    break;          
-            }
+            LevelSuccess();
         }
 
+        
+    }
+
+    public void LevelFailed()
+    {
+
+    }
+
+    public void LevelSuccess()
+    {
+        levelEndPanel.SetActive(true);
+        optionsTint.SetActive(true);
+        pauseBtn.SetActive(false);
+        RetryBtn.SetActive(false);
+        LvlSelect.SetActive(true);
+        PanelText.text = " You have passed the level, Congratulations !";
+
+        // Ajoute la planète a la liste de progression
+        switch (SceneManager.GetActiveScene().name)
+        {
+            case "Planete1":
+                GameManager.Instance.LevelProgression.Add(GameManager.GameLevel.Planete1);
+                break;
+            case "Planete2":
+                GameManager.Instance.LevelProgression.Add(GameManager.GameLevel.Planete2);
+                break;
+            case "Planete3":
+                GameManager.Instance.LevelProgression.Add(GameManager.GameLevel.Planete3);
+                break;
+            case "Planete4":
+                GameManager.Instance.LevelProgression.Add(GameManager.GameLevel.Planete4);
+                break;
+            case "Planete5":
+                GameManager.Instance.LevelProgression.Add(GameManager.GameLevel.Planete5);
+                break;
+        }
     }
 }
+

@@ -7,6 +7,7 @@ namespace UnityStandardAssets.Effects
     {
         // a simple script to scale the size, speed and lifetime of a particle system
 
+        [HideInInspector]
         public float multiplier = 1;
 
 
