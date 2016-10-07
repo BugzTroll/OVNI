@@ -85,7 +85,7 @@ public class MyViewManager : MonoBehaviour
                     {
                         for (int j = pos[1] - radius > 0 ? (int) pos[1] - radius : 0; j <= jMax; j++)
                         {
-                            _texture.SetPixel(i, j, Color.red);
+                            _texture.SetPixel(i, j, _blobTracker.GetBlobColor());
                         }
                     }
                 }
@@ -106,7 +106,7 @@ public class MyViewManager : MonoBehaviour
                     {
                         for (int j = pos[1] - radius > 0 ? (int) pos[1] - radius : 0; j <= jMax; j++)
                         {
-                            _texture.SetPixel(i, j, Color.red);
+                            _texture.SetPixel(i, j, _blobTracker.GetBlobColor());//TEST
                         }
                     }
                 }

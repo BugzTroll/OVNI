@@ -46,6 +46,18 @@ public class MyBlobTracker : MonoBehaviour
         return _trajectory;
     }
 
+    public UnityEngine.Color GetBlobColor()
+    {
+        if (BlobColor == System.Drawing.Color.Red)
+            return UnityEngine.Color.red;
+        else if (BlobColor == System.Drawing.Color.Green)
+            return UnityEngine.Color.green;
+        else if (BlobColor == System.Drawing.Color.Blue)
+            return UnityEngine.Color.blue;
+        else
+            return UnityEngine.Color.white;
+    }
+
     public List<Vector3> GetColorTrajectory()
     {
         var sensor = KinectSensor.GetDefault();
@@ -72,7 +84,6 @@ public class MyBlobTracker : MonoBehaviour
                 cpt++;
             }
         }
-        Debug.Log("cpt\n");
 
         return colorTrajectory;
     }
