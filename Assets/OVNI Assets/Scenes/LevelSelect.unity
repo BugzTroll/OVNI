@@ -99,15 +99,15 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4000013659755418, guid: fde2b781fd781014085e3fdb85b907fc, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -23.9
+      value: -7.05
       objectReference: {fileID: 0}
     - target: {fileID: 4000013659755418, guid: fde2b781fd781014085e3fdb85b907fc, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 6.9
+      value: -0.68
       objectReference: {fileID: 0}
     - target: {fileID: 4000013659755418, guid: fde2b781fd781014085e3fdb85b907fc, type: 2}
       propertyPath: m_LocalPosition.z
-      value: -10.693161
+      value: -38.8
       objectReference: {fileID: 0}
     - target: {fileID: 4000013659755418, guid: fde2b781fd781014085e3fdb85b907fc, type: 2}
       propertyPath: m_LocalRotation.x
@@ -193,6 +193,23 @@ Prefab:
       propertyPath: Sphere_planete5
       value: 
       objectReference: {fileID: 88912089}
+    - target: {fileID: 23000012545944304, guid: fde2b781fd781014085e3fdb85b907fc,
+        type: 2}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 96187335e0cb98c44aac67a04bb39e15, type: 2}
+    - target: {fileID: 4000013659755418, guid: fde2b781fd781014085e3fdb85b907fc, type: 2}
+      propertyPath: m_LocalScale.x
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000013659755418, guid: fde2b781fd781014085e3fdb85b907fc, type: 2}
+      propertyPath: m_LocalScale.y
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000013659755418, guid: fde2b781fd781014085e3fdb85b907fc, type: 2}
+      propertyPath: m_LocalScale.z
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: fde2b781fd781014085e3fdb85b907fc, type: 2}
   m_IsPrefabParent: 0
@@ -291,15 +308,15 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4000013659755418, guid: fde2b781fd781014085e3fdb85b907fc, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 33
+      value: 9.1
       objectReference: {fileID: 0}
     - target: {fileID: 4000013659755418, guid: fde2b781fd781014085e3fdb85b907fc, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 0.36
+      value: -0.81
       objectReference: {fileID: 0}
     - target: {fileID: 4000013659755418, guid: fde2b781fd781014085e3fdb85b907fc, type: 2}
       propertyPath: m_LocalPosition.z
-      value: -10.693161
+      value: -44.73
       objectReference: {fileID: 0}
     - target: {fileID: 4000013659755418, guid: fde2b781fd781014085e3fdb85b907fc, type: 2}
       propertyPath: m_LocalRotation.x
@@ -389,6 +406,23 @@ Prefab:
       propertyPath: Sphere_planete5
       value: 
       objectReference: {fileID: 88912089}
+    - target: {fileID: 4000013659755418, guid: fde2b781fd781014085e3fdb85b907fc, type: 2}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000013659755418, guid: fde2b781fd781014085e3fdb85b907fc, type: 2}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000013659755418, guid: fde2b781fd781014085e3fdb85b907fc, type: 2}
+      propertyPath: m_LocalScale.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 23000012545944304, guid: fde2b781fd781014085e3fdb85b907fc,
+        type: 2}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 7e8139552baf796498fde26cbcec5419, type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: fde2b781fd781014085e3fdb85b907fc, type: 2}
   m_IsPrefabParent: 0
@@ -411,15 +445,15 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4000013659755418, guid: fde2b781fd781014085e3fdb85b907fc, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -2.2
+      value: 1.22
       objectReference: {fileID: 0}
     - target: {fileID: 4000013659755418, guid: fde2b781fd781014085e3fdb85b907fc, type: 2}
       propertyPath: m_LocalPosition.y
-      value: -1.96
+      value: -5.47
       objectReference: {fileID: 0}
     - target: {fileID: 4000013659755418, guid: fde2b781fd781014085e3fdb85b907fc, type: 2}
       propertyPath: m_LocalPosition.z
-      value: -10.693161
+      value: -44.1
       objectReference: {fileID: 0}
     - target: {fileID: 4000013659755418, guid: fde2b781fd781014085e3fdb85b907fc, type: 2}
       propertyPath: m_LocalRotation.x
@@ -509,6 +543,23 @@ Prefab:
       propertyPath: Sphere_planete5
       value: 
       objectReference: {fileID: 88912089}
+    - target: {fileID: 23000012545944304, guid: fde2b781fd781014085e3fdb85b907fc,
+        type: 2}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 7642c98d15b07b045ba1a8bdfe5cff5f, type: 2}
+    - target: {fileID: 4000013659755418, guid: fde2b781fd781014085e3fdb85b907fc, type: 2}
+      propertyPath: m_LocalScale.x
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000013659755418, guid: fde2b781fd781014085e3fdb85b907fc, type: 2}
+      propertyPath: m_LocalScale.y
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000013659755418, guid: fde2b781fd781014085e3fdb85b907fc, type: 2}
+      propertyPath: m_LocalScale.z
+      value: 1.5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: fde2b781fd781014085e3fdb85b907fc, type: 2}
   m_IsPrefabParent: 0
@@ -566,15 +617,15 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4000013659755418, guid: fde2b781fd781014085e3fdb85b907fc, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 0.98
+      value: 2.09
       objectReference: {fileID: 0}
     - target: {fileID: 4000013659755418, guid: fde2b781fd781014085e3fdb85b907fc, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 18.7
+      value: 4.39
       objectReference: {fileID: 0}
     - target: {fileID: 4000013659755418, guid: fde2b781fd781014085e3fdb85b907fc, type: 2}
       propertyPath: m_LocalPosition.z
-      value: -10.693161
+      value: -38
       objectReference: {fileID: 0}
     - target: {fileID: 4000013659755418, guid: fde2b781fd781014085e3fdb85b907fc, type: 2}
       propertyPath: m_LocalRotation.x
@@ -664,6 +715,23 @@ Prefab:
       propertyPath: Sphere_planete5
       value: 
       objectReference: {fileID: 88912089}
+    - target: {fileID: 23000012545944304, guid: fde2b781fd781014085e3fdb85b907fc,
+        type: 2}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 3818510e02d7b90408301ebdd3f28488, type: 2}
+    - target: {fileID: 4000013659755418, guid: fde2b781fd781014085e3fdb85b907fc, type: 2}
+      propertyPath: m_LocalScale.x
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000013659755418, guid: fde2b781fd781014085e3fdb85b907fc, type: 2}
+      propertyPath: m_LocalScale.y
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000013659755418, guid: fde2b781fd781014085e3fdb85b907fc, type: 2}
+      propertyPath: m_LocalScale.z
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: fde2b781fd781014085e3fdb85b907fc, type: 2}
   m_IsPrefabParent: 0
@@ -899,6 +967,19 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: fce8807aa4b76e44a9d04815f23060b9, type: 2}
   m_IsPrefabParent: 0
+--- !u!1 &866849172 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1000011162555152, guid: d86b861d0dce48b409a9b45e010747d6,
+    type: 2}
+  m_PrefabInternal: {fileID: 495013944}
+--- !u!45 &866849173
+Skybox:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 866849172}
+  m_Enabled: 1
+  m_CustomSkybox: {fileID: 2100000, guid: 88ec9a13802800449aaf825aff3aadc7, type: 2}
 --- !u!1001 &1011810623
 Prefab:
   m_ObjectHideFlags: 0
@@ -950,15 +1031,15 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4000013659755418, guid: fde2b781fd781014085e3fdb85b907fc, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 16.7
+      value: 6.74
       objectReference: {fileID: 0}
     - target: {fileID: 4000013659755418, guid: fde2b781fd781014085e3fdb85b907fc, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 7.7
+      value: -4.49
       objectReference: {fileID: 0}
     - target: {fileID: 4000013659755418, guid: fde2b781fd781014085e3fdb85b907fc, type: 2}
       propertyPath: m_LocalPosition.z
-      value: -10.693161
+      value: -36.63
       objectReference: {fileID: 0}
     - target: {fileID: 4000013659755418, guid: fde2b781fd781014085e3fdb85b907fc, type: 2}
       propertyPath: m_LocalRotation.x
@@ -1048,6 +1129,11 @@ Prefab:
       propertyPath: Sphere_planete5
       value: 
       objectReference: {fileID: 88912089}
+    - target: {fileID: 23000012545944304, guid: fde2b781fd781014085e3fdb85b907fc,
+        type: 2}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 7376562ddb369724a8404759c6ebd94f, type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: fde2b781fd781014085e3fdb85b907fc, type: 2}
   m_IsPrefabParent: 0
@@ -1393,8 +1479,8 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1637806645}
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 1.77, y: 3.55, z: -2.82}
-  m_LocalScale: {x: 0.2, y: 1, z: 0.20000072}
+  m_LocalPosition: {x: 0.042912006, y: 0.9666295, z: -1.3600044}
+  m_LocalScale: {x: 0.2, y: 1, z: 0.20000131}
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 88912088}
