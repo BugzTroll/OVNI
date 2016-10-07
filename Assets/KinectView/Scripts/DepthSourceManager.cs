@@ -23,7 +23,7 @@ public class DepthSourceManager : MonoBehaviour
             _Data = new ushort[_Sensor.DepthFrameSource.FrameDescription.LengthInPixels];
         }
     }
-    
+
     void Update () 
     {
         if (_Reader != null)
