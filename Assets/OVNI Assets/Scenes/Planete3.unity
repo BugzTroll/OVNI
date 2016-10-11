@@ -868,7 +868,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 1
 --- !u!1001 &2066641503
 Prefab:
   m_ObjectHideFlags: 0
@@ -975,6 +975,11 @@ Prefab:
       propertyPath: scoreToWin
       value: 1000
       objectReference: {fileID: 0}
+    - target: {fileID: 114000012280701770, guid: ff6b655613cbfd14a9701ba4f7cc1da9,
+        type: 2}
+      propertyPath: targetObjects
+      value: 
+      objectReference: {fileID: 141000433}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: ff6b655613cbfd14a9701ba4f7cc1da9, type: 2}
   m_IsPrefabParent: 0

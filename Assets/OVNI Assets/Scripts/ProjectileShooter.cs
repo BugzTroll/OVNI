@@ -57,37 +57,45 @@ public class ProjectileShooter : MonoBehaviour {
             if (UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
                 return;
 
-
-            // make a switch (equippedProjectile) if we ever have too many types
-            if (equippedProjectile == ProjectileType.BOMB)
-            {
-                if (bombCount > 0)
-                {
-                    CreateProjectile(bombPrefab);
-                    bombCount--;
-                }
-            }
-            if (equippedProjectile == ProjectileType.TOMATO)
-            {
-                if (tomatoCount > 0)
-                {
-                    CreateProjectile(tomatoPrefab);
-                    tomatoCount--;
-                }
-            }
+            Vector3 positions2 = Input.mousePosition;
+            positions2.z = 3;
+            Vector3 positionFromClick = Camera.main.ScreenToWorldPoint(positions2);
+            Vector3 trajectory = Camera.main.transform.forward;
+            ShootProjectile(positionFromClick, trajectory, equippedProjectile);
         }
     }
 
-    void CreateProjectile(GameObject projectilePrefab)
+    void CreateProjectile(GameObject projectilePrefab, Vector3 startPosition, Vector3 startTrajectory)
     {
         GameObject projectile = Instantiate(projectilePrefab) as GameObject;
-        Vector3 positions2 = Input.mousePosition;
-        positions2.z = 3;
-        Vector3 position = Camera.main.ScreenToWorldPoint(positions2);
-        projectile.transform.position = position;
-        
+
+        // Initial Projectile Position
+        projectile.transform.position = startPosition;
+
         //Velocity
         Rigidbody rb = projectile.GetComponent<Rigidbody>();
-        rb.velocity = Camera.main.transform.forward * speed;
+
+        // temp (will come from the "speed" of the tracking)
+        rb.velocity = startTrajectory * speed;
+    }
+
+
+
+
+    public void ShootProjectile(Vector3 startPosition, Vector3 startTrajectory, ProjectileType type)
+    {
+        switch (type)
+        {
+            case ProjectileType.BOMB:
+                CreateProjectile(bombPrefab, startPosition, startTrajectory);
+                bombCount--;
+                break;
+
+            case ProjectileType.TOMATO:
+                CreateProjectile(tomatoPrefab, startPosition, startTrajectory);
+                bombCount--;
+                break;
+        }
+
     }
 }
