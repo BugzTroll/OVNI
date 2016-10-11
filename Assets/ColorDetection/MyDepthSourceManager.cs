@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Drawing.Imaging;
 using UnityEngine;
 using Windows.Kinect;
@@ -78,6 +79,7 @@ public class MyDepthSourceManager : MonoBehaviour
                 Buffer.BlockCopy(_data, 0, _background,
                     (int) _bufferSize*2*(_framecounter%NbFrameForBackgroundSuppression),
                     (int) _bufferSize*2);
+
 
                 // After the first N frame (aka when the backgroud supression buffer is full)
                 if (_framecounter >= NbFrameForBackgroundSuppression)
