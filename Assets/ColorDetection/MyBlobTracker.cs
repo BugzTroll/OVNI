@@ -22,7 +22,6 @@ public class MyBlobTracker : MonoBehaviour
     [Range(1, 30)] public int MinSizeBlob = 6;
     [Range(1, 50)] public int MaxSizeBlob = 20;
     [Range(0, 255)] public int ThresholdBlob = 30;
-    [Range(0, 255)] public int ThresholdBlob2 = 30;
     [Range(0, 50)] public int ThresholdTrajectory = 10;
     [Range(0, 30)] public int FramesWithoutBlobNeededToClear = 10;
     [Range(0, 5)] public int ColorNeighborhoodSize = 2;
@@ -30,8 +29,6 @@ public class MyBlobTracker : MonoBehaviour
     private MyDepthSourceManager _depthManager;
     private Bitmap _resizedZBuffer;
     private Bitmap _thresholdedZBuffer;
-    private Bitmap _thresholdedZBuffer2;
-    private Bitmap _gaussianZBuffer;
 
     private MyColorSourceManager _colorManager;
     private Bitmap _resizedColor;
@@ -107,16 +104,6 @@ public class MyBlobTracker : MonoBehaviour
         return _grey2Rgb.Apply(_resizedZBuffer);
     }
 
-    public Bitmap GetGaussianZBuffer()
-    {
-        return _grey2Rgb.Apply(_gaussianZBuffer);
-    }
-
-    public Bitmap GetThresholdedZBuffer2()
-    {
-        return _grey2Rgb.Apply(_thresholdedZBuffer2);
-    }
-
     public Bitmap GetThresholdedZBuffer()
     {
         return _grey2Rgb.Apply(_thresholdedZBuffer);
@@ -162,13 +149,6 @@ public class MyBlobTracker : MonoBehaviour
         // threshold Z-Buffer To Reduce Noise
         Threshold treshFilter = new Threshold(ThresholdBlob);
         _thresholdedZBuffer = treshFilter.Apply(_resizedZBuffer);
-
-        GaussianBlur filter = new GaussianBlur();
-        // apply the filter
-        _gaussianZBuffer = filter.Apply(_thresholdedZBuffer);
-
-        treshFilter.ThresholdValue = ThresholdBlob2;
-        _thresholdedZBuffer2 = treshFilter.Apply(_gaussianZBuffer);
 
         // Blob Filtering
         var blobFilter = new BlobCounter();

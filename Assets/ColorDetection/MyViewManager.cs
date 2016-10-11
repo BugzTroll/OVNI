@@ -19,8 +19,6 @@ public class MyViewManager : MonoBehaviour
 
     public bool ShowDepth = false;
     public bool ShowThresholdedZBuffer = false;
-    public bool ShowThresholdedZBuffer2 = false;
-    public bool ShowGaussianZBuffer = false;
     public bool ShowCurrentPos = false;
     public bool ShowPositionOnTrajectory = false;
     public bool ShowTrajectory = false;
@@ -59,18 +57,6 @@ public class MyViewManager : MonoBehaviour
         else if (ShowThresholdedZBuffer)
         {
             var bmp = _blobTracker.GetThresholdedZBuffer();
-            _texture = new Texture2D(bmp.Width, bmp.Height, TextureFormat.RGB24, false);
-            _texture.LoadRawTextureData(MyConverter.Bmp2ByteArray(bmp));
-        }
-        else if (ShowThresholdedZBuffer2)
-        {
-            var bmp = _blobTracker.GetThresholdedZBuffer2();
-            _texture = new Texture2D(bmp.Width, bmp.Height, TextureFormat.RGB24, false);
-            _texture.LoadRawTextureData(MyConverter.Bmp2ByteArray(bmp));
-        }
-        else if (ShowGaussianZBuffer)
-        {
-            var bmp = _blobTracker.GetGaussianZBuffer();
             _texture = new Texture2D(bmp.Width, bmp.Height, TextureFormat.RGB24, false);
             _texture.LoadRawTextureData(MyConverter.Bmp2ByteArray(bmp));
         }
