@@ -37,7 +37,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
+  m_IndirectSpecularColor: {r: 0.44692492, g: 0.4967869, b: 0.57508546, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -117,7 +117,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 792932427}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6313bca0159c9284398eedd8efa4ce46, type: 3}
+  m_Script: {fileID: 11500000, guid: d4317a8d999a4d84e9809adc1054a2f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   ViewManager: {fileID: 1860005144}
@@ -181,7 +181,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 2
 --- !u!1 &1037921809
 GameObject:
   m_ObjectHideFlags: 0
@@ -206,13 +206,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1037921809}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4090710a8d4044046be57ce458e6bfb8, type: 3}
+  m_Script: {fileID: 11500000, guid: d075359483e7e464b860a9cbc549d406, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   ColorManager: {fileID: 2128184201}
   DepthManager: {fileID: 1751594993}
   ZBufferScale: 0.5
-  ColorScale: 0.2
+  ColorScale: 0.15
   MinSizeBlob: 6
   MaxSizeBlob: 20
   ThresholdBlob: 90
@@ -343,10 +343,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1751594993}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 39232809f21e81c49828282e6ac48f8f, type: 3}
+  m_Script: {fileID: 11500000, guid: aa98c26ce05704b45a6bbd9f7a6fec3b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   ScalingFactorZBuffer: 10
+  NbFrameForBackgroundSuppression: 5
 --- !u!4 &1751594995
 Transform:
   m_ObjectHideFlags: 0
@@ -359,7 +360,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
 --- !u!1 &1860005144
 GameObject:
   m_ObjectHideFlags: 0
@@ -384,18 +385,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 1860005144}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ff3c9371f05631b4d962a98cc1f31fd6, type: 3}
+  m_Script: {fileID: 11500000, guid: 6a896eb4b7a44ed45ae8eba81572c7df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   ColorManager: {fileID: 2128184201}
   DepthManager: {fileID: 1751594993}
   BlobTracker: {fileID: 1037921809}
-  ColorCheckSquareSize: 300
+  ColorCheckSquareSize: 19
   ShowDepth: 0
   ShowThresholdedZBuffer: 1
   ShowCurrentPos: 0
-  ShowPositionOnTrajectory: 1
-  ShowTrajectory: 1
+  ShowPositionOnTrajectory: 0
+  ShowTrajectory: 0
 --- !u!4 &1860005146
 Transform:
   m_ObjectHideFlags: 0
@@ -408,7 +409,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 6
 --- !u!1 &1870530285
 GameObject:
   m_ObjectHideFlags: 0
@@ -496,7 +497,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2128184201}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0c00fa68910339749ab8def623ba798b, type: 3}
+  m_Script: {fileID: 11500000, guid: 403cdb450f0c9a747a83888ad07072a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!4 &2128184203
@@ -511,4 +512,4 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
