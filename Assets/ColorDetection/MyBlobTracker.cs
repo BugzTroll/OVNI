@@ -25,6 +25,7 @@ public class MyBlobTracker : MonoBehaviour
     [Range(0, 255)] public int ThresholdBlob2 = 30;
     [Range(0, 50)] public int ThresholdTrajectory = 10;
     [Range(0, 30)] public int FramesWithoutBlobNeededToClear = 10;
+    [Range(0, 5)] public int ColorNeighborhoodSize = 2;
 
     private MyDepthSourceManager _depthManager;
     private Bitmap _resizedZBuffer;
@@ -69,10 +70,10 @@ public class MyBlobTracker : MonoBehaviour
         {
             int cpt = 0;
             DepthSpacePoint point = new DepthSpacePoint();
-            point.X = (int)(pos[0] / ZBufferScale);
-            point.Y = (int)(pos[1] / ZBufferScale);
+            point.X = (int) (pos[0]/ZBufferScale);
+            point.Y = (int) (pos[1]/ZBufferScale);
 
-            var z = _depthManager.GetRawZ((int)point.X, (int)point.Y);
+            var z = _depthManager.GetRawZ((int) point.X, (int) point.Y);
 
             var colorSpacePoint = sensor.CoordinateMapper.MapDepthPointToColorSpace(point, z);
 
@@ -137,6 +138,8 @@ public class MyBlobTracker : MonoBehaviour
         _lin = null;
         _poly = null;
         _lastDist = 0;
+        _resizedZBuffer = new Bitmap(1, 1, PixelFormat.Format8bppIndexed);
+        _thresholdedZBuffer = new Bitmap(1, 1, PixelFormat.Format8bppIndexed);
     }
 
     void Update()
@@ -153,8 +156,8 @@ public class MyBlobTracker : MonoBehaviour
         var depthResizeFilter = new ResizeNearestNeighbor((int) (ZBufferScale*depthFrameDescriptor.Width),
             (int) (ZBufferScale*depthFrameDescriptor.Height));
 
-        zBuffer = depthResizeFilter.Apply(zBuffer);
-        _resizedZBuffer = AForge.Imaging.Image.Convert16bppTo8bpp(zBuffer);
+        _resizedZBuffer = depthResizeFilter.Apply(zBuffer);
+        _resizedZBuffer = AForge.Imaging.Image.Convert16bppTo8bpp(_resizedZBuffer);
 
         // threshold Z-Buffer To Reduce Noise
         Threshold treshFilter = new Threshold(ThresholdBlob);
@@ -188,28 +191,44 @@ public class MyBlobTracker : MonoBehaviour
             _framesWithoutBlob = 0;
             int x = (int) biggestBlob.CenterOfGravity.X;
             int y = (int) biggestBlob.CenterOfGravity.Y;
-            int z = _depthManager.GetRawZ((int)(x/ZBufferScale), (int)(y/ZBufferScale));
-            if (z > KinectSensor.GetDefault().DepthFrameSource.DepthMinReliableDistance &&
-                z < KinectSensor.GetDefault().DepthFrameSource.DepthMaxReliableDistance &&
-                z > _lastDist)
+            int maxz = 0;
+            for (int i = -1; i < 2; i++)
+            {
+                for (int j = -1; j < 2; j++)
+                {
+                    if ((int) ((x + i)/ZBufferScale) >= 0 &&
+                        (int) ((x + i)/ZBufferScale) < _depthManager.GetDescriptor().Width &&
+                        (int) ((y + j)/ZBufferScale) >= 0 &&
+                        (int) ((y + j)/ZBufferScale) < _depthManager.GetDescriptor().Height)
+                    {
+                        int z = _depthManager.GetRawZ((int) ((x + i)/ZBufferScale), (int) ((y + j)/ZBufferScale)) ;
+                        if (z > maxz)
+                        {
+                            maxz = z;
+                        }
+                    }
+                }
+            }
+            if (maxz > KinectSensor.GetDefault().DepthFrameSource.DepthMinReliableDistance &&
+                maxz < KinectSensor.GetDefault().DepthFrameSource.DepthMaxReliableDistance &&
+                maxz > _lastDist)
             {
                 if (_trajectory.Count > 2 && _poly != null && _lin != null)
                 {
-                    int xcheck = (int)(_lin[0] * z + _lin[1]);
-                    int ycheck = (int)(_poly[0] + _poly[1] * z + _poly[2] * z * z);
-                    if (Math.Abs(x - xcheck) < ThresholdTrajectory && Math.Abs(y - ycheck) < ThresholdTrajectory)
+                    int xcheck = (int) (_lin[0]*maxz + _lin[1]);
+                    int ycheck = (int) (_poly[0] + _poly[1]*maxz + _poly[2]*maxz*maxz);
+                    //if (Math.Abs(x - xcheck) < ThresholdTrajectory && Math.Abs(y - ycheck) < ThresholdTrajectory)
                     {
-                        _trajectory.Add(new Vector3(x, y, z));
-                        _lastDist = z;
+                        _trajectory.Add(new Vector3(x, y, maxz));
+                        _lastDist = maxz;
                     }
                 }
                 else if (_trajectory.Count < 3)
                 {
-                    _trajectory.Add(new Vector3(x, y, z));
-                    _lastDist = z;
+                    _trajectory.Add(new Vector3(x, y, maxz));
+                    _lastDist = maxz;
                 }
             }
-
         }
         else
         {
@@ -242,6 +261,14 @@ public class MyBlobTracker : MonoBehaviour
 
             // find polynomial coefficients
             _poly = Fit.Polynomial(zData, yData, 2);
+
+            if (_poly[2] < 0)
+            {
+                _poly[1] = (_trajectory[0][1] - _trajectory.Last()[1])/(_trajectory[0][2] - _trajectory.Last()[2]);
+                _poly[0] = _trajectory[0][1] - _poly[1]*_trajectory[0][2];
+                _poly[2] = 0.0f;
+            }
+
         }
 
         // Color Analysis
@@ -264,40 +291,49 @@ public class MyBlobTracker : MonoBehaviour
     private System.Drawing.Color getBallColor()
     {
         int[] colorMax = {0, 0, 0};
-        System.Drawing.Color[] colors = {System.Drawing.Color.Red, System.Drawing.Color.Green, System.Drawing.Color.Blue};
-        List <Vector3> colorTrajectory = GetColorTrajectory();
+        System.Drawing.Color[] colors =
+        {
+            System.Drawing.Color.Red, System.Drawing.Color.Green, System.Drawing.Color.Blue
+        };
+        List<Vector3> colorTrajectory = GetColorTrajectory();
 
         foreach (Vector3 ballPosition in colorTrajectory)
         {
-            for (int x = -1; x < 2; x++)
+            for (int x = -ColorNeighborhoodSize; x < ColorNeighborhoodSize + 1; x++)
             {
-                for (int y = -1; y < 2; y++)
+                for (int y = -ColorNeighborhoodSize; y < ColorNeighborhoodSize + 1; y++)
                 {
-                    System.Drawing.Color current = _resizedColor.GetPixel((int)ballPosition[0] + x, (int)ballPosition[1] + y);
-
-                    short min = -1;
-                    float distMin = float.MaxValue;
-
-                    for (short c = 0; c < colors.Length; c++)
+                    if ((int) ballPosition[0] + x >= 0 && (int) ballPosition[0] + x < _resizedColor.Width &&
+                        (int) ballPosition[1] + y >= 0 && (int) ballPosition[1] + y < _resizedColor.Height)
                     {
-                        float dist = MyHelper.ColorSquareDiff(current, colors[c]);
+                        System.Drawing.Color current = _resizedColor.GetPixel((int) ballPosition[0] + x,
+                            (int) ballPosition[1] + y);
 
-                        if (dist < distMin)
+                        short min = -1;
+                        float distMin = float.MaxValue;
+
+                        for (short c = 0; c < colors.Length; c++)
                         {
-                            min = c;
-                            distMin = dist;
-                        }
-                    }
+                            float dist = MyHelper.ColorSquareDiff(current, colors[c]);
 
-                    colorMax[min] += 1;
+                            if (dist < distMin)
+                            {
+                                min = c;
+                                distMin = dist;
+                            }
+                        }
+
+                        colorMax[min] += 1;
+                    }
                 }
-            }  
+            }
         }
 
         int maxValue = colorMax.Max();
         int maxIndex = colorMax.ToList().IndexOf(maxValue);
         return colors[maxIndex];
     }
+
     private Blob GetBiggestBlob()
     {
         Blob biggestBlob = null;
