@@ -24,6 +24,7 @@ public class MyBlobTracker : MonoBehaviour
     [Range(0, 255)] public int ThresholdBlob = 30;
     [Range(0, 50)] public int ThresholdTrajectory = 10;
     [Range(0, 30)] public int FramesWithoutBlobNeededToClear = 10;
+    [Range(0, 5)] public int ColorNeighborhoodSize = 2;
 
     private MyDepthSourceManager _depthManager;
     private Bitmap _resizedZBuffer;
@@ -140,8 +141,8 @@ public class MyBlobTracker : MonoBehaviour
         var depthResizeFilter = new ResizeNearestNeighbor((int) (ZBufferScale*depthFrameDescriptor.Width),
             (int) (ZBufferScale*depthFrameDescriptor.Height));
 
-        zBuffer = depthResizeFilter.Apply(zBuffer);
-        _resizedZBuffer = AForge.Imaging.Image.Convert16bppTo8bpp(zBuffer);
+        _resizedZBuffer = depthResizeFilter.Apply(zBuffer);
+        _resizedZBuffer = AForge.Imaging.Image.Convert16bppTo8bpp(_resizedZBuffer);
 
         // threshold Z-Buffer To Reduce Noise
         Threshold treshFilter = new Threshold(ThresholdBlob);
@@ -249,9 +250,9 @@ public class MyBlobTracker : MonoBehaviour
 
         foreach (Vector3 ballPosition in colorTrajectory)
         {
-            for (int x = -1; x < 2; x++)
+            for (int x = -ColorNeighborhoodSize; x < ColorNeighborhoodSize+1; x++)
             {
-                for (int y = -1; y < 2; y++)
+                for (int y = -ColorNeighborhoodSize; y < ColorNeighborhoodSize+1; y++)
                 {
                     System.Drawing.Color current = _resizedColor.GetPixel((int)ballPosition[0] + x, (int)ballPosition[1] + y);
 
