@@ -67,7 +67,7 @@ public class MyViewManager : MonoBehaviour
             _texture.LoadRawTextureData(MyConverter.Bmp2ByteArray(bmp));
         }
 
-        int radius = 2;
+        int radius = 1;
 
         switch (displayMode)
         {
@@ -85,7 +85,7 @@ public class MyViewManager : MonoBehaviour
                     {
                         for (int j = pos[1] - radius > 0 ? (int) pos[1] - radius : 0; j <= jMax; j++)
                         {
-                            _texture.SetPixel(i, j, _blobTracker.GetBlobColor());
+                            _texture.SetPixel(i, j, Color.red);
                         }
                     }
                 }
@@ -106,7 +106,7 @@ public class MyViewManager : MonoBehaviour
                     {
                         for (int j = pos[1] - radius > 0 ? (int) pos[1] - radius : 0; j <= jMax; j++)
                         {
-                            _texture.SetPixel(i, j, _blobTracker.GetBlobColor());//TEST
+                            _texture.SetPixel(i, j, Color.red);
                         }
                     }
                 }
@@ -120,7 +120,7 @@ public class MyViewManager : MonoBehaviour
             var linearCoef = _blobTracker.GetLinX();
             if (poly != null && linearCoef != null)
             {
-                for (int z = 500; z < 2500; z++)
+                for (int z = 500; z < 3000; z++)
                 {
                     int x = (int) (linearCoef[0]*z + linearCoef[1]);
                     int y = (int) (poly[0] + poly[1]*z + poly[2]*z*z);
@@ -128,8 +128,24 @@ public class MyViewManager : MonoBehaviour
                     if (x > 0 && x < _texture.width && y > 0 && y < _texture.height)
                     {
                         _texture.SetPixel(x, y, Color.cyan);
+
+                        if (z == _blobTracker.DepthCenter)
+                        {
+                            int iMax = x + radius+1 < _texture.width ? x + radius+1 : _texture.width;
+                            int jMax = y + radius+1 < _texture.height ? y + radius+1 : _texture.height;
+
+                            for (int i = x - (radius+1) > 0 ? x - (radius+1) : 0; i <= iMax; i++)
+                            {
+                                for (int j = y - (radius+1) > 0 ? y - (radius+1) : 0; j <= jMax; j++)
+                                {
+                                    _texture.SetPixel(i, j, Color.green);
+                                }
+                            }
+                        }
                     }
                 }
+
+
             }
         }
 

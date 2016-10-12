@@ -211,11 +211,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ColorManager: {fileID: 2128184201}
   DepthManager: {fileID: 1751594993}
+  DepthCenter: 2700
   ZBufferScale: 0.5
   ColorScale: 0.15
   MinSizeBlob: 6
   MaxSizeBlob: 20
-  ThresholdBlob: 90
+  ThresholdBlob: 85
   ThresholdTrajectory: 10
   FramesWithoutBlobNeededToClear: 10
   ColorNeighborhoodSize: 2
@@ -395,8 +396,8 @@ MonoBehaviour:
   ShowDepth: 0
   ShowThresholdedZBuffer: 1
   ShowCurrentPos: 0
-  ShowPositionOnTrajectory: 0
-  ShowTrajectory: 0
+  ShowPositionOnTrajectory: 1
+  ShowTrajectory: 1
 --- !u!4 &1860005146
 Transform:
   m_ObjectHideFlags: 0

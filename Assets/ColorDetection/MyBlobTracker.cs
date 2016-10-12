@@ -11,12 +11,14 @@ using AForge.Imaging.Filters;
 using MathNet.Numerics;
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearRegression;
+using Color = System.Drawing.Color;
 
 public class MyBlobTracker : MonoBehaviour
 {
     public GameObject ColorManager;
     public GameObject DepthManager;
 
+    [Range(500, 4500)] public int DepthCenter = 2775;
     [Range(0, 1)] public float ZBufferScale = 0.5f;
     [Range(0, 1)] public float ColorScale = 0.15f;
     [Range(1, 30)] public int MinSizeBlob = 6;
@@ -40,23 +42,12 @@ public class MyBlobTracker : MonoBehaviour
     private float[] _lin;
     private float _lastDist;
     private int _framesWithoutBlob;
-    private System.Drawing.Color BlobColor;
+    private Vector3 _speed;
+    private Color _blobColor;
 
     public List<Vector3> GetDepthTrajectory()
     {
         return _trajectory;
-    }
-
-    public UnityEngine.Color GetBlobColor()
-    {
-        if (BlobColor == System.Drawing.Color.Red)
-            return UnityEngine.Color.red;
-        else if (BlobColor == System.Drawing.Color.Green)
-            return UnityEngine.Color.green;
-        else if (BlobColor == System.Drawing.Color.Blue)
-            return UnityEngine.Color.blue;
-        else
-            return UnityEngine.Color.white;
     }
 
     public List<Vector3> GetColorTrajectory()
@@ -125,6 +116,7 @@ public class MyBlobTracker : MonoBehaviour
         _lin = null;
         _poly = null;
         _lastDist = 0;
+        _speed = new Vector3(0, 0, 0);
         _resizedZBuffer = new Bitmap(1, 1, PixelFormat.Format8bppIndexed);
         _thresholdedZBuffer = new Bitmap(1, 1, PixelFormat.Format8bppIndexed);
     }
@@ -181,7 +173,7 @@ public class MyBlobTracker : MonoBehaviour
                         (int) ((y + j)/ZBufferScale) >= 0 &&
                         (int) ((y + j)/ZBufferScale) < _depthManager.GetDescriptor().Height)
                     {
-                        int z = _depthManager.GetRawZ((int) ((x + i)/ZBufferScale), (int) ((y + j)/ZBufferScale)) ;
+                        int z = _depthManager.GetRawZ((int) ((x + i)/ZBufferScale), (int) ((y + j)/ZBufferScale));
                         if (z > maxz)
                         {
                             maxz = z;
@@ -197,8 +189,10 @@ public class MyBlobTracker : MonoBehaviour
                 {
                     int xcheck = (int) (_lin[0]*maxz + _lin[1]);
                     int ycheck = (int) (_poly[0] + _poly[1]*maxz + _poly[2]*maxz*maxz);
-                    //if (Math.Abs(x - xcheck) < ThresholdTrajectory && Math.Abs(y - ycheck) < ThresholdTrajectory)
+                    if (Math.Abs(x - xcheck) < ThresholdTrajectory && Math.Abs(y - ycheck) < ThresholdTrajectory)
                     {
+                        var new_point = new Vector3(x, y, maxz);
+                        _speed = (new_point - _trajectory.Last()) /(_framesWithoutBlob + 1);
                         _trajectory.Add(new Vector3(x, y, maxz));
                         _lastDist = maxz;
                     }
@@ -248,7 +242,31 @@ public class MyBlobTracker : MonoBehaviour
                 _poly[0] = _trajectory[0][1] - _poly[1]*_trajectory[0][2];
                 _poly[2] = 0.0f;
             }
+        }
 
+        // compute point of impact
+        if (_poly != null && _lin != null)
+        {
+            int z = DepthCenter;
+            int x = (int) (_lin[0]*z + _lin[1]);
+            int y = (int) (_poly[0] + _poly[1]*z + _poly[2]*z*z);
+
+            if (x >= 0 && x < _thresholdedZBuffer.Width &&
+                y >= 0 && y < _thresholdedZBuffer.Height)
+            {
+                if (_lastDist + _speed[2] > DepthCenter)
+                {
+                    // feed (x,y) + speed au jeu 
+                    Debug.Log("impact : " + new Vector3(x, y, z));
+                    Debug.Log("speed : " + _speed);
+
+                    _speed = new Vector3(0, 0, 0);
+                    _trajectory.Clear();
+                    _lastDist = 0;
+                    _poly = null;
+                    _lin = null;
+                }
+            }
         }
 
         // Color Analysis
@@ -259,16 +277,16 @@ public class MyBlobTracker : MonoBehaviour
             colorFrameDescriptor.Height,
             PixelFormat.Format32bppArgb);
 
-        var resizeFilter = new ResizeNearestNeighbor((int) (ColorScale*colorFrameDescriptor.Width),
-            (int) (ColorScale*colorFrameDescriptor.Height));
+        var resizeFilter = new ResizeNearestNeighbor((int)(ColorScale * colorFrameDescriptor.Width),
+            (int)(ColorScale * colorFrameDescriptor.Height));
 
         _resizedColor = resizeFilter.Apply(colorImg);
 
-        if (_trajectory.Count > 2)
-            BlobColor = getBallColor();
+        //if (_trajectory.Count > 2)
+        //    _blobColor = getBallColor();
     }
 
-    private System.Drawing.Color getBallColor()
+    private Color getBallColor()
     {
         int[] colorMax = {0, 0, 0};
         System.Drawing.Color[] colors =
@@ -327,5 +345,17 @@ public class MyBlobTracker : MonoBehaviour
             }
         }
         return biggestBlob;
+    }
+
+    public UnityEngine.Color GetBlobColor()
+    {
+        if (_blobColor == System.Drawing.Color.Red)
+            return UnityEngine.Color.red;
+        else if (_blobColor == System.Drawing.Color.Green)
+            return UnityEngine.Color.green;
+        else if (_blobColor == System.Drawing.Color.Blue)
+            return UnityEngine.Color.blue;
+        else
+            return UnityEngine.Color.white;
     }
 }
