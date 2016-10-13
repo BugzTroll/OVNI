@@ -31,6 +31,7 @@ public class MyBlobTracker : MonoBehaviour
     private MyDepthSourceManager _depthManager;
     private Bitmap _resizedZBuffer;
     private Bitmap _thresholdedZBuffer;
+    private Bitmap _meanZBuffer;
 
     private MyColorSourceManager _colorManager;
     private Bitmap _resizedColor;
@@ -95,6 +96,11 @@ public class MyBlobTracker : MonoBehaviour
         return _grey2Rgb.Apply(_resizedZBuffer);
     }
 
+    public Bitmap GetMeanZBuffer()
+    {
+        return _grey2Rgb.Apply(_meanZBuffer);
+    }
+
     public Bitmap GetThresholdedZBuffer()
     {
         return _grey2Rgb.Apply(_thresholdedZBuffer);
@@ -119,6 +125,7 @@ public class MyBlobTracker : MonoBehaviour
         _speed = new Vector3(0, 0, 0);
         _resizedZBuffer = new Bitmap(1, 1, PixelFormat.Format8bppIndexed);
         _thresholdedZBuffer = new Bitmap(1, 1, PixelFormat.Format8bppIndexed);
+        _meanZBuffer = new Bitmap(1, 1, PixelFormat.Format8bppIndexed);
     }
 
     void Update()
@@ -138,9 +145,14 @@ public class MyBlobTracker : MonoBehaviour
         _resizedZBuffer = depthResizeFilter.Apply(zBuffer);
         _resizedZBuffer = AForge.Imaging.Image.Convert16bppTo8bpp(_resizedZBuffer);
 
+        //// create filter
+        Mean filter = new Mean();
+        // apply the filter
+        _meanZBuffer = filter.Apply(_resizedZBuffer);
+
         // threshold Z-Buffer To Reduce Noise
         Threshold treshFilter = new Threshold(ThresholdBlob);
-        _thresholdedZBuffer = treshFilter.Apply(_resizedZBuffer);
+        _thresholdedZBuffer = treshFilter.Apply(_meanZBuffer);
 
         // Blob Filtering
         var blobFilter = new BlobCounter();
@@ -282,8 +294,8 @@ public class MyBlobTracker : MonoBehaviour
 
         _resizedColor = resizeFilter.Apply(colorImg);
 
-        //if (_trajectory.Count > 2)
-        //    _blobColor = getBallColor();
+        if (_trajectory.Count > 2)
+            _blobColor = getBallColor();
     }
 
     private Color getBallColor()

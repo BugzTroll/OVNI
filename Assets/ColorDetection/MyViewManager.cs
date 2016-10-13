@@ -18,6 +18,7 @@ public class MyViewManager : MonoBehaviour
     [Range(0, 600)] public int ColorCheckSquareSize = 300;
 
     public bool ShowDepth = false;
+    public bool ShowMeanBuffer = false;
     public bool ShowThresholdedZBuffer = false;
     public bool ShowCurrentPos = false;
     public bool ShowPositionOnTrajectory = false;
@@ -54,6 +55,14 @@ public class MyViewManager : MonoBehaviour
             _texture = new Texture2D(bmp.Width, bmp.Height, TextureFormat.RGB24, false);
             _texture.LoadRawTextureData(MyConverter.Bmp2ByteArray(bmp));
         }
+
+        else if (ShowMeanBuffer)
+        {
+            var bmp = _blobTracker.GetMeanZBuffer();
+            _texture = new Texture2D(bmp.Width, bmp.Height, TextureFormat.RGB24, false);
+            _texture.LoadRawTextureData(MyConverter.Bmp2ByteArray(bmp));
+        }
+
         else if (ShowThresholdedZBuffer)
         {
             var bmp = _blobTracker.GetThresholdedZBuffer();
