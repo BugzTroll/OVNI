@@ -8,21 +8,6 @@ public class MyColorSourceManager : MonoBehaviour
     private Texture2D _texture;
     private byte[] _data;
 
-    public byte[] GetData()
-    {
-        return _data;
-    }
-
-    public Texture2D GetColorTexture()
-    {
-        return _texture;
-    }
-
-    public FrameDescription GetDescriptor()
-    {
-        return _sensor.ColorFrameSource.FrameDescription;
-    }
-
     void Start()
     {
         _sensor = KinectSensor.GetDefault();
@@ -75,5 +60,20 @@ public class MyColorSourceManager : MonoBehaviour
 
             _sensor = null;
         }
+    }
+
+    public byte[] GetData()
+    {
+        return _data;
+    }
+
+    public Texture2D GetColorTexture()
+    {
+        return _texture;
+    }
+
+    public FrameDescription GetDescriptor()
+    {
+        return _sensor.ColorFrameSource.FrameDescription;
     }
 }

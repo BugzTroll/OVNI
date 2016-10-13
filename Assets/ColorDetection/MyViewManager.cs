@@ -1,13 +1,5 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using UnityEngine;
-
-public enum DisplayMode
-{
-    None = -1,
-    CurrentPos,
-    AllPosOnTrajectory
-}
 
 public class MyViewManager : MonoBehaviour
 {
@@ -15,17 +7,15 @@ public class MyViewManager : MonoBehaviour
     public GameObject DepthManager;
     public GameObject BlobTracker;
 
-    [Range(0, 600)] public int ColorCheckSquareSize = 300;
+    [Range(1, 5)] public int SizeOfPoint = 1;
 
     public bool ShowDepth = false;
     public bool ShowMeanBuffer = false;
     public bool ShowThresholdedZBuffer = false;
-    public bool ShowCurrentPos = false;
-    public bool ShowPositionOnTrajectory = false;
+    public bool ShowPositions = false;
     public bool ShowTrajectory = false;
+    public bool ShowImpactPoint = false;
 
-    private MyColorSourceManager _colorManager;
-    private MyDepthSourceManager _depthManager;
     private MyBlobTracker _blobTracker;
     private Texture2D _texture;
 
@@ -36,22 +26,15 @@ public class MyViewManager : MonoBehaviour
 
     void Start()
     {
-        _depthManager = DepthManager.GetComponent<MyDepthSourceManager>();
-        _colorManager = ColorManager.GetComponent<MyColorSourceManager>();
         _blobTracker = BlobTracker.GetComponent<MyBlobTracker>();
     }
 
     void Update()
     {
-        DisplayMode displayMode = ShowCurrentPos
-            ? DisplayMode.CurrentPos
-            : ShowPositionOnTrajectory
-                ? DisplayMode.AllPosOnTrajectory
-                : DisplayMode.None;
-
-        if (ShowDepth)
+        // Set texture 
+        if (ShowThresholdedZBuffer)
         {
-            var bmp = _blobTracker.GetResizedZBuffer();
+            var bmp = _blobTracker.GetThresholdedZBuffer();
             _texture = new Texture2D(bmp.Width, bmp.Height, TextureFormat.RGB24, false);
             _texture.LoadRawTextureData(MyConverter.Bmp2ByteArray(bmp));
         }
@@ -63,9 +46,9 @@ public class MyViewManager : MonoBehaviour
             _texture.LoadRawTextureData(MyConverter.Bmp2ByteArray(bmp));
         }
 
-        else if (ShowThresholdedZBuffer)
+        else if (ShowDepth)
         {
-            var bmp = _blobTracker.GetThresholdedZBuffer();
+            var bmp = _blobTracker.GetResizedZBuffer();
             _texture = new Texture2D(bmp.Width, bmp.Height, TextureFormat.RGB24, false);
             _texture.LoadRawTextureData(MyConverter.Bmp2ByteArray(bmp));
         }
@@ -76,57 +59,40 @@ public class MyViewManager : MonoBehaviour
             _texture.LoadRawTextureData(MyConverter.Bmp2ByteArray(bmp));
         }
 
-        int radius = 1;
-
-        switch (displayMode)
+        // Draw Positions
+        if (ShowPositions)
         {
-            case DisplayMode.AllPosOnTrajectory:
+            var trajectory = ShowColor()
+                ? _blobTracker.GetColorTrajectory()
+                : _blobTracker.GetDepthTrajectory();
+
+            if (trajectory.Count > 0)
             {
-                var trajectory = ShowDepth || ShowThresholdedZBuffer
-                    ? _blobTracker.GetDepthTrajectory()
-                    : _blobTracker.GetColorTrajectory();
                 foreach (var pos in trajectory)
                 {
-                    int iMax = pos[0] + radius < _texture.width ? (int) pos[0] + radius : _texture.width;
-                    int jMax = pos[1] + radius < _texture.height ? (int) pos[1] + radius : _texture.height;
+                    int iMin = pos[0] - SizeOfPoint < _texture.width ? (int) pos[0] - SizeOfPoint : _texture.width;
+                    int iMax = pos[0] + SizeOfPoint < _texture.width ? (int) pos[0] + SizeOfPoint : _texture.width;
+                    int jMin = pos[1] - SizeOfPoint < _texture.height ? (int) pos[1] - SizeOfPoint : _texture.height;
+                    int jMax = pos[1] + SizeOfPoint < _texture.height ? (int) pos[1] + SizeOfPoint : _texture.height;
 
-                    for (int i = pos[0] - radius > 0 ? (int) pos[0] - radius : 0; i <= iMax; i++)
+                    for (int i = iMin; i <= iMax; i++)
                     {
-                        for (int j = pos[1] - radius > 0 ? (int) pos[1] - radius : 0; j <= jMax; j++)
+                        for (int j = jMin; j <= jMax; j++)
                         {
-                            _texture.SetPixel(i, j, Color.red);
+                            _texture.SetPixel(i, j, Color.green);
                         }
                     }
                 }
-                break;
-            }
-            case DisplayMode.CurrentPos:
-            {
-                var trajectory = ShowDepth || ShowThresholdedZBuffer
-                    ? _blobTracker.GetDepthTrajectory()
-                    : _blobTracker.GetColorTrajectory();
-                if (trajectory.Count > 0)
-                {
-                    var pos = trajectory.Last();
-                    int iMax = pos[0] + radius < _texture.width ? (int) pos[0] + radius : _texture.width;
-                    int jMax = pos[1] + radius < _texture.height ? (int) pos[1] + radius : _texture.height;
-
-                    for (int i = pos[0] - radius > 0 ? (int) pos[0] - radius : 0; i <= iMax; i++)
-                    {
-                        for (int j = pos[1] - radius > 0 ? (int) pos[1] - radius : 0; j <= jMax; j++)
-                        {
-                            _texture.SetPixel(i, j, Color.red);
-                        }
-                    }
-                }
-                break;
             }
         }
 
-        if (ShowTrajectory)
+        // Draw trajectory 
+        if (ShowTrajectory && !ShowColor())
         {
-            var poly = _blobTracker.GetPoly();
-            var linearCoef = _blobTracker.GetLinX();
+            // Draw polynomial curve
+            var poly = _blobTracker.GetPolynomialEqtn();
+            var linearCoef = _blobTracker.GetLinearEqtn();
+
             if (poly != null && linearCoef != null)
             {
                 for (int z = 500; z < 3000; z++)
@@ -134,110 +100,118 @@ public class MyViewManager : MonoBehaviour
                     int x = (int) (linearCoef[0]*z + linearCoef[1]);
                     int y = (int) (poly[0] + poly[1]*z + poly[2]*z*z);
 
-                    if (x > 0 && x < _texture.width && y > 0 && y < _texture.height)
+                    // Check if it's in image range
+                    if (x >= 0 && x < _texture.width && y >= 0 && y < _texture.height)
                     {
                         _texture.SetPixel(x, y, Color.cyan);
+                    }
+                }
+            }
+            // Draw linear curve
+            if (_blobTracker.GetSpeed() != Vector3.zero)
+            {
+                for (int z = 500; z < 3000; z++)
+                {
+                    var last = _blobTracker.GetDepthTrajectory().Last();
+                    var coef = z - last[2];
+                    var point = _blobTracker.GetSpeed().normalized*coef + last;
 
-                        if (z == _blobTracker.DepthCenter)
-                        {
-                            int iMax = x + radius+1 < _texture.width ? x + radius+1 : _texture.width;
-                            int jMax = y + radius+1 < _texture.height ? y + radius+1 : _texture.height;
+                    var x = (int) point[0];
+                    var y = (int) point[1];
 
-                            for (int i = x - (radius+1) > 0 ? x - (radius+1) : 0; i <= iMax; i++)
-                            {
-                                for (int j = y - (radius+1) > 0 ? y - (radius+1) : 0; j <= jMax; j++)
-                                {
-                                    _texture.SetPixel(i, j, Color.green);
-                                }
-                            }
-                        }
+                    //check if it's in image range
+                    if (x >= 0 && x < _texture.width && y >= 0 && y < _texture.height)
+                    {
+                        _texture.SetPixel(x, y, Color.magenta);
+                    }
+                }
+            }
+        }
+
+        // Draw impact point
+        if (ShowImpactPoint)
+        {
+            int iMax, iMin, jMax, jMin;
+            int x, y;
+
+            if (ShowColor())
+            {
+                var polImpact = _blobTracker.GetColorImpactPoint_poly();
+                var linImpact = _blobTracker.GetColorImpactPoint_lin();
+
+                // Draw polynomial impact point in color coordinate
+                x = (int) polImpact[0];
+                y = (int) polImpact[1];
+                iMin = x - SizeOfPoint < _texture.width ? x - SizeOfPoint : _texture.width;
+                iMax = x + SizeOfPoint < _texture.width ? x + SizeOfPoint : _texture.width;
+                jMin = y - SizeOfPoint < _texture.height ? y - SizeOfPoint : _texture.height;
+                jMax = y + SizeOfPoint < _texture.height ? y + SizeOfPoint : _texture.height;
+
+                for (int i = iMin; i <= iMax; i++)
+                {
+                    for (int j = jMin; j <= jMax; j++)
+                    {
+                        _texture.SetPixel(i, j, Color.blue);
                     }
                 }
 
+                // Draw linear impact point in color coordinate
+                x = (int) linImpact[0];
+                y = (int) linImpact[1];
+                iMin = x - SizeOfPoint < _texture.width ? x - SizeOfPoint : _texture.width;
+                iMax = x + SizeOfPoint < _texture.width ? x + SizeOfPoint : _texture.width;
+                jMin = y - SizeOfPoint < _texture.height ? y - SizeOfPoint : _texture.height;
+                jMax = y + SizeOfPoint < _texture.height ? y + SizeOfPoint : _texture.height;
 
+                for (int i = iMin; i <= iMax; i++)
+                {
+                    for (int j = jMin; j <= jMax; j++)
+                    {
+                        _texture.SetPixel(i, j, Color.red);
+                    }
+                }
+            }
+            else
+            {
+                // Draw polynomial impact point in depth coordinate
+                x = (int) _blobTracker.GetDepthImpactPoint_poly()[0];
+                y = (int) _blobTracker.GetDepthImpactPoint_poly()[1];
+                iMin = x - SizeOfPoint < _texture.width ? x - SizeOfPoint : _texture.width;
+                iMax = x + SizeOfPoint < _texture.width ? x + SizeOfPoint : _texture.width;
+                jMin = y - SizeOfPoint < _texture.height ? y - SizeOfPoint : _texture.height;
+                jMax = y + SizeOfPoint < _texture.height ? y + SizeOfPoint : _texture.height;
+
+                for (int i = iMin; i <= iMax; i++)
+                {
+                    for (int j = jMin; j <= jMax; j++)
+                    {
+                        _texture.SetPixel(i, j, Color.blue);
+                    }
+                }
+
+                // Draw linear impact point in depth coordinate
+                x = (int) _blobTracker.GetDepthImpactPoint_lin()[0];
+                y = (int) _blobTracker.GetDepthImpactPoint_lin()[1];
+                iMin = x - SizeOfPoint < _texture.width ? x - SizeOfPoint : _texture.width;
+                iMax = x + SizeOfPoint < _texture.width ? x + SizeOfPoint : _texture.width;
+                jMin = y - SizeOfPoint < _texture.height ? y - SizeOfPoint : _texture.height;
+                jMax = y + SizeOfPoint < _texture.height ? y + SizeOfPoint : _texture.height;
+
+                for (int i = iMin; i <= iMax; i++)
+                {
+                    for (int j = jMin; j <= jMax; j++)
+                    {
+                        _texture.SetPixel(i, j, Color.red);
+                    }
+                }
             }
         }
 
         _texture.Apply();
     }
+
+    private bool ShowColor()
+    {
+        return !ShowMeanBuffer && !ShowDepth && !ShowThresholdedZBuffer;
+    }
 }
-
-
-//THIS SHOULD BE REFACTOR SOMEWHERE ELSE
-
-//public bool AnalyseSquareForColor = false;
-//private UnityEngine.Color[] colors =
-//{
-//    Color.red, //r
-//    Color.green, //g
-//    Color.blue, //b
-//    Color.yellow //y
-//};
-//private Projectile AnalyseSquare()
-//{
-//    if (!ShowDepth)
-//    {
-//        // square drawing
-//        int xMin = 1920 / 2 - ColorCheckSquareSize / 2;
-//        int xMax = 1920 / 2 + ColorCheckSquareSize / 2;
-//        int yMin = 1080 / 2 - ColorCheckSquareSize / 2;
-//        int yMax = 1080 / 2 + ColorCheckSquareSize / 2;
-
-//        for (int i = 0; i < ColorCheckSquareSize; i++)
-//        {
-//            _Texture.SetPixel(xMin + i, yMin, Color.red);
-//            _Texture.SetPixel(xMin + i, yMin - 1, Color.red);
-
-//            _Texture.SetPixel(xMin + i, yMax, Color.red);
-//            _Texture.SetPixel(xMin + i, yMax + 1, Color.red);
-
-//            _Texture.SetPixel(xMin, yMin + i, Color.red);
-//            _Texture.SetPixel(xMin - 1, yMin + i, Color.red);
-
-//            _Texture.SetPixel(xMax, yMin + i, Color.red);
-//            _Texture.SetPixel(xMax + 1, yMin + i, Color.red);
-//        }
-
-//        // Detection
-//        int[] colorMax = { 0, 0, 0, 0 };
-
-//        for (int x = xMin + 1; x < xMax - 1; x++)
-//        {
-//            for (int y = yMin + 1; y < yMax - 1; y++)
-//            {
-//                Color current = _Texture.GetPixel(x, y);
-//                short min = -1;
-//                float distMin = float.MaxValue;
-
-//                for (short c = 0; c < colors.Length; c++)
-//                {
-//                    float dist = MyHelper.ColorSquareDiff(current, colors[c]);
-
-//                    if (dist < distMin)
-//                    {
-//                        min = c;
-//                        distMin = dist;
-//                    }
-//                }
-
-//                _Texture.SetPixel(x, y, colors[min]);
-//                colorMax[min] += 1;
-//            }
-//        }
-
-//        int maxValue = colorMax.Max();
-//        int maxIndex = colorMax.ToList().IndexOf(maxValue);
-
-//        // set zone in top left corner
-//        //for (int x = 1; x < 50; x++)
-//        //{
-//        //    for (int y = 1; y < 50; y++)
-//        //    {
-//        //        _Texture.SetPixel(x, y, colors[maxIndex]);
-//        //    }
-//        //}
-
-//        return (Projectile)maxIndex;
-//    }
-//    return Projectile.None;
-//}

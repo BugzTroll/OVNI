@@ -1,6 +1,4 @@
-﻿using System;
-using UnityEngine;
-using System.Collections;
+﻿using UnityEngine;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -9,8 +7,6 @@ using Windows.Kinect;
 using AForge.Imaging;
 using AForge.Imaging.Filters;
 using MathNet.Numerics;
-using MathNet.Numerics.LinearAlgebra;
-using MathNet.Numerics.LinearRegression;
 using Color = System.Drawing.Color;
 
 public class MyBlobTracker : MonoBehaviour
@@ -27,6 +23,9 @@ public class MyBlobTracker : MonoBehaviour
     [Range(0, 50)] public int ThresholdTrajectory = 10;
     [Range(0, 30)] public int FramesWithoutBlobNeededToClear = 10;
     [Range(0, 5)] public int ColorNeighborhoodSize = 2;
+    [Range(2, 10)] public int MinPointRequired = 2;
+
+    private KinectSensor _sensor;
 
     private MyDepthSourceManager _depthManager;
     private Bitmap _resizedZBuffer;
@@ -34,127 +33,73 @@ public class MyBlobTracker : MonoBehaviour
     private Bitmap _meanZBuffer;
 
     private MyColorSourceManager _colorManager;
-    private Bitmap _resizedColor;
-
     private GrayscaleToRGB _grey2Rgb;
-    private List<Vector3> _trajectory;
-    private Blob[] _blobs;
-    private double[] _poly;
-    private float[] _lin;
-    private float _lastDist;
-    private int _framesWithoutBlob;
-    private Vector3 _speed;
+    private Bitmap _resizedColor;
     private Color _blobColor;
 
-    public List<Vector3> GetDepthTrajectory()
-    {
-        return _trajectory;
-    }
 
-    public List<Vector3> GetColorTrajectory()
-    {
-        var sensor = KinectSensor.GetDefault();
-        List<Vector3> colorTrajectory = new List<Vector3>();
-        foreach (var pos in _trajectory)
-        {
-            int cpt = 0;
-            DepthSpacePoint point = new DepthSpacePoint();
-            point.X = (int) (pos[0]/ZBufferScale);
-            point.Y = (int) (pos[1]/ZBufferScale);
+    private List<Vector3> _trajectory;
+    private Vector3 _colorImpactLin;
+    private Vector3 _colorImpactPol;
+    private Vector3 _depthImpactLin;
+    private Vector3 _depthImpactPol;
+    private Vector3 _speed;
+    private Blob[] _blobs;
+    private int _framesWithoutBlob;
+    private double[] _polyEqtn;
+    private double[] _linEqtn;
+    private float _lastDist;
 
-            var z = _depthManager.GetRawZ((int) point.X, (int) point.Y);
-
-            var colorSpacePoint = sensor.CoordinateMapper.MapDepthPointToColorSpace(point, z);
-
-            if (!float.IsNegativeInfinity(colorSpacePoint.X) && !float.IsNegativeInfinity(colorSpacePoint.Y))
-            {
-                colorSpacePoint.X *= ColorScale;
-                colorSpacePoint.Y *= ColorScale;
-                colorTrajectory.Add(new Vector3(colorSpacePoint.X, colorSpacePoint.Y, 0.0f));
-            }
-            else
-            {
-                cpt++;
-            }
-        }
-
-        return colorTrajectory;
-    }
-
-    public double[] GetPoly()
-    {
-        return _poly;
-    }
-
-    public float[] GetLinX()
-    {
-        return _lin;
-    }
-
-    public Bitmap GetResizedZBuffer()
-    {
-        return _grey2Rgb.Apply(_resizedZBuffer);
-    }
-
-    public Bitmap GetMeanZBuffer()
-    {
-        return _grey2Rgb.Apply(_meanZBuffer);
-    }
-
-    public Bitmap GetThresholdedZBuffer()
-    {
-        return _grey2Rgb.Apply(_thresholdedZBuffer);
-    }
-
-    public Bitmap GetResizedColor()
-    {
-        return _resizedColor;
-    }
 
     void Start()
     {
+        _sensor = KinectSensor.GetDefault();
         _grey2Rgb = new GrayscaleToRGB();
         _depthManager = DepthManager.GetComponent<MyDepthSourceManager>();
         _colorManager = ColorManager.GetComponent<MyColorSourceManager>();
         _blobs = new Blob[0];
         _trajectory = new List<Vector3>();
         _framesWithoutBlob = 0;
-        _lin = null;
-        _poly = null;
+
         _lastDist = 0;
         _speed = new Vector3(0, 0, 0);
         _resizedZBuffer = new Bitmap(1, 1, PixelFormat.Format8bppIndexed);
         _thresholdedZBuffer = new Bitmap(1, 1, PixelFormat.Format8bppIndexed);
         _meanZBuffer = new Bitmap(1, 1, PixelFormat.Format8bppIndexed);
+        _linEqtn = null;
+        _polyEqtn = null;
+        _colorImpactLin = new Vector3(0, 0, 0);
+        _colorImpactPol = new Vector3(0, 0, 0);
+        _depthImpactLin = new Vector3(0, 0, 0);
+        _depthImpactPol = new Vector3(0, 0, 0);
     }
 
     void Update()
     {
         var depthFrameDescriptor = _depthManager.GetDescriptor();
 
-        // Create Z-Buffer Bitmap From Depth Manager Data (16 bit/pixel greyscale)
+        // Create z-buffer bitmap from depth manager data (16 bit/pixel greyscale)
         var zBuffer = MyConverter.ByteArray2Bmp(_depthManager.GetData(),
             depthFrameDescriptor.Width,
             depthFrameDescriptor.Height,
             PixelFormat.Format16bppGrayScale);
 
-        // Resize Depth Buffer
+        // Resize depth buffer
         var depthResizeFilter = new ResizeNearestNeighbor((int) (ZBufferScale*depthFrameDescriptor.Width),
             (int) (ZBufferScale*depthFrameDescriptor.Height));
 
         _resizedZBuffer = depthResizeFilter.Apply(zBuffer);
         _resizedZBuffer = AForge.Imaging.Image.Convert16bppTo8bpp(_resizedZBuffer);
 
-        //// create filter
+        // Mean filter
         Mean filter = new Mean();
-        // apply the filter
         _meanZBuffer = filter.Apply(_resizedZBuffer);
 
-        // threshold Z-Buffer To Reduce Noise
+        // Threshold z-buffer to reduce noise
         Threshold treshFilter = new Threshold(ThresholdBlob);
         _thresholdedZBuffer = treshFilter.Apply(_meanZBuffer);
 
-        // Blob Filtering
+        // Blob filtering
         var blobFilter = new BlobCounter();
         blobFilter.CoupledSizeFiltering = true;
         blobFilter.FilterBlobs = true;
@@ -164,124 +109,10 @@ public class MyBlobTracker : MonoBehaviour
         blobFilter.MaxWidth = MaxSizeBlob;
         blobFilter.ProcessImage(_thresholdedZBuffer);
 
-        // Fill Blob Array 
+        // Fill blob array 
         _blobs = blobFilter.GetObjectsInformation();
 
-        var biggestBlob = GetBiggestBlob();
-
-        // Trajectory Analysis
-        if (biggestBlob != null)
-        {
-            _framesWithoutBlob = 0;
-            int x = (int) biggestBlob.CenterOfGravity.X;
-            int y = (int) biggestBlob.CenterOfGravity.Y;
-            int maxz = 0;
-            for (int i = -1; i < 2; i++)
-            {
-                for (int j = -1; j < 2; j++)
-                {
-                    if ((int) ((x + i)/ZBufferScale) >= 0 &&
-                        (int) ((x + i)/ZBufferScale) < _depthManager.GetDescriptor().Width &&
-                        (int) ((y + j)/ZBufferScale) >= 0 &&
-                        (int) ((y + j)/ZBufferScale) < _depthManager.GetDescriptor().Height)
-                    {
-                        int z = _depthManager.GetRawZ((int) ((x + i)/ZBufferScale), (int) ((y + j)/ZBufferScale));
-                        if (z > maxz)
-                        {
-                            maxz = z;
-                        }
-                    }
-                }
-            }
-            if (maxz > KinectSensor.GetDefault().DepthFrameSource.DepthMinReliableDistance &&
-                maxz < KinectSensor.GetDefault().DepthFrameSource.DepthMaxReliableDistance &&
-                maxz > _lastDist)
-            {
-                if (_trajectory.Count > 2 && _poly != null && _lin != null)
-                {
-                    int xcheck = (int) (_lin[0]*maxz + _lin[1]);
-                    int ycheck = (int) (_poly[0] + _poly[1]*maxz + _poly[2]*maxz*maxz);
-                    if (Math.Abs(x - xcheck) < ThresholdTrajectory && Math.Abs(y - ycheck) < ThresholdTrajectory)
-                    {
-                        var new_point = new Vector3(x, y, maxz);
-                        _speed = (new_point - _trajectory.Last()) /(_framesWithoutBlob + 1);
-                        _trajectory.Add(new Vector3(x, y, maxz));
-                        _lastDist = maxz;
-                    }
-                }
-                else if (_trajectory.Count < 3)
-                {
-                    _trajectory.Add(new Vector3(x, y, maxz));
-                    _lastDist = maxz;
-                }
-            }
-        }
-        else
-        {
-            _framesWithoutBlob++;
-            if (_framesWithoutBlob >= FramesWithoutBlobNeededToClear)
-            {
-                _trajectory.Clear();
-                _lastDist = 0;
-                _poly = null;
-                _lin = null;
-            }
-        }
-
-        if (_trajectory.Count > 2)
-        {
-            _lin = new float[2];
-            _lin[0] = (_trajectory[0][0] - _trajectory.Last()[0])/(_trajectory[0][2] - _trajectory.Last()[2]);
-            _lin[1] = _trajectory[0][0] - _lin[0]*_trajectory[0][2];
-
-            // generate parametric data for the polynomial regression
-            double[] zData = new double[_trajectory.Count];
-            double[] yData = new double[_trajectory.Count];
-
-            for (int i = 0; i < _trajectory.Count; i++)
-            {
-                var pos = _trajectory[i];
-                zData[i] = pos[2];
-                yData[i] = pos[1];
-            }
-
-            // find polynomial coefficients
-            _poly = Fit.Polynomial(zData, yData, 2);
-
-            if (_poly[2] < 0)
-            {
-                _poly[1] = (_trajectory[0][1] - _trajectory.Last()[1])/(_trajectory[0][2] - _trajectory.Last()[2]);
-                _poly[0] = _trajectory[0][1] - _poly[1]*_trajectory[0][2];
-                _poly[2] = 0.0f;
-            }
-        }
-
-        // compute point of impact
-        if (_poly != null && _lin != null)
-        {
-            int z = DepthCenter;
-            int x = (int) (_lin[0]*z + _lin[1]);
-            int y = (int) (_poly[0] + _poly[1]*z + _poly[2]*z*z);
-
-            if (x >= 0 && x < _thresholdedZBuffer.Width &&
-                y >= 0 && y < _thresholdedZBuffer.Height)
-            {
-                if (_lastDist + _speed[2] > DepthCenter)
-                {
-                    // feed (x,y) + speed au jeu 
-                    Debug.Log("impact : " + new Vector3(x, y, z));
-                    Debug.Log("speed : " + _speed);
-
-                    _speed = new Vector3(0, 0, 0);
-                    _trajectory.Clear();
-                    _lastDist = 0;
-                    _poly = null;
-                    _lin = null;
-                }
-            }
-        }
-
-        // Color Analysis
+        // Create color bitmap from color manager data (32 bit/pixel argb)
         var colorFrameDescriptor = _colorManager.GetDescriptor();
 
         var colorImg = MyConverter.ByteArray2Bmp(_colorManager.GetData(),
@@ -289,22 +120,236 @@ public class MyBlobTracker : MonoBehaviour
             colorFrameDescriptor.Height,
             PixelFormat.Format32bppArgb);
 
-        var resizeFilter = new ResizeNearestNeighbor((int)(ColorScale * colorFrameDescriptor.Width),
-            (int)(ColorScale * colorFrameDescriptor.Height));
+        // Resize color bitmap
+        var resizeFilter = new ResizeNearestNeighbor((int) (ColorScale*colorFrameDescriptor.Width),
+            (int) (ColorScale*colorFrameDescriptor.Height));
 
         _resizedColor = resizeFilter.Apply(colorImg);
 
-        if (_trajectory.Count > 2)
-            _blobColor = getBallColor();
+        // Analyse trajectory
+        AnalyseTrajectory();
+
+        // Color analysis
+        AnalyseColor();
+
+        // Compute impact point
+        if (_polyEqtn != null && _linEqtn != null)
+        {
+            // Compute impact point with polynomial eqtn
+            int polyZ = DepthCenter;
+            int polyX = (int) (_linEqtn[0]*polyZ + _linEqtn[1]);
+            int polyY = (int) (_polyEqtn[0] + _polyEqtn[1]*polyZ + _polyEqtn[2]*polyZ*polyZ);
+
+            if (polyX >= 0 && polyX < _resizedZBuffer.Width &&
+                polyY >= 0 && polyY < _resizedZBuffer.Height)
+            {
+                _depthImpactPol = new Vector3(polyX, polyY, polyZ);
+                _colorImpactPol = DepthPoint2ColorPointVector3(_depthImpactPol);
+            }
+
+            // Compute impact point with linear eqtn
+            int linZ = DepthCenter;
+            var deltaZ = DepthCenter - _trajectory.Last()[2];
+            int linX = (int) (deltaZ*_speed.normalized[0] + _trajectory.Last()[0]);
+            int linY = (int) (deltaZ*_speed.normalized[1] + _trajectory.Last()[1]);
+
+            if (linX >= 0 && linX < _resizedZBuffer.Width &&
+                linY >= 0 && linY < _resizedZBuffer.Height)
+            {
+                _depthImpactLin = new Vector3(linX, linY, linZ);
+                _colorImpactLin = DepthPoint2ColorPointVector3(_depthImpactLin);
+            }
+
+            // If we should hit the wall at next frame
+            if (_lastDist + _speed[2] > DepthCenter)
+            {
+                // TODO feed (x,y) + speed au jeu 
+                Debug.Log("impact : " + _depthImpactLin);
+                Debug.Log("speed : " + _speed);
+
+                ResetTrajectory();
+            }
+        }
     }
 
-    private Color getBallColor()
+
+    private Vector3 DepthPoint2ColorPointVector3(Vector3 depthPoint)
     {
-        int[] colorMax = {0, 0, 0};
-        System.Drawing.Color[] colors =
+        DepthSpacePoint point = new DepthSpacePoint();
+        point.X = (int) (depthPoint.x/ZBufferScale);
+        point.Y = (int) (depthPoint.y/ZBufferScale);
+
+        var depth = _depthManager.GetRawZ((int) point.X, (int) point.Y);
+
+        var colorSpacePoint = _sensor.CoordinateMapper.MapDepthPointToColorSpace(point, depth);
+
+        if (!float.IsNegativeInfinity(colorSpacePoint.X) && !float.IsNegativeInfinity(colorSpacePoint.Y))
         {
-            System.Drawing.Color.Red, System.Drawing.Color.Green, System.Drawing.Color.Blue
+            colorSpacePoint.X *= ColorScale;
+            colorSpacePoint.Y *= ColorScale;
+        }
+
+        return new Vector3(colorSpacePoint.X, colorSpacePoint.Y, depth);
+    }
+
+    #region Trajectory
+
+    private void ResetTrajectory()
+    {
+        _speed = new Vector3(0, 0, 0);
+        _trajectory.Clear();
+        _lastDist = 0;
+        _polyEqtn = null;
+        _linEqtn = null;
+    }
+
+    private void AnalyseTrajectory()
+    {
+        // Get biggest blob
+        Blob biggestBlob = null;
+        int maxArea = 0;
+        foreach (var blob in _blobs)
+        {
+            if (blob.Area > maxArea)
+            {
+                maxArea = blob.Area;
+                biggestBlob = blob;
+            }
+        }
+
+        // Get ball position
+        if (biggestBlob != null)
+        {
+            _framesWithoutBlob = 0;
+
+            int x = (int) biggestBlob.CenterOfGravity.X;
+            int y = (int) biggestBlob.CenterOfGravity.Y;
+
+            int maxZ = 0;
+            int radius = 1;
+
+            // Manage side of image
+            int minI = x - radius < _thresholdedZBuffer.Width ? x - radius : _thresholdedZBuffer.Width;
+            int maxI = x + radius < _thresholdedZBuffer.Width ? x + radius : _thresholdedZBuffer.Width;
+            int minJ = y - radius < _thresholdedZBuffer.Height ? y - radius : _thresholdedZBuffer.Height;
+            int maxJ = y + radius < _thresholdedZBuffer.Height ? y + radius : _thresholdedZBuffer.Height;
+
+            // Get the max Z value in a neighborhood around center of ball
+            for (int i = minI; i < maxI; i++)
+            {
+                for (int j = minJ; j < maxJ; j++)
+                {
+                    // TODO we should take the median instead of max
+                    int z = _depthManager.GetRawZ((int) (i/ZBufferScale), (int) (j/ZBufferScale));
+                    if (z > maxZ)
+                    {
+                        maxZ = z;
+                    }
+                }
+            }
+
+            // Check that the z is in kinect range and bigger than last point 
+            if (maxZ < KinectSensor.GetDefault().DepthFrameSource.DepthMaxReliableDistance &&
+                maxZ > KinectSensor.GetDefault().DepthFrameSource.DepthMinReliableDistance &&
+                maxZ > _lastDist)
+            {
+                if (_trajectory.Count > MinPointRequired &&
+                    _linEqtn != null &&
+                    _polyEqtn != null)
+                {
+                    // Check if the point is over 'curve'
+
+                    //int xcheck = (int) (_linEqtn[0]*maxZ + _linEqtn[1]);
+                    //int ycheck = (int) (_polyEqtn[0] + _polyEqtn[1]*maxZ + _polyEqtn[2]*maxZ*maxZ);
+                    //if (Math.Abs(x - xcheck) < ThresholdTrajectory && Math.Abs(y - ycheck) < ThresholdTrajectory)
+                    {
+                        var newPoint = new Vector3(x, y, maxZ);
+                        _speed = (newPoint - _trajectory.Last())/(_framesWithoutBlob + 1);
+                        _trajectory.Add(newPoint);
+                        _lastDist = maxZ;
+                    }
+                }
+                else
+                {
+                    // Add the point                            // TODO we need to make sure no false point pass through here
+                    _trajectory.Add(new Vector3(x, y, maxZ));
+                    _lastDist = maxZ;
+                }
+            }
+        }
+        else
+        {
+            // No ball detected
+            _framesWithoutBlob++;
+            if (_framesWithoutBlob >= FramesWithoutBlobNeededToClear)
+            {
+                ResetTrajectory();
+            }
+        }
+
+        // Find the coefficients for polynomial equation
+        ComputePolynomialEquation();
+    }
+
+    private void ComputePolynomialEquation()
+    {
+        if (_trajectory.Count > MinPointRequired)
+        {
+            // Find linear equation of X by Z
+            _linEqtn = new double[2];
+            _linEqtn[0] = (_trajectory[0][0] - _trajectory.Last()[0])/(_trajectory[0][2] - _trajectory.Last()[2]);
+            _linEqtn[1] = _trajectory[0][0] - _linEqtn[0]*_trajectory[0][2];
+
+            // Projection over Z plane
+            double[] zData = new double[_trajectory.Count];
+            double[] yData = new double[_trajectory.Count];
+
+            // Generate parametric data for regression
+            for (int i = 0; i < _trajectory.Count; i++)
+            {
+                var pos = _trajectory[i];
+                zData[i] = pos[2];
+                yData[i] = pos[1];
+            }
+
+            // Find polynomial coefficients
+            _polyEqtn = Fit.Polynomial(zData, yData, 2);
+
+            // Check if the curve is upward and swap to linear equation 
+            if (_polyEqtn[2] < 0)
+            {
+                _polyEqtn[1] = (_trajectory[0][1] - _trajectory.Last()[1])/(_trajectory[0][2] - _trajectory.Last()[2]);
+                _polyEqtn[0] = _trajectory[0][1] - _polyEqtn[1]*_trajectory[0][2];
+                _polyEqtn[2] = 0.0f;
+            }
+        }
+    }
+
+    private void ComputeLinearEquation()
+    {
+        // ALLO
+    }
+
+    #endregion
+
+    #region Color
+
+    private void AnalyseColor()
+    {
+        AnalyseBallColorOverTrajectory();
+    }
+
+    private void AnalyseBallColorOverTrajectory()
+    {
+        List<int> colorMax = new List<int>() {0, 0, 0};
+
+        Color[] colors =
+        {
+            Color.Red,
+            Color.Green,
+            Color.Blue
         };
+
         List<Vector3> colorTrajectory = GetColorTrajectory();
 
         foreach (Vector3 ballPosition in colorTrajectory)
@@ -316,7 +361,7 @@ public class MyBlobTracker : MonoBehaviour
                     if ((int) ballPosition[0] + x >= 0 && (int) ballPosition[0] + x < _resizedColor.Width &&
                         (int) ballPosition[1] + y >= 0 && (int) ballPosition[1] + y < _resizedColor.Height)
                     {
-                        System.Drawing.Color current = _resizedColor.GetPixel((int) ballPosition[0] + x,
+                        Color current = _resizedColor.GetPixel((int) ballPosition[0] + x,
                             (int) ballPosition[1] + y);
 
                         short min = -1;
@@ -340,34 +385,85 @@ public class MyBlobTracker : MonoBehaviour
         }
 
         int maxValue = colorMax.Max();
-        int maxIndex = colorMax.ToList().IndexOf(maxValue);
-        return colors[maxIndex];
+        int maxIndex = colorMax.IndexOf(maxValue);
+        _blobColor = colors[maxIndex];
     }
 
-    private Blob GetBiggestBlob()
+    #endregion
+
+    #region Getter
+
+    public List<Vector3> GetDepthTrajectory()
     {
-        Blob biggestBlob = null;
-        int maxArea = 0;
-        foreach (var blob in _blobs)
+        return _trajectory;
+    }
+
+    public List<Vector3> GetColorTrajectory()
+    {
+        List<Vector3> colorTrajectory = new List<Vector3>();
+        foreach (var pos in _trajectory)
         {
-            if (blob.Area > maxArea)
-            {
-                maxArea = blob.Area;
-                biggestBlob = blob;
-            }
+            var colorPos = DepthPoint2ColorPointVector3(pos);
+            colorTrajectory.Add(colorPos);
         }
-        return biggestBlob;
+
+        return colorTrajectory;
     }
 
-    public UnityEngine.Color GetBlobColor()
+    public double[] GetPolynomialEqtn()
     {
-        if (_blobColor == System.Drawing.Color.Red)
-            return UnityEngine.Color.red;
-        else if (_blobColor == System.Drawing.Color.Green)
-            return UnityEngine.Color.green;
-        else if (_blobColor == System.Drawing.Color.Blue)
-            return UnityEngine.Color.blue;
-        else
-            return UnityEngine.Color.white;
+        return _polyEqtn;
     }
+
+    public double[] GetLinearEqtn()
+    {
+        return _linEqtn;
+    }
+
+    public Vector3 GetSpeed()
+    {
+        return _speed;
+    }
+
+    public Bitmap GetResizedZBuffer()
+    {
+        return _grey2Rgb.Apply(_resizedZBuffer);
+    }
+
+    public Bitmap GetMeanZBuffer()
+    {
+        return _grey2Rgb.Apply(_meanZBuffer);
+    }
+
+    public Bitmap GetThresholdedZBuffer()
+    {
+        return _grey2Rgb.Apply(_thresholdedZBuffer);
+    }
+
+    public Bitmap GetResizedColor()
+    {
+        return _resizedColor;
+    }
+
+    public Vector3 GetColorImpactPoint_poly()
+    {
+        return _colorImpactPol;
+    }
+
+    public Vector3 GetColorImpactPoint_lin()
+    {
+        return _colorImpactLin;
+    }
+
+    public Vector3 GetDepthImpactPoint_poly()
+    {
+        return _depthImpactPol;
+    }
+
+    public Vector3 GetDepthImpactPoint_lin()
+    {
+        return _depthImpactLin;
+    }
+
+    #endregion
 }

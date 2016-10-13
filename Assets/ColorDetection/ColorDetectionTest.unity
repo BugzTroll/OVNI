@@ -216,10 +216,11 @@ MonoBehaviour:
   ColorScale: 0.15
   MinSizeBlob: 6
   MaxSizeBlob: 20
-  ThresholdBlob: 85
+  ThresholdBlob: 50
   ThresholdTrajectory: 10
   FramesWithoutBlobNeededToClear: 10
   ColorNeighborhoodSize: 2
+  MinPointRequired: 2
 --- !u!4 &1037921811
 Transform:
   m_ObjectHideFlags: 0
@@ -392,12 +393,13 @@ MonoBehaviour:
   ColorManager: {fileID: 2128184201}
   DepthManager: {fileID: 1751594993}
   BlobTracker: {fileID: 1037921809}
-  ColorCheckSquareSize: 19
+  SizeOfPoint: 1
   ShowDepth: 0
-  ShowThresholdedZBuffer: 1
-  ShowCurrentPos: 0
-  ShowPositionOnTrajectory: 1
-  ShowTrajectory: 1
+  ShowMeanBuffer: 0
+  ShowThresholdedZBuffer: 0
+  ShowPositions: 1
+  ShowTrajectory: 0
+  ShowImpactPoint: 1
 --- !u!4 &1860005146
 Transform:
   m_ObjectHideFlags: 0

@@ -19,27 +19,6 @@ public class MyDepthSourceManager : MonoBehaviour
     private int _framecounter;
     private uint _bufferSize;
 
-    public byte[] GetData()
-    {
-        return MyConverter.ShortArray2ByteArray(_data);
-    }
-
-    public ushort GetRawZ(int i, int j)
-    {
-        return (ushort) (_backgroundMean[i + j*GetDescriptor().Width] -
-                         _data[i + j*GetDescriptor().Width]/ScalingFactorZBuffer);
-    }
-
-    public Texture2D GetDepthTexture()
-    {
-        return _texture;
-    }
-
-    public FrameDescription GetDescriptor()
-    {
-        return _sensor.DepthFrameSource.FrameDescription;
-    }
-
     void Start()
     {
         _framecounter = 0;
@@ -134,5 +113,26 @@ public class MyDepthSourceManager : MonoBehaviour
 
             _sensor = null;
         }
+    }
+
+    public byte[] GetData()
+    {
+        return MyConverter.ShortArray2ByteArray(_data);
+    }
+
+    public ushort GetRawZ(int i, int j)
+    {
+        return (ushort)(_backgroundMean[i + j * GetDescriptor().Width] -
+                         _data[i + j * GetDescriptor().Width] / ScalingFactorZBuffer);
+    }
+
+    public Texture2D GetDepthTexture()
+    {
+        return _texture;
+    }
+
+    public FrameDescription GetDescriptor()
+    {
+        return _sensor.DepthFrameSource.FrameDescription;
     }
 }
