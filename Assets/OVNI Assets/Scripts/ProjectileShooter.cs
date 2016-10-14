@@ -63,7 +63,7 @@ public class ProjectileShooter : MonoBehaviour {
             Vector3 trajectory = Camera.main.transform.forward;
 
             
-            ShootProjectile(positionFromClick, trajectory, equippedProjectile);
+            ShootProjectile(positionFromClick, trajectory);
         }
     }
 
@@ -87,21 +87,23 @@ public class ProjectileShooter : MonoBehaviour {
 
 
 
-    public void ShootProjectile(Vector3 startPosition, Vector3 startTrajectory, ProjectileType type)
+    public void ShootProjectile(Vector3 startPosition, Vector3 startTrajectory)
     {
+        ProjectileType type = equippedProjectile;
         switch (type)
         {
             case ProjectileType.BOMB:
                 CreateProjectile(bombPrefab, startPosition, startTrajectory);
-                bombCount--;
+                if (bombCount > 0)
+                    bombCount--;
                 break;
 
             case ProjectileType.TOMATO:
                 CreateProjectile(tomatoPrefab, startPosition, startTrajectory);
-                bombCount--;
+                if (tomatoCount > 0)
+                    tomatoCount--;
                 break;
         }
-
     }
 
     

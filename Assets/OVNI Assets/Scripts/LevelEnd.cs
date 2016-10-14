@@ -50,7 +50,7 @@ public class LevelEnd : MonoBehaviour {
     }
     void CheckAmmoCount()
     {
-        if (shooter.tomatoCount + shooter.bombCount == 0)
+        if (shooter.tomatoCount + shooter.bombCount <= 0)
         {
             levelEndPanel.SetActive(true);
             optionsTint.SetActive(true);

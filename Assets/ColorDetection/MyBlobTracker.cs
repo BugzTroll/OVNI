@@ -187,8 +187,8 @@ public class MyBlobTracker : MonoBehaviour
                 {
                     shooter.ShootProjectile(
                         Camera.main.ScreenToWorldPoint(screenPoint),
-                        new Vector3(0,0,1), 
-                        ProjectileShooter.ProjectileType.TOMATO);
+                        new Vector3(0,0,1)
+                        );
 
                     Debug.Log("proj position:" + Camera.main.ScreenToWorldPoint(screenPoint));
                 }
