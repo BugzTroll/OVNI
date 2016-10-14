@@ -40,6 +40,25 @@ public class GameManager
 
     private GameObject KinectMenuInteraction;
 
+    private ProjectileShooter shooter {
+        get { return shooter; }
+        set
+        {
+            shooter = value;
+
+            MyBlobTracker blobtracker = null;
+            var obj = GameObject.Find("BlobTracker");
+
+            if (obj)
+                blobtracker = obj.GetComponent<MyBlobTracker>();
+            
+            if (blobtracker)
+                blobtracker.SetShooter(shooter);
+        } 
+    }
+
+
+
     // make sure the constructor is private, so it can only be instantiated here
     private GameManager()
     {
@@ -131,7 +150,15 @@ public class GameManager
     void OnSceneChanged(Scene oldScene, Scene newScene)
     {
         Debug.Log("New scene loaded: " + newScene.buildIndex + ", " + newScene.name);
+
+        GameObject projectileShooterObject = GameObject.Find("Player");
+        if (projectileShooterObject != null)
+        {
+            shooter = projectileShooterObject.GetComponent<ProjectileShooter>();
+        }
+
     }
+
 
     private void Quit()
     {

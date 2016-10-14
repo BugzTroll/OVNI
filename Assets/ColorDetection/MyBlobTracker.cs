@@ -24,8 +24,11 @@ public class MyBlobTracker : MonoBehaviour
     [Range(0, 30)] public int FramesWithoutBlobNeededToClear = 10;
     [Range(0, 5)] public int ColorNeighborhoodSize = 2;
     [Range(2, 10)] public int MinPointRequired = 2;
+    public Vector2 LeftBotomScreen = Vector2.zero;
+    public Vector2 RightTopScreen = Vector2.zero;
 
     private KinectSensor _sensor;
+    private ProjectileShooter shooter;
 
     private MyDepthSourceManager _depthManager;
     private Bitmap _resizedZBuffer;
@@ -36,7 +39,6 @@ public class MyBlobTracker : MonoBehaviour
     private GrayscaleToRGB _grey2Rgb;
     private Bitmap _resizedColor;
     private Color _blobColor;
-
 
     private List<Vector3> _trajectory;
     private Vector3 _colorImpactLin;
@@ -54,13 +56,17 @@ public class MyBlobTracker : MonoBehaviour
     void Start()
     {
         _sensor = KinectSensor.GetDefault();
+        GameObject projectileShooterObject = GameObject.Find("Player");
+        if (projectileShooterObject != null)
+        {
+            shooter = projectileShooterObject.GetComponent<ProjectileShooter>();
+        }
         _grey2Rgb = new GrayscaleToRGB();
         _depthManager = DepthManager.GetComponent<MyDepthSourceManager>();
         _colorManager = ColorManager.GetComponent<MyColorSourceManager>();
         _blobs = new Blob[0];
         _trajectory = new List<Vector3>();
         _framesWithoutBlob = 0;
-
         _lastDist = 0;
         _speed = new Vector3(0, 0, 0);
         _resizedZBuffer = new Bitmap(1, 1, PixelFormat.Format8bppIndexed);
@@ -163,7 +169,30 @@ public class MyBlobTracker : MonoBehaviour
             // If we should hit the wall at next frame
             if (_lastDist + _speed[2] > DepthCenter)
             {
-                // TODO feed (x,y) + speed au jeu 
+                float xScreenSpace = (_colorImpactLin[0] - LeftBotomScreen[0])/(RightTopScreen[0] - LeftBotomScreen[0]) * Camera.main.pixelWidth;
+                float yScreenSpace = (1 -
+                                     (_colorImpactLin[1] - (_colorManager.GetDescriptor().Height - RightTopScreen[1]))/
+                                     (RightTopScreen[1] - LeftBotomScreen[1])) * Camera.main.pixelHeight;
+                var screenPoint = new Vector3(xScreenSpace, yScreenSpace,0);
+
+                _speed.z /= 100;
+
+                GameObject projectileShooterObject = GameObject.Find("Player");
+                if (projectileShooterObject != null)
+                {
+                    shooter = projectileShooterObject.GetComponent<ProjectileShooter>();
+                }
+
+                if (shooter)
+                {
+                    shooter.ShootProjectile(
+                        Camera.main.ScreenToWorldPoint(screenPoint),
+                        new Vector3(0,0,1), 
+                        ProjectileShooter.ProjectileType.TOMATO);
+
+                    Debug.Log("proj position:" + Camera.main.ScreenToWorldPoint(screenPoint));
+                }
+
                 Debug.Log("impact : " + _depthImpactLin);
                 Debug.Log("speed : " + _speed);
 
@@ -172,6 +201,10 @@ public class MyBlobTracker : MonoBehaviour
         }
     }
 
+    public void SetShooter(ProjectileShooter shoot)
+    {
+        shooter = shoot;
+    }
 
     private Vector3 DepthPoint2ColorPointVector3(Vector3 depthPoint)
     {
