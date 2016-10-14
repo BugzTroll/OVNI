@@ -140,6 +140,10 @@ Prefab:
       propertyPath: bombCount
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 1000012078928316, guid: 29f94dac6694b2045aaf35850b45c64f, type: 2}
+      propertyPath: m_Name
+      value: Player
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 114000013089697994, guid: 29f94dac6694b2045aaf35850b45c64f, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: 29f94dac6694b2045aaf35850b45c64f, type: 2}
@@ -868,7 +872,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
 --- !u!1001 &2066641503
 Prefab:
   m_ObjectHideFlags: 0

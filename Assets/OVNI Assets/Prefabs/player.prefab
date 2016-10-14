@@ -54,6 +54,6 @@ MonoBehaviour:
   tomatoPrefab: {fileID: 1000012715797112, guid: b332305ce86fc9b419459c0fad936138,
     type: 2}
   bombPrefab: {fileID: 1000010377066388, guid: 728970f7225f57b4587d117fdf68ae2b, type: 2}
-  tomatoCount: 5
+  tomatoCount: 20
   bombCount: 3
   speed: 20
