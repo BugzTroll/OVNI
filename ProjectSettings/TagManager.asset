@@ -5,6 +5,12 @@ TagManager:
   serializedVersion: 2
   tags:
   - Clickable
+  - Fire
+  - Kinect
+  - Wall
+  - Destructable
+  - Projectile
+  - Container
   layers:
   - Default
   - TransparentFX

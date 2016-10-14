@@ -4,11 +4,22 @@ using UnityEngine.SceneManagement;
 
 public class LevelSelection : MonoBehaviour {
 
-    private GameObject ui;
-	// Use this for initialization
-	void Start ()
+    public GameObject Shadow_planete2;
+    public GameObject Sphere_planete2;
+
+    public GameObject Shadow_planete3;
+    public GameObject Sphere_planete3;
+
+    public GameObject Shadow_planete4;
+    public GameObject Sphere_planete4;
+
+    public GameObject Shadow_planete5;
+    public GameObject Sphere_planete5;
+
+    // Use this for initialization
+    void Start ()
     {
-        ui = GameObject.Find("UI");
+        updatePlanetUI();
     }
 	
 	// Update is called once per frame
@@ -22,23 +33,52 @@ public class LevelSelection : MonoBehaviour {
             {
                 if (hit.collider.tag == "Clickable")
                 {
-                    //Destroy(gameObject);
-                    
-                    LoadLevel();
+                    if (hit.collider.name == "Planete1")
+                    {
+                        // change to scene associated to planet
+                        GameManager.Instance.ChangeScene("Planete1");                      
+                    }
+                    if (hit.collider.name == "Planete2")
+                    {
+                        // change to scene associated to planet
+                        GameManager.Instance.ChangeScene("Planete2");
+                    }
+                    if (hit.collider.name == "Planete3")
+                    {
+                        // change to scene associated to planet
+                        GameManager.Instance.ChangeScene("Planete3");
+                    }
+                    if (hit.collider.name == "Planete4")
+                    {
+                        // change to scene associated to planet
+                        GameManager.Instance.ChangeScene("Planete4");
+                    }
+                    if (hit.collider.name == "Planete5")
+                    {
+                        // change to scene associated to planet
+                        GameManager.Instance.ChangeScene("Planete5");
+                    }
                 }
                     
             }
         }
 	}
 
-    void LoadLevel()
+    void updatePlanetUI()
     {
-        StartOptions opt = ui.GetComponent<StartOptions>();
-        opt.sceneToStart = 2;
-        opt.Invoke("StartButtonClicked", 0);
+        if (GameManager.Instance.LevelProgression.Contains(GameManager.GameLevel.Planete1))
+        {
+            Shadow_planete2.SetActive(false);
+            Sphere_planete2.tag = "Clickable";
 
-        // temp
-        //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-        
+            Shadow_planete3.SetActive(false);
+            Sphere_planete3.tag = "Clickable";
+        }
+
+        if (GameManager.Instance.LevelProgression.Contains(GameManager.GameLevel.Planete2) && GameManager.Instance.LevelProgression.Contains(GameManager.GameLevel.Planete3))
+        {
+            Shadow_planete4.SetActive(false);
+            Sphere_planete4.tag = "Clickable";
+        }
     }
 }
