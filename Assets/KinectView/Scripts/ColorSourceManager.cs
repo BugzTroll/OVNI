@@ -16,7 +16,7 @@ public class ColorSourceManager : MonoBehaviour
     {
         return _Texture;
     }
-    
+
     void Start()
     {
         _Sensor = KinectSensor.GetDefault();
