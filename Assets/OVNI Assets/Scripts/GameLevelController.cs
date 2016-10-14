@@ -19,7 +19,7 @@ public class GameLevelController : MonoBehaviour {
         if (targetObjects != null)
             scoreToWin = 1000000000;
 
-        GameObject projectileShooterObject = GameObject.Find("Player");
+        GameObject projectileShooterObject = GameObject.Find("PlayerController");
         if (projectileShooterObject != null)
         {
             shooter = projectileShooterObject.GetComponent<ProjectileShooter>();

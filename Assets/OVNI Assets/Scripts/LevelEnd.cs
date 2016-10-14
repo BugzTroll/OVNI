@@ -19,7 +19,7 @@ public class LevelEnd : MonoBehaviour {
     // Use this for initialization
     void Start ()
     {
-        GameObject projectileShooterObject = GameObject.Find("Player");
+        GameObject projectileShooterObject = GameObject.Find("PlayerController");
         if (projectileShooterObject != null)
         {
             shooter = projectileShooterObject.GetComponent<ProjectileShooter>();

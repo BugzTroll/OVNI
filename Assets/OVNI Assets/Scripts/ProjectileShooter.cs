@@ -61,9 +61,14 @@ public class ProjectileShooter : MonoBehaviour {
             positions2.z = 3;
             Vector3 positionFromClick = Camera.main.ScreenToWorldPoint(positions2);
             Vector3 trajectory = Camera.main.transform.forward;
+
+            
             ShootProjectile(positionFromClick, trajectory, equippedProjectile);
         }
     }
+
+
+    
 
     void CreateProjectile(GameObject projectilePrefab, Vector3 startPosition, Vector3 startTrajectory)
     {
@@ -98,4 +103,6 @@ public class ProjectileShooter : MonoBehaviour {
         }
 
     }
+
+    
 }
