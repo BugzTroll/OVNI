@@ -170,14 +170,12 @@ public class MyBlobTracker : MonoBehaviour
             if (_lastDist + _speed[2] > DepthCenter)
             {
                 float xScreenSpace = (_colorImpactLin[0] - LeftBotomScreen[0])/(RightTopScreen[0] - LeftBotomScreen[0]) * Camera.main.pixelWidth;
-                float yScreenSpace = (1 -
-                                     (_colorImpactLin[1] - (_colorManager.GetDescriptor().Height - RightTopScreen[1]))/
-                                     (RightTopScreen[1] - LeftBotomScreen[1])) * Camera.main.pixelHeight;
-                var screenPoint = new Vector3(xScreenSpace, yScreenSpace,0);
+                float yScreenSpace = (1 - (RightTopScreen[1] - (_resizedZBuffer.Height - _colorImpactLin[1]))/ (RightTopScreen[1] - LeftBotomScreen[1])) * Camera.main.pixelHeight;//(1 -(_colorImpactLin[1] - (_colorManager.GetDescriptor().Height - RightTopScreen[1]))/(RightTopScreen[1] - LeftBotomScreen[1]));
+                var screenPoint = new Vector3(xScreenSpace, yScreenSpace, 0);
 
                 _speed.z /= 100;
 
-                GameObject projectileShooterObject = GameObject.Find("Player");
+                GameObject projectileShooterObject = GameObject.Find("PlayerController");
                 if (projectileShooterObject != null)
                 {
                     shooter = projectileShooterObject.GetComponent<ProjectileShooter>();
@@ -185,8 +183,9 @@ public class MyBlobTracker : MonoBehaviour
 
                 if (shooter)
                 {
+                    var pt = Camera.main.ScreenToWorldPoint(new Vector3 (screenPoint.x,screenPoint.y,10));
                     shooter.ShootProjectile(
-                        Camera.main.ScreenToWorldPoint(screenPoint),
+                        pt,
                         new Vector3(0,0,1)
                         );
 
