@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ProjectileShooter : MonoBehaviour {
+public class ProjectileShooter : MonoBehaviour
+{
 
     public enum ProjectileType
     {
@@ -20,21 +21,17 @@ public class ProjectileShooter : MonoBehaviour {
     // change per prefab
     public float speed;
 
-    //Rect rect;
-    //Texture texturebomb;
-    //Texture texturetomate;
-
     private ProjectileType equippedProjectile;
 
-
     // Used to create projectiles and create the GUI for remaining ammo
-    void Start ()
+    void Start()
     {
+
         equippedProjectile = ProjectileType.TOMATO;
     }
 
     // Update is called once per frame
-    void FixedUpdate ()
+    void FixedUpdate()
     {
         if (Input.GetKeyDown("space")) // find kinect gesture eventually ?
         {
@@ -47,21 +44,13 @@ public class ProjectileShooter : MonoBehaviour {
 
         if (Input.GetMouseButtonDown(0))
         {
+            // TODO WHAT IS THIS ?
             if (UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
                 return;
 
-            Vector3 positions2 = Input.mousePosition;
-            positions2.z = 3;
-            Vector3 positionFromClick = Camera.main.ScreenToWorldPoint(positions2);
-            Vector3 trajectory = Camera.main.transform.forward;
-
-            
-            ShootProjectile(positionFromClick, trajectory);
+            ShootProjectile(Input.mousePosition, Vector3.forward);
         }
     }
-
-
-    
 
     void CreateProjectile(GameObject projectilePrefab, Vector3 startPosition, Vector3 startTrajectory)
     {
@@ -77,33 +66,33 @@ public class ProjectileShooter : MonoBehaviour {
         rb.velocity = startTrajectory * speed;
     }
 
-
-
-
-    public void ShootProjectile(Vector3 startPosition, Vector3 startTrajectory)
+    public void ShootProjectile(Vector3 screenPosition, Vector3 velocity)
     {
+        screenPosition.z = 3;
+
+        Vector3 worldPosition = Camera.main.ScreenToWorldPoint(screenPosition);
+
         ProjectileType type = equippedProjectile;
         switch (type)
         {
             case ProjectileType.BOMB:
-                
                 if (bombCount > 0)
                 {
-                    CreateProjectile(bombPrefab, startPosition, startTrajectory);
+                    CreateProjectile(bombPrefab, worldPosition, velocity);
+
                     bombCount--;
                 }
-                    
                 break;
 
             case ProjectileType.TOMATO:
-                
                 if (tomatoCount > 0)
                 {
-                    CreateProjectile(tomatoPrefab, startPosition, startTrajectory);
+                    CreateProjectile(tomatoPrefab, worldPosition, velocity);
                     tomatoCount--;
                 }
-                    
                 break;
         }
     }
+
+
 }
