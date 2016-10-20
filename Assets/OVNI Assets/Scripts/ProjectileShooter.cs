@@ -30,13 +30,6 @@ public class ProjectileShooter : MonoBehaviour {
     // Used to create projectiles and create the GUI for remaining ammo
     void Start ()
     {
-        //// Load Textures
-        //texturebomb = Resources.Load("Textures/Bomb") as Texture;
-        //texturetomate = Resources.Load("Textures/Tomate") as Texture;
-
-        //// Picutre Draw Frame
-        //rect = new Rect(Screen.width * 0.03f, Screen.height * 0.80f, Screen.width * 0.03f, Screen.width * 0.03f);
-
         equippedProjectile = ProjectileType.TOMATO;
     }
 
@@ -93,18 +86,24 @@ public class ProjectileShooter : MonoBehaviour {
         switch (type)
         {
             case ProjectileType.BOMB:
-                CreateProjectile(bombPrefab, startPosition, startTrajectory);
+                
                 if (bombCount > 0)
+                {
+                    CreateProjectile(bombPrefab, startPosition, startTrajectory);
                     bombCount--;
+                }
+                    
                 break;
 
             case ProjectileType.TOMATO:
-                CreateProjectile(tomatoPrefab, startPosition, startTrajectory);
+                
                 if (tomatoCount > 0)
+                {
+                    CreateProjectile(tomatoPrefab, startPosition, startTrajectory);
                     tomatoCount--;
+                }
+                    
                 break;
         }
     }
-
-    
 }
