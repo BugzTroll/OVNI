@@ -59,6 +59,10 @@ public class MyViewManager : MonoBehaviour
             _texture.LoadRawTextureData(MyConverter.Bmp2ByteArray(bmp));
         }
 
+        var scale = ShowColor()
+            ? _blobTracker.ColorScale
+            : _blobTracker.ZBufferScale;
+
         // Draw Positions
         if (ShowPositions)
         {
@@ -66,14 +70,16 @@ public class MyViewManager : MonoBehaviour
                 ? _blobTracker.GetColorTrajectory()
                 : _blobTracker.GetDepthTrajectory();
 
+
             if (trajectory.Count > 0)
             {
-                foreach (var pos in trajectory)
+                foreach (var position in trajectory)
                 {
-                    int iMin = pos[0] - SizeOfPoint < _texture.width ? (int) pos[0] - SizeOfPoint : _texture.width;
-                    int iMax = pos[0] + SizeOfPoint < _texture.width ? (int) pos[0] + SizeOfPoint : _texture.width;
-                    int jMin = pos[1] - SizeOfPoint < _texture.height ? (int) pos[1] - SizeOfPoint : _texture.height;
-                    int jMax = pos[1] + SizeOfPoint < _texture.height ? (int) pos[1] + SizeOfPoint : _texture.height;
+                    var pos = position*scale;
+                    int iMin = (pos[0] - SizeOfPoint < _texture.width) ? (int) pos[0] - SizeOfPoint : _texture.width;
+                    int iMax = (pos[0] + SizeOfPoint < _texture.width) ? (int) pos[0] + SizeOfPoint : _texture.width;
+                    int jMin = (pos[1] - SizeOfPoint < _texture.height) ? (int) pos[1] - SizeOfPoint : _texture.height;
+                    int jMax = (pos[1] + SizeOfPoint < _texture.height) ? (int) pos[1] + SizeOfPoint : _texture.height;
 
                     for (int i = iMin; i <= iMax; i++)
                     {
@@ -97,8 +103,8 @@ public class MyViewManager : MonoBehaviour
             {
                 for (int z = 500; z < 3000; z++)
                 {
-                    int x = (int) (linearCoef[0]*z + linearCoef[1]);
-                    int y = (int) (poly[0] + poly[1]*z + poly[2]*z*z);
+                    int x = (int) ((linearCoef[0]*z + linearCoef[1])*scale);
+                    int y = (int) ((poly[0] + poly[1]*z + poly[2]*z*z)*scale);
 
                     // Check if it's in image range
                     if (x >= 0 && x < _texture.width && y >= 0 && y < _texture.height)
@@ -116,8 +122,8 @@ public class MyViewManager : MonoBehaviour
                     var coef = z - last[2];
                     var point = _blobTracker.GetSpeed().normalized*coef + last;
 
-                    var x = (int) point[0];
-                    var y = (int) point[1];
+                    var x = (int) (point[0]*scale);
+                    var y = (int) (point[1]*scale);
 
                     //check if it's in image range
                     if (x >= 0 && x < _texture.width && y >= 0 && y < _texture.height)
@@ -136,8 +142,8 @@ public class MyViewManager : MonoBehaviour
 
             if (ShowColor())
             {
-                var polImpact = _blobTracker.GetColorImpactPoint_poly();
-                var linImpact = _blobTracker.GetColorImpactPoint_lin();
+                var polImpact = _blobTracker.GetColorImpactPoint_poly()*scale;
+                var linImpact = _blobTracker.GetColorImpactPoint_lin()*scale;
 
                 // Draw polynomial impact point in color coordinate
                 x = (int) polImpact[0];
@@ -174,8 +180,8 @@ public class MyViewManager : MonoBehaviour
             else
             {
                 // Draw polynomial impact point in depth coordinate
-                x = (int) _blobTracker.GetDepthImpactPoint_poly()[0];
-                y = (int) _blobTracker.GetDepthImpactPoint_poly()[1];
+                x = (int) (_blobTracker.GetDepthImpactPoint_poly()[0]*scale);
+                y = (int) (_blobTracker.GetDepthImpactPoint_poly()[1]*scale);
                 iMin = x - SizeOfPoint < _texture.width ? x - SizeOfPoint : _texture.width;
                 iMax = x + SizeOfPoint < _texture.width ? x + SizeOfPoint : _texture.width;
                 jMin = y - SizeOfPoint < _texture.height ? y - SizeOfPoint : _texture.height;
@@ -190,8 +196,8 @@ public class MyViewManager : MonoBehaviour
                 }
 
                 // Draw linear impact point in depth coordinate
-                x = (int) _blobTracker.GetDepthImpactPoint_lin()[0];
-                y = (int) _blobTracker.GetDepthImpactPoint_lin()[1];
+                x = (int) (_blobTracker.GetDepthImpactPoint_lin()[0]*scale);
+                y = (int) (_blobTracker.GetDepthImpactPoint_lin()[1]*scale);
                 iMin = x - SizeOfPoint < _texture.width ? x - SizeOfPoint : _texture.width;
                 iMax = x + SizeOfPoint < _texture.width ? x + SizeOfPoint : _texture.width;
                 jMin = y - SizeOfPoint < _texture.height ? y - SizeOfPoint : _texture.height;

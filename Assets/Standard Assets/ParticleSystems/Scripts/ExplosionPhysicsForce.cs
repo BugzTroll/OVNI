@@ -7,7 +7,6 @@ namespace UnityStandardAssets.Effects
 {
     public class ExplosionPhysicsForce : MonoBehaviour
     {
-        [HideInInspector]
         public float explosionForce = 4;
 
 

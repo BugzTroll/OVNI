@@ -13,6 +13,7 @@ public class MyDepthSourceManager : MonoBehaviour
     private KinectSensor _sensor;
     private DepthFrameReader _reader;
     private Texture2D _texture;
+    private ushort[] _rawData;
     private ushort[] _data;
     private ushort[,] _background;
     private ushort[] _backgroundMean;
@@ -31,6 +32,7 @@ public class MyDepthSourceManager : MonoBehaviour
             _bufferSize = _sensor.DepthFrameSource.FrameDescription.LengthInPixels;
 
             _texture = new Texture2D(frameDesc.Width, frameDesc.Height, TextureFormat.RGB24, false);
+            _rawData = new ushort[_bufferSize];
             _data = new ushort[_bufferSize];
 
             _background = new ushort[NbFrameForBackgroundSuppression, _bufferSize];
@@ -52,10 +54,10 @@ public class MyDepthSourceManager : MonoBehaviour
                 var desc = frame.FrameDescription;
 
                 // Get current Frame Data
-                frame.CopyFrameDataToArray(_data);
+                frame.CopyFrameDataToArray(_rawData);
 
                 // Fill buffer for background supression
-                Buffer.BlockCopy(_data, 0, _background,
+                Buffer.BlockCopy(_rawData, 0, _background,
                     (int) _bufferSize*2*(_framecounter%NbFrameForBackgroundSuppression),
                     (int) _bufferSize*2);
 
@@ -77,7 +79,7 @@ public class MyDepthSourceManager : MonoBehaviour
                     // compute mean of backgrounds to supress
                     for (int i = 0; i < _bufferSize; ++i)
                     {
-                        _data[i] = (ushort) Math.Max((_backgroundMean[i] - _data[i])*ScalingFactorZBuffer, 0);
+                        _data[i] = (ushort) Math.Max((_backgroundMean[i] - _rawData[i])*ScalingFactorZBuffer, 0);
                     }
                 }
                 var zBuffer = AForge.Imaging.Image.Convert16bppTo8bpp(MyConverter.ByteArray2Bmp(MyConverter.ShortArray2ByteArray(_data), 
@@ -122,8 +124,12 @@ public class MyDepthSourceManager : MonoBehaviour
 
     public ushort GetRawZ(int i, int j)
     {
-        return (ushort)(_backgroundMean[i + j * GetDescriptor().Width] -
-                         _data[i + j * GetDescriptor().Width] / ScalingFactorZBuffer);
+        return _rawData[i + j * GetDescriptor().Width];
+    }
+
+    public ushort[] GetRawData()
+    {
+        return _rawData;
     }
 
     public Texture2D GetDepthTexture()
