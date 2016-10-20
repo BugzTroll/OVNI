@@ -67,7 +67,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 4000011374246370}
-  - 114: {fileID: 114000010137550258}
+  - 114: {fileID: 114000013367365030}
   m_Layer: 0
   m_Name: TrackingManager
   m_TagString: Untagged
@@ -130,17 +130,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 4000011374246370}
   m_RootOrder: 2
---- !u!114 &114000010137550258
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000013811995738}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a16ce07724fd643c582fc68f916bd210, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &114000011590834932
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -165,7 +154,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ColorManager: {fileID: 1000010381513058}
   DepthManager: {fileID: 1000011637784798}
-  DepthCenter: 2700
   ZBufferScale: 0.5
   ColorScale: 0.15
   MinSizeBlob: 6
@@ -177,6 +165,7 @@ MonoBehaviour:
   MinPointRequired: 2
   LeftBotomScreen: {x: 0, y: 0}
   RightTopScreen: {x: 0, y: 0}
+  _ProjectionDistance: 0
 --- !u!114 &114000012972750216
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -190,3 +179,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ScalingFactorZBuffer: 10
   NbFrameForBackgroundSuppression: 5
+--- !u!114 &114000013367365030
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000013811995738}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa12335b36504434882f384d3560a57b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
