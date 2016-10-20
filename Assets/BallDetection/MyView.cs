@@ -8,7 +8,7 @@ public class MyView : MonoBehaviour
 
     void Start()
     {
-        gameObject.GetComponent<Renderer>().material.SetTextureScale("_MainTex", new Vector2(-1, 1));
+        //gameObject.GetComponent<Renderer>().material.SetTextureScale("_MainTex", new Vector2(-1, 1));
     }
 
     void Update()
