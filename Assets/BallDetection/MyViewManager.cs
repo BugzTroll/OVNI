@@ -9,6 +9,7 @@ public class MyViewManager : MonoBehaviour
 
     [Range(1, 5)] public int SizeOfPoint = 1;
 
+    //TODO : devrait tout être a off en PLAYMODE, sert seulement dans la visualisation
     public bool ShowDepth = false;
     public bool ShowMeanBuffer = false;
     public bool ShowThresholdedZBuffer = false;

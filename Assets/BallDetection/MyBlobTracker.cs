@@ -84,6 +84,8 @@ public class MyBlobTracker : MonoBehaviour
 
     void Start()
     {
+        Application.targetFrameRate = 60;
+
         _sensor = KinectSensor.GetDefault();
         GameObject projectileShooterObject = GameObject.Find("Player");
         if (projectileShooterObject != null)
@@ -126,14 +128,14 @@ public class MyBlobTracker : MonoBehaviour
             depthFrameDescriptor.Height,
             PixelFormat.Format16bppGrayScale);
 
-        // Resize depth buffer
+        // Resize depth buffer TODO : peux nuire à la reprojection ?
         var depthResizeFilter = new ResizeNearestNeighbor((int) (ZBufferScale*depthFrameDescriptor.Width),
             (int) (ZBufferScale*depthFrameDescriptor.Height));
 
         _resizedZBuffer = depthResizeFilter.Apply(zBuffer);
         _resizedZBuffer = AForge.Imaging.Image.Convert16bppTo8bpp(_resizedZBuffer);
 
-        // Create color bitmap from color manager data (32 bit/pixel argb)
+        // Create color bitmap from color manager data (32 bit/pixel argb) 
         var colorFrameDescriptor = _colorManager.GetDescriptor();
 
         var colorImg = MyConverter.ByteArray2Bmp(_colorManager.GetData(),
@@ -147,8 +149,8 @@ public class MyBlobTracker : MonoBehaviour
 
         _resizedColor = resizeFilter.Apply(colorImg);
 
-        // Mean filter
-        Mean filter = new Mean();
+        // Mean filter TODO : combiner les filtres en les faisant a la main pour faire moins de passes sur le bmp? est-ce qu'on est clutch?
+        Mean filter = new Mean();   // TODO tu coute cher mon ptit maudit 3-4 fps
         _meanZBuffer = filter.Apply(_resizedZBuffer);
 
         // Threshold z-buffer to reduce noise
@@ -174,13 +176,13 @@ public class MyBlobTracker : MonoBehaviour
         // Color analysis
         AnalyseColor();
 
-        // Compute impact point
+        //Compute impact point
         if (_polyEqtn != null && _linEqtn != null)
         {
-            // Compute impact point with polynomial eqtn
+            // Compute impact point with polynomial eqtn TODO: remove this part
             int polyZ = _ProjectionDistance;
-            int polyX = (int) (_linEqtn[0]*polyZ + _linEqtn[1]);
-            int polyY = (int) (_polyEqtn[0] + _polyEqtn[1]*polyZ + _polyEqtn[2]*polyZ*polyZ);
+            int polyX = (int)(_linEqtn[0] * polyZ + _linEqtn[1]);
+            int polyY = (int)(_polyEqtn[0] + _polyEqtn[1] * polyZ + _polyEqtn[2] * polyZ * polyZ);
 
             if (polyX >= 0 && polyX < 512 &&
                 polyY >= 0 && polyY < 424)
@@ -189,11 +191,11 @@ public class MyBlobTracker : MonoBehaviour
                 _colorImpactPol = DepthPoint2ColorPoint(_depthImpactPol);
             }
 
-            // Compute impact point with linear eqtn
+            // Compute impact point with linear eqtn TODO: pour l'affichage a mettre en debug mode seulement
             int linZ = _ProjectionDistance;
             var deltaZ = _ProjectionDistance - _trajectory.Last()[2];
-            int linX = (int) (deltaZ*_speed.normalized[0] + _trajectory.Last()[0]);
-            int linY = (int) (deltaZ*_speed.normalized[1] + _trajectory.Last()[1]);
+            int linX = (int)(deltaZ * _speed.normalized[0] + _trajectory.Last()[0]);
+            int linY = (int)(deltaZ * _speed.normalized[1] + _trajectory.Last()[1]);
 
             if (linX >= 0 && linX < 512 &&
                 linY >= 0 && linY < 424)
@@ -203,14 +205,14 @@ public class MyBlobTracker : MonoBehaviour
             }
 
             // If we should hit the wall at next frame
-            if (_lastDist + _speed[2] > _ProjectionDistance-500)
+            if (_lastDist + _speed[2] > _ProjectionDistance - 500)
             {
-                float xNormalized = (1 - (_colorImpactLin[0] - LeftBotomScreen[0]*1920)/
-                                     (RightTopScreen[0]*1920 - LeftBotomScreen[0]*1920));
-                
+                float xNormalized = (1 - (_colorImpactLin[0] - LeftBotomScreen[0] * 1920) /
+                                     (RightTopScreen[0] * 1920 - LeftBotomScreen[0] * 1920));
+
                 float yNormalized = (1 -
-                                      (RightTopScreen[1]*1080 - (1080 - _colorImpactLin[1]))/
-                                      (RightTopScreen[1]*1080 - LeftBotomScreen[1]*1080));
+                                      (RightTopScreen[1] * 1080 - (1080 - _colorImpactLin[1])) /
+                                      (RightTopScreen[1] * 1080 - LeftBotomScreen[1] * 1080));
 
                 if (xNormalized >= 0.0f && xNormalized <= 1.0f &&
                     yNormalized >= 0.0f && yNormalized <= 1.0f)
@@ -225,15 +227,16 @@ public class MyBlobTracker : MonoBehaviour
                     if (shooter)
                     {
                         shooter.ShootProjectile(
-                            new Vector3(xNormalized*Screen.width, yNormalized*Screen.height),
+                            new Vector3(xNormalized * Screen.width, yNormalized * Screen.height),
                             _speed.normalized
                         );
                     }
 
+                    //TODO : printer seulement en debug mode
                     Debug.Log("impact : " + _depthImpactLin);
                     Debug.Log("speed : " + _speed.normalized);
 
-                    
+
                 }
 
                 ResetTrajectory();
@@ -241,6 +244,7 @@ public class MyBlobTracker : MonoBehaviour
         }
     }
 
+    //TODO : Utiliser le moins possible
     private Vector3 DepthPoint2ColorPoint(Vector3 depthPoint)
     {
         DepthSpacePoint point = new DepthSpacePoint();
@@ -294,7 +298,7 @@ public class MyBlobTracker : MonoBehaviour
             int minJ = y - radius < _resizedZBuffer.Height ? y - radius : _resizedZBuffer.Height;
             int maxJ = y + radius < _resizedZBuffer.Height ? y + radius : _resizedZBuffer.Height;
 
-            // Get the max Z value in a neighborhood around center of ball
+            // Get the max Z value in a neighborhood around center of ball TODO : au lieu  de prendre le max, on en prend un des qu'on le trouve, a valider
             for (int i = minI; i < maxI; i++)
             {
                 for (int j = minJ; j < maxJ; j++)
@@ -345,7 +349,7 @@ public class MyBlobTracker : MonoBehaviour
             }
         }
 
-        // Find the coefficients for polynomial equation
+        // Find the coefficients for polynomial equation //TODO : bye bye
         ComputePolynomialEquation();
     }
 
@@ -370,7 +374,7 @@ public class MyBlobTracker : MonoBehaviour
                 yData[i] = pos[1];
             }
 
-            // Find polynomial coefficients
+            // Find polynomial coefficients //TODO long a computer ?
             _polyEqtn = Fit.Polynomial(zData, yData, 2);
 
             // Check if the curve is upward and swap to linear equation 
@@ -397,6 +401,7 @@ public class MyBlobTracker : MonoBehaviour
         //AnalyseBallColorOverTrajectory();
     }
 
+    //TODO : fix me pliz
     private void AnalyseBallColorOverTrajectory()
     {
         List<int> colorMax = new List<int>() {0, 0, 0};
@@ -457,6 +462,7 @@ public class MyBlobTracker : MonoBehaviour
         return _trajectory;
     }
 
+    //TODO Debug mode seulement et ne pas recalculer a chaque frame, maintenir la liste a jour a la place
     public List<Vector3> GetColorTrajectory()
     {
         List<Vector3> colorTrajectory = new List<Vector3>();

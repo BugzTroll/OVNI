@@ -223,7 +223,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad38a5432ced85a4199e90b44d4aa93e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BlobTracker: {fileID: 1037921809}
 --- !u!1 &1037921809 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 1000011331833352, guid: 659c08c554e144e439c263c9d3627c3f,
