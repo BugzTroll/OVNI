@@ -4,6 +4,7 @@ public class MyView : MonoBehaviour
 {
     public GameObject ViewManager;
     private MyViewManager _viewManager;
+    private Texture2D _backgroundTexture;
 
     void Start()
     {
@@ -22,6 +23,12 @@ public class MyView : MonoBehaviour
         {
             return;
         }
-        gameObject.GetComponent<Renderer>().material.mainTexture = _viewManager.GetTexture();
+        //gameObject.GetComponent<Renderer>().material.mainTexture = _viewManager.GetTexture();
+        _backgroundTexture = _viewManager.GetTexture();
+    }
+
+    void OnGUI()
+    {
+        GUI.DrawTextureWithTexCoords(new Rect(0, 0, Screen.width, Screen.height), _backgroundTexture, new Rect(0,0,1,-1));
     }
 }

@@ -169,8 +169,8 @@ public class MyBlobTracker : MonoBehaviour
             // If we should hit the wall at next frame
             if (_lastDist + _speed[2] > DepthCenter)
             {
-                float xScreenSpace = (_colorImpactLin[0] - LeftBotomScreen[0])/(RightTopScreen[0] - LeftBotomScreen[0]) * Camera.main.pixelWidth;
-                float yScreenSpace = (1 - (RightTopScreen[1] - (_resizedZBuffer.Height - _colorImpactLin[1]))/ (RightTopScreen[1] - LeftBotomScreen[1])) * Camera.main.pixelHeight;//(1 -(_colorImpactLin[1] - (_colorManager.GetDescriptor().Height - RightTopScreen[1]))/(RightTopScreen[1] - LeftBotomScreen[1]));
+                float xScreenSpace = (_colorImpactLin[0] - LeftBotomScreen[0]*_resizedColor.Width)/(RightTopScreen[0] - LeftBotomScreen[0] * _resizedColor.Width) * Camera.main.pixelWidth;
+                float yScreenSpace = (1 - (RightTopScreen[1] - (_resizedZBuffer.Height - _colorImpactLin[1]))/ (RightTopScreen[1] - LeftBotomScreen[1] * _resizedColor.Height)) * Camera.main.pixelHeight;
                 var screenPoint = new Vector3(xScreenSpace, yScreenSpace, 0);
 
                 _speed.z /= 100;

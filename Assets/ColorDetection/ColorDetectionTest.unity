@@ -140,10 +140,9 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 792932432}
-  - 33: {fileID: 792932431}
   - 65: {fileID: 792932430}
-  - 23: {fileID: 792932429}
   - 114: {fileID: 792932428}
+  - 114: {fileID: 792932433}
   m_Layer: 0
   m_Name: View
   m_TagString: Untagged
@@ -163,35 +162,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ViewManager: {fileID: 1860005144}
---- !u!23 &792932429
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 792932427}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_MotionVectors: 1
-  m_LightProbeUsage: 0
-  m_ReflectionProbeUsage: 1
-  m_Materials:
-  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
-  m_SubsetIndices: 
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_SelectedWireframeHidden: 0
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingOrder: 0
 --- !u!65 &792932430
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -204,13 +174,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!33 &792932431
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 792932427}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!4 &792932432
 Transform:
   m_ObjectHideFlags: 0
@@ -219,11 +182,23 @@ Transform:
   m_GameObject: {fileID: 792932427}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 50}
-  m_LocalScale: {x: 96, y: 54, z: 1}
+  m_LocalScale: {x: 200, y: 100, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
+--- !u!114 &792932433
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 792932427}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad38a5432ced85a4199e90b44d4aa93e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  BlobTracker: {fileID: 1037921809}
 --- !u!1 &1037921809 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 1000011331833352, guid: 659c08c554e144e439c263c9d3627c3f,
@@ -352,7 +327,7 @@ MonoBehaviour:
   DepthManager: {fileID: 1751594993}
   BlobTracker: {fileID: 1037921809}
   SizeOfPoint: 1
-  ShowDepth: 1
+  ShowDepth: 0
   ShowMeanBuffer: 0
   ShowThresholdedZBuffer: 0
   ShowPositions: 0
