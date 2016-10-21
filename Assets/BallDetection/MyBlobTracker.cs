@@ -228,7 +228,7 @@ public class MyBlobTracker : MonoBehaviour
                     {
                         shooter.ShootProjectile(
                             new Vector3(xNormalized * Screen.width, yNormalized * Screen.height),
-                            _speed.normalized
+                            Vector3.forward
                         );
                     }
 
