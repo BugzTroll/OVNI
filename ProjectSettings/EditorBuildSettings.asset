@@ -5,17 +5,33 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/OVNI Assets/Scenes/MainMenu.unity
-  - enabled: 1
+  - enabled: 0
     path: Assets/OVNI Assets/Scenes/LevelSelect.unity
-  - enabled: 1
+  - enabled: 0
     path: Assets/OVNI Assets/Scenes/Planete1.unity
-  - enabled: 1
+  - enabled: 0
     path: Assets/OVNI Assets/Scenes/Planete2.unity
-  - enabled: 1
+  - enabled: 0
     path: Assets/OVNI Assets/Scenes/Planete3.unity
-  - enabled: 1
+  - enabled: 0
     path: Assets/OVNI Assets/Scenes/Planete4.unity
-  - enabled: 1
+  - enabled: 0
     path: Assets/OVNI Assets/Scenes/Planete5.unity
+  - enabled: 1
+    path: Assets/Scenes/MainMenu.unity
+  - enabled: 1
+    path: Assets/Scenes/Planete1.unity
+  - enabled: 1
+    path: Assets/Scenes/Planete2.unity
+  - enabled: 1
+    path: Assets/Scenes/Planete3.unity
+  - enabled: 1
+    path: Assets/Scenes/Planete4.unity
+  - enabled: 1
+    path: Assets/Scenes/Planete5.unity
+  - enabled: 1
+    path: Assets/Scenes/StartupConfiguration.unity
+  - enabled: 1
+    path: Assets/Scenes/LevelSelect.unity

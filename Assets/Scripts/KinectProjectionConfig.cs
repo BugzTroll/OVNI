@@ -35,15 +35,13 @@ public class KinectProjectionConfig : MonoBehaviour
 
     void OnMouseDown()
     {
-        if (_clickCounter == 0)
+        if (_clickCounter <= 3)
         {
-            _blobTracker.LeftBotomScreen = new Vector2(Input.mousePosition.x/Screen.width,
+            _blobTracker.ScreenCorners[_clickCounter] = new Vector2(Input.mousePosition.x/Screen.width,
                 Input.mousePosition.y/Screen.height);
         }
-        else if (_clickCounter == 1)
+        if (_clickCounter == 3)
         {
-            _blobTracker.RightTopScreen = new Vector2(Input.mousePosition.x/Screen.width,
-                Input.mousePosition.y/Screen.height);
             _blobTracker.InitProjectionDistance();
 
             GameManager.Instance.CurrentState = GameManager.GameState.MAIN_MENU;

@@ -109,24 +109,6 @@ public class ViewManager : MonoBehaviour
         // Draw trajectory 
         if (ShowTrajectory && !ShowColor())
         {
-            // Draw polynomial curve
-            var poly = _blobTracker.GetPolynomialEqtn();
-            var linearCoef = _blobTracker.GetLinearEqtn();
-
-            if (poly != null && linearCoef != null)
-            {
-                for (int z = 500; z < 3000; z++)
-                {
-                    int x = (int) ((linearCoef[0]*z + linearCoef[1])*scale);
-                    int y = (int) ((poly[0] + poly[1]*z + poly[2]*z*z)*scale);
-
-                    // Check if it's in image range
-                    if (x >= 0 && x < _texture.width && y >= 0 && y < _texture.height)
-                    {
-                        _texture.SetPixel(x, y, Color.cyan);
-                    }
-                }
-            }
             // Draw linear curve
             if (_blobTracker.GetSpeed() != Vector3.zero)
             {

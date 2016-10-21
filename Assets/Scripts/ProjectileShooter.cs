@@ -69,9 +69,10 @@ public class ProjectileShooter : MonoBehaviour
 
     public void ShootProjectile(Vector3 screenPosition, Vector3 velocity)
     {
-        screenPosition.z = 3;
+        screenPosition.z = 1;
 
         Vector3 worldPosition = Camera.main.ScreenToWorldPoint(screenPosition);
+        velocity = worldPosition - Camera.main.gameObject.transform.position;
 
         ProjectileType type = equippedProjectile;
         switch (type)
@@ -79,7 +80,7 @@ public class ProjectileShooter : MonoBehaviour
             case ProjectileType.BOMB:
                 if (bombCount > 0)
                 {
-                    CreateProjectile(bombPrefab, worldPosition, velocity);
+                    CreateProjectile(bombPrefab, worldPosition, velocity.normalized);
 
                     bombCount--;
                 }
@@ -88,7 +89,7 @@ public class ProjectileShooter : MonoBehaviour
             case ProjectileType.TOMATO:
                 if (tomatoCount > 0)
                 {
-                    CreateProjectile(tomatoPrefab, worldPosition, velocity);
+                    CreateProjectile(tomatoPrefab, worldPosition, velocity.normalized);
                     tomatoCount--;
                 }
                 break;
