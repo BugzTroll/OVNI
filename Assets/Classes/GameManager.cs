@@ -11,12 +11,14 @@ public class GameManager
     public enum GameState
     {
         NONE = -1,
-        MAIN_MENU = 0,
-        OPTIONS_MENU = 1,
-        PAUSED = 2,
-        IN_GAME = 3,
-        LEVEL_SELECT = 4,
-        QUIT = 5
+        MAIN_MENU,
+        OPTIONS_MENU,
+        PAUSED,
+        IN_GAME,
+        LEVEL_SELECT,
+        QUIT,
+        GAME_SUCCESS,
+        GAME_OVER
         //OTHERS
     }
     public enum GameLevel
@@ -45,7 +47,6 @@ public class GameManager
         currentScene = SceneManager.GetSceneAt(0);
         SceneManager.activeSceneChanged += OnSceneChanged; // unsubscribe
 
-        //InitKIM();
         if (DebugManager.Debug)
             Debug.Log("GameManager was created");
 
@@ -53,11 +54,6 @@ public class GameManager
 
     public void InitIfNeeded()
     {
-        if (GameObject.FindGameObjectsWithTag("Kinect").Length == 0)
-        {
-            //InitKIM();
-            //UnityEngine.Object.Instantiate(KinectMenuInteraction);
-        }
         if (DebugManager.Debug)
             Debug.Log("GameManager exists");
     }
@@ -108,11 +104,24 @@ public class GameManager
                 case GameState.IN_GAME:
                     //UI.showInGameUI
                     break;
+                //TODO: shooting vs preparing/ball color detection
+                
+                case GameState.GAME_SUCCESS:
+                    if (currentState == GameState.GAME_OVER)
+                        value = currentState;
+                    break;
+                case GameState.GAME_OVER:
+                    if (currentState == GameState.GAME_SUCCESS)
+                        value = currentState;
+                    break;
                 case GameState.QUIT:
                     Quit();
                     break;
             }
             currentState = value;
+
+            if (DebugManager.Debug)
+                Debug.Log("Game State changed to: " + GameManager.Instance.currentState.ToString());
         }
     }
 
@@ -126,6 +135,10 @@ public class GameManager
     public void ChangeScene(string sceneName)
     {
         //SceneManager.UnloadScene(SceneManager.GetActiveScene());
+
+        if (sceneName.StartsWith("Planete"))
+            Instance.CurrentState = GameState.IN_GAME;  // change to preparation/color detection eventually
+
         SceneManager.LoadScene(sceneName);
         currentScene = SceneManager.GetActiveScene();
     }
@@ -155,6 +168,27 @@ public class GameManager
         }
     }
 
+    public void UpdateProgression(Scene level)
+    {
+        switch (level.name)
+        {
+            case "Planete1":
+                Instance.LevelProgression.Add(GameLevel.Planete1);
+                break;
+            case "Planete2":
+                Instance.LevelProgression.Add(GameLevel.Planete2);
+                break;
+            case "Planete3":
+                Instance.LevelProgression.Add(GameLevel.Planete3);
+                break;
+            case "Planete4":
+                Instance.LevelProgression.Add(GameLevel.Planete4);
+                break;
+            case "Planete5":
+                Instance.LevelProgression.Add(GameLevel.Planete5);
+                break;
+        }
+    }
 
     private void Quit()
     {

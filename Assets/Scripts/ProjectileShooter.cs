@@ -45,7 +45,7 @@ public class ProjectileShooter : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
-            // TODO WHAT IS THIS ?
+            // Make sure the click was not on a UI object (an object linked to an EventSystem)
             if (UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
                 return;
 

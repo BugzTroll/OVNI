@@ -41,20 +41,21 @@ public class LevelEnd : MonoBehaviour {
     }
     public void RetryButtonClicked()
     {
-        // Able Panel  + OptionTint when condition is met
+        // enable Panel  + OptionTint when condition is met
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        GameManager.Instance.CurrentState = GameManager.GameState.IN_GAME;
     }
+
     public void ReturnButtonClicked()
     {
-        GameManager.Instance.ChangeScene("LevelSelect");
+        GameManager.Instance.CurrentState = GameManager.GameState.LEVEL_SELECT;
     }
+
     void CheckAmmoCount()
     {
         if (shooter.tomatoCount + shooter.bombCount <= 0)
         {
-            levelEndPanel.SetActive(true);
-            optionsTint.SetActive(true);
-            pauseBtn.SetActive(false);
+            LevelFailed();
         }
       
     }
@@ -66,43 +67,33 @@ public class LevelEnd : MonoBehaviour {
         {
             LevelSuccess();
         }
-
-        
     }
 
     public void LevelFailed()
     {
+        if (GameManager.Instance.CurrentState != GameManager.GameState.IN_GAME)
+            return;
 
+        GameManager.Instance.CurrentState = GameManager.GameState.GAME_OVER;
+        levelEndPanel.SetActive(true);
+        optionsTint.SetActive(true);
+        pauseBtn.SetActive(false);
     }
 
     public void LevelSuccess()
     {
+        if (GameManager.Instance.CurrentState != GameManager.GameState.IN_GAME)
+            return;
+
+        GameManager.Instance.CurrentState = GameManager.GameState.GAME_SUCCESS;
         levelEndPanel.SetActive(true);
         optionsTint.SetActive(true);
         pauseBtn.SetActive(false);
-        RetryBtn.SetActive(false);
-        LvlSelect.SetActive(true);
-        PanelText.text = " You have passed the level, Congratulations !";
+
+        PanelText.text = " Niveau Réussi, Félicitations !";
 
         // Ajoute la planète a la liste de progression
-        switch (SceneManager.GetActiveScene().name)
-        {
-            case "Planete1":
-                GameManager.Instance.LevelProgression.Add(GameManager.GameLevel.Planete1);
-                break;
-            case "Planete2":
-                GameManager.Instance.LevelProgression.Add(GameManager.GameLevel.Planete2);
-                break;
-            case "Planete3":
-                GameManager.Instance.LevelProgression.Add(GameManager.GameLevel.Planete3);
-                break;
-            case "Planete4":
-                GameManager.Instance.LevelProgression.Add(GameManager.GameLevel.Planete4);
-                break;
-            case "Planete5":
-                GameManager.Instance.LevelProgression.Add(GameManager.GameLevel.Planete5);
-                break;
-        }
+        GameManager.Instance.UpdateProgression(SceneManager.GetActiveScene());
     }
 }
 
