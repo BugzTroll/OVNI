@@ -14,6 +14,7 @@ public class LevelEnd : MonoBehaviour {
     public GameObject RetryBtn;
     public GameObject LvlSelect;
     public UnityEngine.UI.Text PanelText;
+    public float endScreenSlowMoFactor;     // 0.0 to 1.0
 
 
     // Use this for initialization
@@ -82,6 +83,7 @@ public class LevelEnd : MonoBehaviour {
         levelEndPanel.SetActive(true);
         optionsTint.SetActive(true);
         pauseBtn.SetActive(false);
+        Time.timeScale = endScreenSlowMoFactor;
     }
 
     public void LevelSuccess()
@@ -93,6 +95,7 @@ public class LevelEnd : MonoBehaviour {
         levelEndPanel.SetActive(true);
         optionsTint.SetActive(true);
         pauseBtn.SetActive(false);
+        Time.timeScale = endScreenSlowMoFactor;
 
         PanelText.text = " Niveau Réussi, Félicitations !";
 

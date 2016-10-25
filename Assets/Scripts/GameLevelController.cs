@@ -15,6 +15,7 @@ public class GameLevelController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+        Time.timeScale = 1.0f;  // put it at 1 again in case it got slowed down during the fail/win screen !
 
         if (targetObjects != null)
             scoreToWin = 1000000000;
