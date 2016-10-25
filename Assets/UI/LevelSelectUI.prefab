@@ -192,7 +192,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Return
+  m_Text: Retour
 --- !u!114 &114000012605950614
 MonoBehaviour:
   m_ObjectHideFlags: 1

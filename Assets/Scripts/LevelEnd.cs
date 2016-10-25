@@ -19,6 +19,8 @@ public class LevelEnd : MonoBehaviour {
     // Use this for initialization
     void Start ()
     {
+        GameManager.Instance.CurrentState = GameManager.GameState.IN_GAME;
+
         GameObject projectileShooterObject = GameObject.Find("PlayerController");
         if (projectileShooterObject != null)
         {
@@ -35,15 +37,17 @@ public class LevelEnd : MonoBehaviour {
     // Update is called once per frame
     void Update ()
     {
-        CheckAmmoCount();
-        CheckWinCondition();
+        if (GameManager.Instance.CurrentState == GameManager.GameState.IN_GAME)
+        {
+            CheckAmmoCount();
+            CheckWinCondition();
+        }
 
     }
     public void RetryButtonClicked()
     {
         // enable Panel  + OptionTint when condition is met
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        GameManager.Instance.CurrentState = GameManager.GameState.IN_GAME;
+        GameManager.Instance.ChangeScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     public void ReturnButtonClicked()

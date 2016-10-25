@@ -128,19 +128,23 @@ public class GameManager
     public void ChangeScene(int sceneIndex)
     {
         //SceneManager.UnloadScene(SceneManager.GetActiveScene());
+        
         SceneManager.LoadScene(sceneIndex);
         currentScene = SceneManager.GetActiveScene();
+
+        //if (sceneIndex > SceneManager.GetSceneByName("LevelSelect").buildIndex)
+        //    Instance.CurrentState = GameState.IN_GAME;  // change to preparation/color detection eventually
     }
 
     public void ChangeScene(string sceneName)
     {
         //SceneManager.UnloadScene(SceneManager.GetActiveScene());
-
-        if (sceneName.StartsWith("Planete"))
-            Instance.CurrentState = GameState.IN_GAME;  // change to preparation/color detection eventually
-
+        
         SceneManager.LoadScene(sceneName);
         currentScene = SceneManager.GetActiveScene();
+
+        //if (sceneName.StartsWith("Planete"))
+        //    Instance.CurrentState = GameState.IN_GAME;  // change to preparation/color detection eventually
     }
 
     void OnSceneChanged(Scene oldScene, Scene newScene)
