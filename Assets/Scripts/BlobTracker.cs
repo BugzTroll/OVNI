@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -7,7 +8,9 @@ using Windows.Kinect;
 using AForge.Imaging;
 using AForge.Imaging.Filters;
 using MathNet.Numerics;
+using UnityEngine.Events;
 using Color = System.Drawing.Color;
+using Image = AForge.Imaging.Image;
 
 public class BlobTracker : MonoBehaviour
 {
@@ -26,6 +29,9 @@ public class BlobTracker : MonoBehaviour
 
     private KinectSensor _sensor;
     private ProjectileShooter shooter = null;
+    public static event UnityAction<float, float> ImpactPointDetected;
+
+    private int framebetweenthrow = 0;
 
     private DepthSourceManager _depthManager;
     private Bitmap _resizedZBuffer;
@@ -66,10 +72,10 @@ public class BlobTracker : MonoBehaviour
         DepthSpacePoint drt = p[(int) rt.y*1920 + (int) rt.x];
         DepthSpacePoint drb = p[(int) rb.y*1920 + (int) rb.x];
 
-        if (!float.IsNegativeInfinity(dlb.X) && !float.IsNegativeInfinity(dlb.Y) &&
-            !float.IsNegativeInfinity(dlt.X) && !float.IsNegativeInfinity(dlt.Y) &&
-            !float.IsNegativeInfinity(drt.X) && !float.IsNegativeInfinity(drt.Y) &&
-            !float.IsNegativeInfinity(drb.X) && !float.IsNegativeInfinity(drb.Y))
+        if (!Single.IsNegativeInfinity(dlb.X) && !Single.IsNegativeInfinity(dlb.Y) &&
+            !Single.IsNegativeInfinity(dlt.X) && !Single.IsNegativeInfinity(dlt.Y) &&
+            !Single.IsNegativeInfinity(drt.X) && !Single.IsNegativeInfinity(drt.Y) &&
+            !Single.IsNegativeInfinity(drb.X) && !Single.IsNegativeInfinity(drb.Y))
         {
             int zlb = _depthManager.GetRawZ((int) dlb.X, (int) dlb.Y);
             int zlt = _depthManager.GetRawZ((int) dlt.X, (int) dlt.Y);
@@ -120,6 +126,7 @@ public class BlobTracker : MonoBehaviour
 
     void Update()
     {
+        framebetweenthrow++;
         var depthFrameDescriptor = _depthManager.GetDescriptor();
 
         // Create z-buffer bitmap from depth manager data (16 bit/pixel greyscale)
@@ -133,7 +140,7 @@ public class BlobTracker : MonoBehaviour
             (int) (ZBufferScale*depthFrameDescriptor.Height));
 
         _resizedZBuffer = depthResizeFilter.Apply(zBuffer);
-        _resizedZBuffer = AForge.Imaging.Image.Convert16bppTo8bpp(_resizedZBuffer);
+        _resizedZBuffer = Image.Convert16bppTo8bpp(_resizedZBuffer);
 
         // Create color bitmap from color manager data (32 bit/pixel argb) 
         var colorFrameDescriptor = _colorManager.GetDescriptor();
@@ -177,7 +184,7 @@ public class BlobTracker : MonoBehaviour
         // AnalyseColor();
 
         //Compute impact point
-        if (_trajectory.Count > MinPointRequired)
+        if (_trajectory.Count >= MinPointRequired)
         {
             // Compute impact point with linear eqtn
             int linZ = _projectionDistance;
@@ -194,7 +201,7 @@ public class BlobTracker : MonoBehaviour
             }
 
             // If we should hit the wall at next frame
-            if (_lastDist + _speed[2] > _projectionDistance - 500)
+            if (_lastDist + _speed[2] > _projectionDistance - 100)
             {
                 float[] points = Projection2Square(ScreenCorners, _colorImpactLin[0]/1920.0f,
                     (1080 - _colorImpactLin[1])/1080.0f);
@@ -207,10 +214,15 @@ public class BlobTracker : MonoBehaviour
                 {
                     if (shooter)
                     {
-                        shooter.ShootProjectile(
-                            new Vector3(xNormalized*Screen.width, yNormalized*Screen.height),
-                            Vector3.forward
-                        );
+                        if (framebetweenthrow > 10)
+                        {
+                            ImpactPointDetected(xNormalized * Screen.width, yNormalized * Screen.height);
+                            shooter.ShootProjectile(
+                                new Vector3(xNormalized*Screen.width, yNormalized*Screen.height),
+                                Vector3.forward);
+                            Debug.Log(framebetweenthrow);
+                        }
+                        framebetweenthrow = 0;
                     }
                     else
                     {
@@ -223,7 +235,7 @@ public class BlobTracker : MonoBehaviour
                     if (DebugManager.Debug)
                     {
                         Debug.Log("impact : " + _depthImpactLin);
-                        Debug.Log("speed : " + _speed.normalized);
+                        Debug.Log("speed : " + _speed);
                     }
                 }
                 ResetTrajectory();
@@ -242,7 +254,7 @@ public class BlobTracker : MonoBehaviour
         return new Vector3(colorSpacePoint.X, colorSpacePoint.Y, z);
     }
 
-    float[] Projection2Square(Vector2[] Q, float x , float y)
+    float[] Projection2Square(Vector2[] Q, float x, float y)
     {
         float ax = (x - Q[0].x) + (Q[1].x - Q[0].x)*(y - Q[0].y)/(Q[0].y - Q[1].y);
         float a3x = (Q[3].x - Q[0].x) + (Q[1].x - Q[0].x)*(Q[3].y - Q[0].y)/(Q[0].y - Q[1].y);
@@ -270,7 +282,7 @@ public class BlobTracker : MonoBehaviour
     {
         _speed = new Vector3(0, 0, 0);
         _trajectory.Clear();
-        _lastDist = 0;
+        _lastDist = 500;
     }
 
     private void AnalyseTrajectory()
@@ -290,6 +302,11 @@ public class BlobTracker : MonoBehaviour
         // Get ball position
         if (biggestBlob != null)
         {
+            if (_framesWithoutBlob > 0 && _framesWithoutBlob < 10 && DebugManager.Debug)
+            {
+                Debug.Log("frame without blob : " + _framesWithoutBlob);
+            }
+
             _framesWithoutBlob = 0;
 
             int x = (int) biggestBlob.CenterOfGravity.X;
@@ -299,9 +316,9 @@ public class BlobTracker : MonoBehaviour
             int radius = 1;
 
             // Manage side of image
-            int minI = x - radius < _resizedZBuffer.Width ? x - radius : _resizedZBuffer.Width;
+            int minI = x - radius >= 0 ? x - radius : 0;
             int maxI = x + radius < _resizedZBuffer.Width ? x + radius : _resizedZBuffer.Width;
-            int minJ = y - radius < _resizedZBuffer.Height ? y - radius : _resizedZBuffer.Height;
+            int minJ = y - radius >= 0 ? y - radius : 0;
             int maxJ = y + radius < _resizedZBuffer.Height ? y + radius : _resizedZBuffer.Height;
 
             // Get the max Z value in a neighborhood around center of ball
@@ -323,7 +340,7 @@ public class BlobTracker : MonoBehaviour
                 maxZ > KinectSensor.GetDefault().DepthFrameSource.DepthMinReliableDistance &&
                 maxZ > _lastDist)
             {
-                if (_trajectory.Count > MinPointRequired)
+                if (_trajectory.Count >= MinPointRequired - 1)
                 {
                     var newPoint = new Vector3(x/ZBufferScale, y/ZBufferScale, maxZ); //full depth rez 512x424
                     _speed = (newPoint - _trajectory.Last())/(_framesWithoutBlob + 1);
@@ -380,7 +397,7 @@ public class BlobTracker : MonoBehaviour
                             (int) ballPosition[1] + y);
 
                         short min = -1;
-                        float distMin = float.MaxValue;
+                        float distMin = Single.MaxValue;
 
                         for (short c = 0; c < colors.Length; c++)
                         {

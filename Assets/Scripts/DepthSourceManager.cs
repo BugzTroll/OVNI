@@ -124,6 +124,11 @@ public class DepthSourceManager : MonoBehaviour
 
     public ushort GetRawZ(int i, int j)
     {
+        if (i < 0 || i >= GetDescriptor().Width || j < 0 || j >= GetDescriptor().Height)
+        {
+            Debug.Log("pouet");
+        }
+
         return _rawData[i + j * GetDescriptor().Width];
     }
 

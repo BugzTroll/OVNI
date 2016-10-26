@@ -154,18 +154,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ColorManager: {fileID: 1000010381513058}
   DepthManager: {fileID: 1000011637784798}
+  ScreenCorners:
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
   ZBufferScale: 0.5
   ColorScale: 0.15
   MinSizeBlob: 6
   MaxSizeBlob: 20
   ThresholdBlob: 50
   ThresholdTrajectory: 10
-  FramesWithoutBlobNeededToClear: 10
+  FramesWithoutBlobNeededToClear: 6
   ColorNeighborhoodSize: 2
   MinPointRequired: 2
-  LeftBotomScreen: {x: 0, y: 0}
-  RightTopScreen: {x: 0, y: 0}
-  _ProjectionDistance: 0
 --- !u!114 &114000012972750216
 MonoBehaviour:
   m_ObjectHideFlags: 1
