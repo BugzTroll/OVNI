@@ -31,7 +31,7 @@ public class ProjectileShooter : MonoBehaviour
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    void Update()
     {
         if (Input.GetKeyDown("space")) // find kinect gesture eventually ?
         {

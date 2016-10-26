@@ -8,13 +8,13 @@ public class LevelEnd : MonoBehaviour {
 
     private ProjectileShooter shooter;
     private GameLevelController gameLvlController;
-    public GameObject levelEndPanel;                         //Store a reference to the Game Object pausePanel 
+    public GameObject levelEndPanel;
     public GameObject optionsTint;
     public GameObject pauseBtn;
     public GameObject RetryBtn;
     public GameObject LvlSelect;
     public UnityEngine.UI.Text PanelText;
-    public float endScreenSlowMoFactor;     // 0.0 to 1.0
+    [Range(0, 1)] public float endScreenSlowMoFactor;
 
 
     // Use this for initialization

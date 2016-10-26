@@ -42,7 +42,7 @@ public class DurabilityManager : MonoBehaviour
         {
             int dmg = damageDealer.baseDamage;
 
-            damageDone += (dmg * collision.relativeVelocity.magnitude);
+            damageDone += dmg; //(dmg * collision.relativeVelocity.magnitude);
             durability -= damageDone;
             if (DebugManager.Debug)
             {
