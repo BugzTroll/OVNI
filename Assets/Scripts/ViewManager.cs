@@ -90,9 +90,9 @@ public class ViewManager : MonoBehaviour
                 foreach (var position in trajectory)
                 {
                     var pos = position*scale;
-                    int iMin = (pos[0] - SizeOfPoint < _texture.width) ? (int) pos[0] - SizeOfPoint : _texture.width;
+                    int iMin = (pos[0] - SizeOfPoint >= 0) ? (int) pos[0] - SizeOfPoint :0;
                     int iMax = (pos[0] + SizeOfPoint < _texture.width) ? (int) pos[0] + SizeOfPoint : _texture.width;
-                    int jMin = (pos[1] - SizeOfPoint < _texture.height) ? (int) pos[1] - SizeOfPoint : _texture.height;
+                    int jMin = (pos[1] - SizeOfPoint >= 0) ? (int) pos[1] - SizeOfPoint : 0;
                     int jMax = (pos[1] + SizeOfPoint < _texture.height) ? (int) pos[1] + SizeOfPoint : _texture.height;
 
                     for (int i = iMin; i <= iMax; i++)
@@ -142,9 +142,9 @@ public class ViewManager : MonoBehaviour
                 // Draw linear impact point in color coordinate
                 x = (int) linImpact[0];
                 y = (int) linImpact[1];
-                iMin = x - SizeOfPoint < _texture.width ? x - SizeOfPoint : _texture.width;
+                iMin = x - SizeOfPoint >= 0 ? x - SizeOfPoint : 0;
                 iMax = x + SizeOfPoint < _texture.width ? x + SizeOfPoint : _texture.width;
-                jMin = y - SizeOfPoint < _texture.height ? y - SizeOfPoint : _texture.height;
+                jMin = y - SizeOfPoint >= 0 ? y - SizeOfPoint : 0;
                 jMax = y + SizeOfPoint < _texture.height ? y + SizeOfPoint : _texture.height;
 
                 for (int i = iMin; i <= iMax; i++)

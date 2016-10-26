@@ -14,12 +14,14 @@ public class MyHelper : MonoBehaviour
     {
         Color avColor = Color.black;
         int cpt = 0;
+        int iMin = x - radius < 0 ? x - radius : 0;
         int iMax = x + radius < texture.width ? x + radius : texture.width;
+        int jMin = y - radius < 0 ? y - radius : 0;
         int jMax = y + radius < texture.height ? y + radius : texture.height;
 
-        for (int i = x - radius > 0 ? x - radius : 0; i <= iMax; i++)
+        for (int i = iMin; i <= iMax; i++)
         {
-            for (int j = y - radius > 0 ? y - radius : 0; j <= jMax; j++)
+            for (int j = jMin; j <= jMax; j++)
             {
                 avColor += texture.GetPixel(i, j);
                 cpt++;

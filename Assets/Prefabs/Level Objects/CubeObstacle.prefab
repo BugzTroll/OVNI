@@ -132,4 +132,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pointsWhenDestroyed: 200
-  durability: 400
+  durability: 100

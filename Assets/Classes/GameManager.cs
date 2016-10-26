@@ -8,6 +8,8 @@ using UnityEngine;
 public class GameManager
 {
 
+    
+
     public enum GameState
     {
         NONE = -1,
@@ -50,6 +52,7 @@ public class GameManager
         if (DebugManager.Debug)
             Debug.Log("GameManager was created");
 
+        BlobTracker.ImpactPointDetected += OnImpactPointDetected;
     }
 
     public void InitIfNeeded()
@@ -123,6 +126,11 @@ public class GameManager
             if (DebugManager.Debug)
                 Debug.Log("Game State changed to: " + GameManager.Instance.currentState.ToString());
         }
+    }
+
+    void OnImpactPointDetected(float x, float y)
+    {
+        Debug.Log("point d'impact ! " + x + "," + y);
     }
 
     public void ChangeScene(int sceneIndex)
