@@ -1,36 +1,49 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Drawing;
+using System.Drawing.Imaging;
+using AForge.Imaging;
 
 public class KinectProjectionConfig : MonoBehaviour
 {
-    public GameObject ViewManager;
+    public GameObject ColorManager;
     public GameObject BlobTracker;
-    private ViewManager _viewManager;
-    private BlobTracker _blobTracker;
-    private Texture2D _backgroundTexture;
-    private int _clickCounter;
 
+    private ColorSourceManager _colorManager;
+    private BlobTracker _blobTracker;
+    private int _clickCounter;
+    private Bitmap _source;
+    private Bitmap _template;
+    private Bitmap bmp;
+    private Texture _texture;
 
     // Use this for initialization
     void Start()
     {
         _clickCounter = 0;
-        _backgroundTexture = new Texture2D(Screen.width, Screen.height);
-        _viewManager = ViewManager.GetComponent<ViewManager>();
+        _colorManager = ColorManager.GetComponent<ColorSourceManager>();
         _blobTracker = BlobTracker.GetComponent<BlobTracker>();
-        _backgroundTexture = new Texture2D(Screen.width, Screen.height);
+        _template = (Bitmap) Bitmap.FromFile( "C:\\Users\\nadm2208\\Documents\\OVNI\\Assets\\Resources\\4f89eb55d2007a0f1e84553ff5105411.jpg");
+
+        _texture = new Texture2D(1920,1080, TextureFormat.RGB24, false);
+        _texture = Resources.Load("OVNI") as Texture;
     }
 
     // Update is called once per frame
     void Update()
     {
-        _backgroundTexture = _viewManager.GetTexture();
+        _source = Converter.ByteArray2Bmp(_colorManager.GetData(), _colorManager.GetDescriptor().Width, 
+        _colorManager.GetDescriptor().Height, PixelFormat.Format32bppArgb);
+        ExhaustiveTemplateMatching tm = new ExhaustiveTemplateMatching(0.921f);
+
+        // image formate trouble -> ony 24bpp
+       // TemplateMatch[] matchings = tm.ProcessImage(_source, _template);
     }
 
     void OnGUI()
     {
-        GUI.DrawTextureWithTexCoords(new Rect(0, 0, Screen.width, Screen.height), _backgroundTexture,
-            new Rect(0, 0, 1, -1));
+        GUI.DrawTextureWithTexCoords(new Rect(0, 0, Screen.width, Screen.height), _texture,
+            new Rect(0, 0, -1, 1));
     }
 
     void OnMouseDown()
@@ -45,11 +58,6 @@ public class KinectProjectionConfig : MonoBehaviour
             _blobTracker.InitProjectionDistance();
 
             GameManager.Instance.CurrentState = GameManager.GameState.MAIN_MENU;
-
-            if (!DebugManager.Debug)
-            {
-                _viewManager.Shutdown();
-            }
         }
         _clickCounter++;
     }
