@@ -28,12 +28,13 @@ public class GameLevelController : MonoBehaviour {
 
         score = 0;
         scoreText.text = "Score: ";
-        tomateText.text = " Tomates Restantes ";
-        bombText.text = " Bombes Restantes ";
+        // tomateText.text = " Tomates Restantes ";
+        // bombText.text = " Bombes Restantes ";
     }
 	
 	// Update is called once per frame
 	void Update () {
+
         UpdateScoreText();
         UpdateAmmoCount();
 
@@ -47,8 +48,8 @@ public class GameLevelController : MonoBehaviour {
     }
     void UpdateAmmoCount()
     {
-        tomateText.text = shooter.tomatoCount + " Tomates Restantes ";
-        bombText.text = shooter.bombCount + " Bombes Restantes ";
+        // tomateText.text = shooter.tomatoCount + " Tomates Restantes ";
+        // bombText.text = shooter.bombCount + " Bombes Restantes ";
     }
 
 

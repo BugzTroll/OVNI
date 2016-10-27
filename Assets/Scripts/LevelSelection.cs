@@ -27,40 +27,7 @@ public class LevelSelection : MonoBehaviour {
     {
 	    if (Input.GetMouseButtonDown(0))
         {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit))
-            {
-                if (hit.collider.tag == "Clickable")
-                {
-                    if (hit.collider.name == "Planete1")
-                    {
-                        // change to scene associated to planet
-                        GameManager.Instance.ChangeScene("Planete1");                      
-                    }
-                    if (hit.collider.name == "Planete2")
-                    {
-                        // change to scene associated to planet
-                        GameManager.Instance.ChangeScene("Planete2");
-                    }
-                    if (hit.collider.name == "Planete3")
-                    {
-                        // change to scene associated to planet
-                        GameManager.Instance.ChangeScene("Planete3");
-                    }
-                    if (hit.collider.name == "Planete4")
-                    {
-                        // change to scene associated to planet
-                        GameManager.Instance.ChangeScene("Planete4");
-                    }
-                    if (hit.collider.name == "Planete5")
-                    {
-                        // change to scene associated to planet
-                        GameManager.Instance.ChangeScene("Planete5");
-                    }
-                }
-                    
-            }
+            GameManager.Instance.ActionFromBallOrClick(Input.mousePosition.x, Input.mousePosition.y);
         }
 	}
 
