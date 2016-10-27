@@ -1,4 +1,4 @@
 ﻿public class DebugManager
 {
-    public static readonly bool Debug = false;
+    public static readonly bool Debug = true;
 }
