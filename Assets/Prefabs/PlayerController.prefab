@@ -51,9 +51,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea9aeea090e8128408344d21db028d9f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Upcomming_0: {fileID: 0}
+  Upcomming_1: {fileID: 0}
+  Upcomming_2: {fileID: 0}
+  Upcomming_3: {fileID: 0}
+  Upcomming_4: {fileID: 0}
   tomatoPrefab: {fileID: 1000012715797112, guid: b332305ce86fc9b419459c0fad936138,
     type: 2}
   bombPrefab: {fileID: 1000010377066388, guid: 728970f7225f57b4587d117fdf68ae2b, type: 2}
-  tomatoCount: 20
-  bombCount: 3
+  Ammos: 0000001
   speed: 20

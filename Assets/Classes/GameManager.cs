@@ -96,7 +96,7 @@ public class GameManager
                     ChangeScene("MainMenu");
                     break;
                 case GameState.LEVEL_SELECT:
-                    ChangeScene("LevelSelect");
+                    //ChangeScene("LevelSelect");
                     break;
                 case GameState.PAUSED:
                     //UI.showPausePanel
@@ -124,7 +124,7 @@ public class GameManager
             currentState = value;
 
             if (DebugManager.Debug)
-                Debug.Log("Game State changed to: " + GameManager.Instance.currentState.ToString());
+                Debug.Log("Game State changed to: " + Instance.currentState.ToString());
         }
     }
 
@@ -137,14 +137,41 @@ public class GameManager
     // x and y in normalized screen space 
     public void ActionFromBallOrClick(float x, float y)   // TODO: FIND A WAY BETTER NAME
     {
-        GameObject projectileShooterObject = GameObject.Find("PlayerController");
-        if (projectileShooterObject != null)
+        if (Instance.currentState == GameState.IN_GAME)
         {
-            ProjectileShooter shooter = projectileShooterObject.GetComponent<ProjectileShooter>();
-            // shooter.ShootProjectile(new Vector3(x, y, 0), Vector3.forward);  REACTIVATE WHEN BLOBTRACKER CAN BE MODIFIED
+            GameObject projectileShooterObject = GameObject.Find("PlayerController");
+            if (projectileShooterObject != null)
+            {
+                ProjectileShooter shooter = projectileShooterObject.GetComponent<ProjectileShooter>();
+                // shooter.ShootProjectile(new Vector3(x, y, 0), Vector3.forward);  REACTIVATE WHEN BLOBTRACKER CAN BE MODIFIED
+            }
         }
 
-        else if (SceneManager.GetActiveScene().name == "LevelSelect")
+        else if (Instance.currentState == GameState.GAME_OVER)
+        {
+            //GameObject endLevelPanel = GameObject.Find("EndLvlPanel");
+            GameObject ui = GameObject.Find("GameUI");
+
+            if (ui)
+            {
+                LevelEnd levelEnd = ui.GetComponent<LevelEnd>();
+                levelEnd.RetryButtonClicked();
+            }            
+        }
+
+        else if (Instance.currentState == GameState.GAME_SUCCESS)
+        {
+            GameObject ui = GameObject.Find("GameUI");
+
+            if (ui)
+            {
+                LevelEnd levelEnd = ui.GetComponent<LevelEnd>();
+                levelEnd.ReturnButtonClicked();
+            }
+        }
+
+        
+        else if (Instance.currentState == GameState.LEVEL_SELECT)
         {
             Ray ray = Camera.main.ScreenPointToRay(new Vector3(x, y, 0));
             RaycastHit hit;
@@ -158,6 +185,7 @@ public class GameManager
 
             }
         }
+
 
         // other cases such as transition between levels
     }

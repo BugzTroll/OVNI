@@ -4,7 +4,8 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 
-public class LevelEnd : MonoBehaviour {
+public class LevelEnd : MonoBehaviour
+{
 
     private ProjectileShooter shooter;
     private GameLevelController gameLvlController;
@@ -12,13 +13,12 @@ public class LevelEnd : MonoBehaviour {
     public GameObject optionsTint;
     public GameObject pauseBtn;
     public GameObject RetryBtn;
-    public GameObject LvlSelect;
-    public UnityEngine.UI.Text PanelText;
-    [Range(0, 1)] public float endScreenSlowMoFactor;
+    [Range(0, 1)]
+    public float endScreenSlowMoFactor;
 
 
     // Use this for initialization
-    void Start ()
+    void Start()
     {
         GameManager.Instance.CurrentState = GameManager.GameState.IN_GAME;
 
@@ -36,7 +36,7 @@ public class LevelEnd : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void Update ()
+    void Update()
     {
         if (GameManager.Instance.CurrentState == GameManager.GameState.IN_GAME)
         {
@@ -44,6 +44,11 @@ public class LevelEnd : MonoBehaviour {
             CheckWinCondition();
         }
 
+        else
+        {
+            if (Input.GetMouseButtonDown(0))
+                GameManager.Instance.ActionFromBallOrClick(Input.mousePosition.x, Input.mousePosition.y);
+        }
     }
     public void RetryButtonClicked()
     {
@@ -53,16 +58,16 @@ public class LevelEnd : MonoBehaviour {
 
     public void ReturnButtonClicked()
     {
-        GameManager.Instance.CurrentState = GameManager.GameState.LEVEL_SELECT;
+        GameManager.Instance.ChangeScene("LevelSelect");
     }
 
     void CheckAmmoCount()
     {
-        if (shooter.Ammos.Length == 0)
+        if (shooter.GetCurrentAmmoCount() <= 0)
         {
             LevelFailed();
         }
-      
+
     }
     void CheckWinCondition()
     {
@@ -84,6 +89,9 @@ public class LevelEnd : MonoBehaviour {
         optionsTint.SetActive(true);
         pauseBtn.SetActive(false);
         Time.timeScale = endScreenSlowMoFactor;
+
+        GameObject retryText = levelEndPanel.transform.Find("retryText").gameObject;
+        retryText.SetActive(true);
     }
 
     public void LevelSuccess()
@@ -93,11 +101,12 @@ public class LevelEnd : MonoBehaviour {
 
         GameManager.Instance.CurrentState = GameManager.GameState.GAME_SUCCESS;
         levelEndPanel.SetActive(true);
-        optionsTint.SetActive(true);
+        //optionsTint.SetActive(true);
         pauseBtn.SetActive(false);
         Time.timeScale = endScreenSlowMoFactor;
 
-        PanelText.text = " Niveau Réussi, Félicitations !";
+        GameObject continueText = levelEndPanel.transform.Find("continueText").gameObject;
+        continueText.SetActive(true);
 
         // Ajoute la planète a la liste de progression
         GameManager.Instance.UpdateProgression(SceneManager.GetActiveScene());

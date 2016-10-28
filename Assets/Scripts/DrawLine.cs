@@ -29,23 +29,23 @@ public class DrawLine : MonoBehaviour {
 
     void Draw()
     {
-        if (GameManager.Instance.LevelProgression.Contains(GameManager.GameLevel.Planete1))
-        {
-            lineRenderer = GetComponent<LineRenderer>();
-            lineRenderer.SetPosition(0, planete1.position);
-            lineRenderer.SetWidth(0.45f, 0.45f);
-            dist = Vector3.Distance(planete1.position, planete2.position);
+        //if (GameManager.Instance.LevelProgression.Contains(GameManager.GameLevel.Planete1))
+        //{
+        //    lineRenderer = GetComponent<LineRenderer>();
+        //    lineRenderer.SetPosition(0, planete1.position);
+        //    lineRenderer.SetWidth(0.45f, 0.45f);
+        //    dist = Vector3.Distance(planete1.position, planete2.position);
 
-            if (counter < dist)
-            {
-                counter += 0.1f / lineDrawSpeed; // Vitesse
-                float x = Mathf.Lerp(0, dist, counter);
-                Vector3 pointA = planete1.position;
-                Vector3 pointB = planete2.position;
-                Vector3 pointAlongLine = x * Vector3.Normalize(pointB - pointA) + pointA;
+        //    if (counter < dist)
+        //    {
+        //        counter += 0.1f / lineDrawSpeed; // Vitesse
+        //        float x = Mathf.Lerp(0, dist, counter);
+        //        Vector3 pointA = planete1.position;
+        //        Vector3 pointB = planete2.position;
+        //        Vector3 pointAlongLine = x * Vector3.Normalize(pointB - pointA) + pointA;
 
-                lineRenderer.SetPosition(1, pointAlongLine);
-            }
-        }
+        //        lineRenderer.SetPosition(1, pointAlongLine);
+        //    }
+        //}
     }
 }

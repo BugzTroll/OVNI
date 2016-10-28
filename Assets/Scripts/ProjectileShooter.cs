@@ -19,18 +19,18 @@ public class ProjectileShooter : MonoBehaviour
     public UnityEngine.UI.RawImage Upcomming_4;
     public GameObject tomatoPrefab;
     public GameObject bombPrefab;
-    public string Ammos;
+    public string Ammo;
 
 
     // change per prefab
     public  float speed = 10;
-    private int projectileShooted;
+    private int projectilesShooted;
     private ProjectileType equippedProjectile;
 
     // Used to create projectiles and create the GUI for remaining ammo
     void Start()
     {
-        equippedProjectile = (ProjectileType)((int)char.GetNumericValue(Ammos[projectileShooted]));
+        equippedProjectile = (ProjectileType)((int)char.GetNumericValue(Ammo[projectilesShooted]));
         updateAmmoPictures();
     }
 
@@ -54,21 +54,28 @@ public class ProjectileShooter : MonoBehaviour
                 return;
 
             ShootProjectile(Input.mousePosition, Vector3.forward);
-            if (Ammos.Length > projectileShooted)
+            if (Ammo.Length > projectilesShooted)
             {
-                equippedProjectile = (ProjectileType)((int)char.GetNumericValue(Ammos[projectileShooted]));    
+                equippedProjectile = (ProjectileType)((int)char.GetNumericValue(Ammo[projectilesShooted]));    
             }
             updateAmmoPictures();
         }
         
     }
 
+    // temp fix; ammo should be a dynamic array (remove a projectile from it when it is used)
+    public int GetCurrentAmmoCount()
+    {
+        return Ammo.Length - projectilesShooted;
+    }
+
+
     void updateAmmoPictures()
     {
         // Image du prochain projectile
-        if (Ammos.Length > projectileShooted)
+        if (Ammo.Length > projectilesShooted)
         {
-            ProjectileType type = (ProjectileType)((int)char.GetNumericValue(Ammos[projectileShooted]));
+            ProjectileType type = (ProjectileType)((int)char.GetNumericValue(Ammo[projectilesShooted]));
             switch (type)
             {
                 case ProjectileType.BOMB:
@@ -87,9 +94,9 @@ public class ProjectileShooter : MonoBehaviour
         }
 
         // Image du +1
-        if (Ammos.Length > projectileShooted + 1)
+        if (Ammo.Length > projectilesShooted + 1)
         {
-            ProjectileType type1 = (ProjectileType)((int)char.GetNumericValue(Ammos[projectileShooted +1]));
+            ProjectileType type1 = (ProjectileType)((int)char.GetNumericValue(Ammo[projectilesShooted +1]));
             switch (type1)
             {
                 case ProjectileType.BOMB:
@@ -108,9 +115,9 @@ public class ProjectileShooter : MonoBehaviour
         }
 
         // Image du +2
-        if (Ammos.Length > projectileShooted + 2)
+        if (Ammo.Length > projectilesShooted + 2)
         {
-            ProjectileType type2 = (ProjectileType)((int)char.GetNumericValue(Ammos[projectileShooted +2]));
+            ProjectileType type2 = (ProjectileType)((int)char.GetNumericValue(Ammo[projectilesShooted +2]));
             switch (type2)
             {
                 case ProjectileType.BOMB:
@@ -128,9 +135,9 @@ public class ProjectileShooter : MonoBehaviour
 
         }
         // Image du +3
-        if (Ammos.Length > projectileShooted + 3)
+        if (Ammo.Length > projectilesShooted + 3)
         {
-            ProjectileType type3 = (ProjectileType)((int)char.GetNumericValue(Ammos[projectileShooted +3]));
+            ProjectileType type3 = (ProjectileType)((int)char.GetNumericValue(Ammo[projectilesShooted +3]));
             switch (type3)
             {
                 case ProjectileType.BOMB:
@@ -149,9 +156,9 @@ public class ProjectileShooter : MonoBehaviour
         }
 
         // Image du +4
-        if (Ammos.Length > projectileShooted + 4)
+        if (Ammo.Length > projectilesShooted + 4)
         {
-            ProjectileType type4 = (ProjectileType)((int)char.GetNumericValue(Ammos[projectileShooted + 4]));
+            ProjectileType type4 = (ProjectileType)((int)char.GetNumericValue(Ammo[projectilesShooted + 4]));
             switch (type4)
             {
                 case ProjectileType.BOMB:
@@ -191,7 +198,7 @@ public class ProjectileShooter : MonoBehaviour
 
         Vector3 worldPosition = Camera.main.ScreenToWorldPoint(screenPosition);
         velocity = worldPosition - Camera.main.gameObject.transform.position;
-        if (projectileShooted < Ammos.Length)
+        if (projectilesShooted < Ammo.Length)
         {
             ProjectileType type = equippedProjectile;
             switch (type)
@@ -204,7 +211,7 @@ public class ProjectileShooter : MonoBehaviour
                     CreateProjectile(tomatoPrefab, worldPosition, velocity.normalized);
                     break;
             }
-            projectileShooted++;
+            projectilesShooted++;
         }
     }
 

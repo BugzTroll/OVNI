@@ -6,8 +6,6 @@ public class GameLevelController : MonoBehaviour {
     private ProjectileShooter shooter;
 
     public UnityEngine.UI.Text scoreText;
-    public UnityEngine.UI.Text tomateText;
-    public UnityEngine.UI.Text bombText;
 
     public int score = 0;
     public int scoreToWin;
