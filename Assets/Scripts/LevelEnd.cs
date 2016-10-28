@@ -58,7 +58,7 @@ public class LevelEnd : MonoBehaviour {
 
     void CheckAmmoCount()
     {
-        if (shooter.tomatoCount + shooter.bombCount <= 0)
+        if (shooter.Ammos.Length == 0)
         {
             LevelFailed();
         }
