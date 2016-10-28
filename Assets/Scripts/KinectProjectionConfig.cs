@@ -63,7 +63,7 @@ public class KinectProjectionConfig : MonoBehaviour
                     _colorManager.GetDescriptor().Height, PixelFormat.Format32bppArgb);
 
                 var colorFrameDescriptor = _colorManager.GetDescriptor();
-                var resizeFilter = new ResizeNearestNeighbor((int) (0.3*colorFrameDescriptor.Width),
+                var resizeFilter = new ResizeBilinear((int) (0.3*colorFrameDescriptor.Width),
                     (int) (0.3*colorFrameDescriptor.Height));
 
                 _source = resizeFilter.Apply(source);
@@ -71,20 +71,16 @@ public class KinectProjectionConfig : MonoBehaviour
                 var grey = new Grayscale(0.2125, 0.7154, 0.0721);
 
                 var greySource = grey.Apply(_source);
-                //greySource.Save("C:\\Users\\nadm2208\\Desktop\\Alien1.bmp");
+                greySource.Save("C:\\Users\\nadm2208\\Desktop\\Alien1.bmp");
 
                 var thres = new Threshold(220);
                 var temp = thres.Apply(greySource);
-
-                //temp.Save("C:\\Users\\nadm2208\\Desktop\\Alien2.bmp");
+                temp.Save("C:\\Users\\nadm2208\\Desktop\\Alien2.bmp");
 
                 ExhaustiveTemplateMatching tm = new ExhaustiveTemplateMatching(0.75f);
 
                 var greytemplate = grey.Apply(_template);
-
-                //greySource.Save("C:\\Users\\nadm2208\\Desktop\\Alien1.bmp");
-
-                //greytemplate.Save("C:\\Users\\nadm2208\\Desktop\\Alien3.bmp");
+                greytemplate.Save("C:\\Users\\nadm2208\\Desktop\\Alien3.bmp");
 
                 // image formate trouble -> ony 24bpp
                 TemplateMatch[] matchings = tm.ProcessImage(temp, greytemplate);
@@ -99,7 +95,7 @@ public class KinectProjectionConfig : MonoBehaviour
                 }
 
                 _source.UnlockBits(data);
-                //_source.Save("C:\\Users\\nadm2208\\Desktop\\AlienDetecter.bmp");
+                _source.Save("C:\\Users\\nadm2208\\Desktop\\AlienDetecter.bmp");
                 GameManager.Instance.CurrentState = GameManager.GameState.MAIN_MENU;
             }
         }

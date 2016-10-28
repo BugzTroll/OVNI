@@ -25,6 +25,7 @@ public class BlobTracker : MonoBehaviour
     [Range(0, 255)] public int ThresholdBlob = 30;
     [Range(0, 30)] public int FramesWithoutBlobNeededToClear = 10;
     [Range(2, 5)] public int MinPointRequired = 2;
+    [Range(0, 100)] public float PercentThresholdZMiss = 80.0f;
 
     private KinectSensor _sensor;
     private ProjectileShooter shooter = null;
@@ -224,6 +225,8 @@ public class BlobTracker : MonoBehaviour
         _speed = new Vector3(0, 0, 0);
         _trajectory.Clear();
         _lastDist = 500;
+        _depthImpactLin = Vector3.zero;
+        _colorImpactLin = Vector3.zero;
     }
 
     private void AnalyseTrajectory()
@@ -296,6 +299,44 @@ public class BlobTracker : MonoBehaviour
         }
         else
         {
+            if (_colorImpactLin.magnitude > 1e-5)
+            {
+                float[] points = Projection2Square(ScreenCorners, _colorImpactLin[0] / 1920.0f,
+                    (1080 - _colorImpactLin[1]) / 1080.0f);
+
+                float xNormalized = 1.0f - points[0];
+                float yNormalized = points[1];
+
+                if (xNormalized >= 0.0f && xNormalized <= 1.0f &&
+                    yNormalized >= 0.0f && yNormalized <= 1.0f)
+                {
+                    if (shooter)
+                    {
+                        if (_nbFrameBetweenThrow > 10)
+                        {
+                            ImpactPointDetected(xNormalized * Screen.width, yNormalized * Screen.height);
+                            shooter.ShootProjectile(
+                                new Vector3(xNormalized * Screen.width, yNormalized * Screen.height),
+                                Vector3.forward);
+                        }
+                        _nbFrameBetweenThrow = 0;
+                    }
+                    else
+                    {
+                        if (DebugManager.Debug)
+                        {
+                            Debug.Log("No Shooter set to BlobTracker");
+                        }
+                    }
+
+                    if (DebugManager.Debug)
+                    {
+                        Debug.Log("impact : " + _depthImpactLin);
+                        Debug.Log("speed : " + _speed);
+                    }
+                }
+                ResetTrajectory();
+            }
             // No ball detected
             _framesWithoutBlob++;
             if (_framesWithoutBlob >= FramesWithoutBlobNeededToClear)
