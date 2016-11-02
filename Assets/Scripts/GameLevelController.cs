@@ -6,8 +6,7 @@ public class GameLevelController : MonoBehaviour {
     private ProjectileShooter shooter;
 
     public UnityEngine.UI.Text scoreText;
-    public UnityEngine.UI.Text tomateText;
-    public UnityEngine.UI.Text bombText;
+    public UnityEngine.UI.Text ammoText;
 
     public int score = 0;
     public int scoreToWin;
@@ -28,14 +27,15 @@ public class GameLevelController : MonoBehaviour {
 
         score = 0;
         scoreText.text = "Score: ";
-        tomateText.text = " Tomates Restantes ";
-        bombText.text = " Bombes Restantes ";
+        // tomateText.text = " Tomates Restantes ";
+        // bombText.text = " Bombes Restantes ";
     }
 	
 	// Update is called once per frame
 	void Update () {
+
         UpdateScoreText();
-        UpdateAmmoCount();
+        UpdateAmmoText();
 
         // it would be better here than in LevelEnd
         //CheckIfAllTargetsDestroyed(targetObjects);
@@ -45,10 +45,12 @@ public class GameLevelController : MonoBehaviour {
     {
         scoreText.text = "Score: " + score;
     }
-    void UpdateAmmoCount()
+    void UpdateAmmoText()
     {
-        tomateText.text = shooter.tomatoCount + " Tomates Restantes ";
-        bombText.text = shooter.bombCount + " Bombes Restantes ";
+        if (shooter)
+        {
+            ammoText.text = "Projectiles restants: " + shooter.GetCurrentAmmoCount();
+        }
     }
 
 

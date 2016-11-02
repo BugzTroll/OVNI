@@ -96,7 +96,7 @@ public class GameManager
                     ChangeScene("MainMenu");
                     break;
                 case GameState.LEVEL_SELECT:
-                    ChangeScene("LevelSelect");
+                    //ChangeScene("LevelSelect");
                     break;
                 case GameState.PAUSED:
                     //UI.showPausePanel
@@ -124,35 +124,82 @@ public class GameManager
             currentState = value;
 
             if (DebugManager.Debug)
-                Debug.Log("Game State changed to: " + GameManager.Instance.currentState.ToString());
+                Debug.Log("Game State changed to: " + Instance.currentState.ToString());
         }
     }
 
     void OnImpactPointDetected(float x, float y)
     {
         Debug.Log("point d'impact ! " + x + "," + y);
+        Instance.ActionFromBallOrClick(x, y);
+    }
+
+    // x and y in normalized screen space 
+    public void ActionFromBallOrClick(float x, float y)   // TODO: FIND A WAY BETTER NAME
+    {
+        if (Instance.currentState == GameState.IN_GAME)
+        {
+            GameObject projectileShooterObject = GameObject.Find("PlayerController");
+            if (projectileShooterObject != null)
+            {
+                ProjectileShooter shooter = projectileShooterObject.GetComponent<ProjectileShooter>();
+                // shooter.ShootProjectile(new Vector3(x, y, 0), Vector3.forward);  REACTIVATE WHEN BLOBTRACKER CAN BE MODIFIED
+            }
+        }
+
+        else if (Instance.currentState == GameState.GAME_OVER)
+        {
+            //GameObject endLevelPanel = GameObject.Find("EndLvlPanel");
+            GameObject ui = GameObject.Find("GameUI");
+
+            if (ui)
+            {
+                LevelEnd levelEnd = ui.GetComponent<LevelEnd>();
+                levelEnd.RetryButtonClicked();
+            }            
+        }
+
+        else if (Instance.currentState == GameState.GAME_SUCCESS)
+        {
+            GameObject ui = GameObject.Find("GameUI");
+
+            if (ui)
+            {
+                LevelEnd levelEnd = ui.GetComponent<LevelEnd>();
+                levelEnd.ReturnButtonClicked();
+            }
+        }
+
+        
+        else if (Instance.currentState == GameState.LEVEL_SELECT)
+        {
+            Ray ray = Camera.main.ScreenPointToRay(new Vector3(x, y, 0));
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit))
+            {
+                if (hit.collider.tag == "Clickable")
+                {
+                    // this works only if the name of the objet is the same as the corresponding scene
+                    Instance.ChangeScene(hit.collider.name);
+                }
+
+            }
+        }
+
+
+        // other cases such as transition between levels
     }
 
     public void ChangeScene(int sceneIndex)
     {
-        //SceneManager.UnloadScene(SceneManager.GetActiveScene());
-        
         SceneManager.LoadScene(sceneIndex);
         currentScene = SceneManager.GetActiveScene();
-
-        //if (sceneIndex > SceneManager.GetSceneByName("LevelSelect").buildIndex)
-        //    Instance.CurrentState = GameState.IN_GAME;  // change to preparation/color detection eventually
     }
 
     public void ChangeScene(string sceneName)
     {
-        //SceneManager.UnloadScene(SceneManager.GetActiveScene());
-        
         SceneManager.LoadScene(sceneName);
         currentScene = SceneManager.GetActiveScene();
-
-        //if (sceneName.StartsWith("Planete"))
-        //    Instance.CurrentState = GameState.IN_GAME;  // change to preparation/color detection eventually
     }
 
     void OnSceneChanged(Scene oldScene, Scene newScene)

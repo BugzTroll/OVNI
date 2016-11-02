@@ -2,7 +2,7 @@
 *.slo
 *.lo
 *.o
-*.obj
+#*.obj
 
 # Precompiled Headers
 *.gch
@@ -63,3 +63,14 @@ sysinfo.txt
 # Builds
 *.apk
 *.unitypackage
+Assets/ColorDetection/dll.meta
+Assets/ColorDetection/dll/AForge.Imaging.Formats.dll.meta
+Assets/ColorDetection/dll/AForge.Imaging.IPPrototyper.dll.meta
+Assets/ColorDetection/dll/AForge.Imaging.dll.meta
+Assets/ColorDetection/dll/AForge.Math.dll.meta
+Assets/ColorDetection/dll/AForge.dll.meta
+Assets/ColorDetection/dll/ICSharpCode.SharpZipLib.dll.meta
+Assets/ColorDetection/dll/LZ4Sharp.dll.meta
+Assets/ColorDetection/dll/MathNet.Numerics.dll.meta
+Assets/ColorDetection/dll/System.Drawing.dll.meta
+Assets/ColorDetection/dll/System.Threading.dll.meta

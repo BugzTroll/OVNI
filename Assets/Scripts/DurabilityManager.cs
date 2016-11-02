@@ -38,16 +38,30 @@ public class DurabilityManager : MonoBehaviour
         }
 
         DamageDealer damageDealer = collision.gameObject.GetComponent<DamageDealer>();
+
         if (damageDealer)
         {
-            int dmg = damageDealer.baseDamage;
-
-            damageDone += (dmg * collision.relativeVelocity.magnitude);
-            durability -= damageDone;
-            if (DebugManager.Debug)
+            if (damageDealer.name == "Acid(Clone)")
             {
-                Debug.Log("Damage done: " + damageDone);
+                Color altColor = Color.green;
+                Renderer rend;
+                rend = GetComponent<Renderer>();
+                rend.material.color = altColor;
+
+                durability = 1;
                 Debug.Log("Remaining durability: " + durability);
+            }
+            else
+            {
+                int dmg = damageDealer.baseDamage;
+
+                damageDone += dmg; //(dmg * collision.relativeVelocity.magnitude);
+                durability -= damageDone;
+                if (DebugManager.Debug)
+                {
+                    Debug.Log("Damage done: " + damageDone);
+                    Debug.Log("Remaining durability: " + durability);
+                }
             }
         }
     }
