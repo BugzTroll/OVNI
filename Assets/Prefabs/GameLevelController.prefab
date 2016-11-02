@@ -52,3 +52,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scoreText: {fileID: 0}
+  ammoText: {fileID: 0}
+  score: 0
+  scoreToWin: 1000
+  targetObjects: {fileID: 0}

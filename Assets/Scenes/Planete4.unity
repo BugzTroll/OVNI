@@ -288,6 +288,12 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 1617d466ce790f046ac3922ea1ee7d59, type: 2}
   m_IsPrefabParent: 0
+--- !u!114 &49187697 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 114000012104699744, guid: 1617d466ce790f046ac3922ea1ee7d59,
+    type: 2}
+  m_PrefabInternal: {fileID: 49187696}
+  m_Script: {fileID: 708705254, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
 --- !u!4 &66789361 stripped
 Transform:
   m_PrefabParentObject: {fileID: 4000010019968784, guid: 8bfbc7a8b93a0f348ba9ce039db56f35,
@@ -1513,7 +1519,7 @@ Prefab:
         type: 2}
       propertyPath: scoreText
       value: 
-      objectReference: {fileID: 768639280}
+      objectReference: {fileID: 49187697}
     - target: {fileID: 114000012280701770, guid: ff6b655613cbfd14a9701ba4f7cc1da9,
         type: 2}
       propertyPath: tomateText
@@ -1534,6 +1540,11 @@ Prefab:
       propertyPath: targetObjects
       value: 
       objectReference: {fileID: 141000433}
+    - target: {fileID: 114000012280701770, guid: ff6b655613cbfd14a9701ba4f7cc1da9,
+        type: 2}
+      propertyPath: ammoText
+      value: 
+      objectReference: {fileID: 768639280}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: ff6b655613cbfd14a9701ba4f7cc1da9, type: 2}
   m_IsPrefabParent: 0

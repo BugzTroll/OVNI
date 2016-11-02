@@ -193,6 +193,12 @@ Transform:
   m_PrefabParentObject: {fileID: 4000010019968784, guid: 8bfbc7a8b93a0f348ba9ce039db56f35,
     type: 2}
   m_PrefabInternal: {fileID: 102831952}
+--- !u!114 &106590960 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 114000012104699744, guid: 1617d466ce790f046ac3922ea1ee7d59,
+    type: 2}
+  m_PrefabInternal: {fileID: 998755617}
+  m_Script: {fileID: 708705254, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
 --- !u!1 &141000433
 GameObject:
   m_ObjectHideFlags: 0
@@ -503,51 +509,6 @@ Prefab:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 224000013372182678, guid: 1617d466ce790f046ac3922ea1ee7d59,
-        type: 2}
-      propertyPath: m_AnchorMin.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 224000013372182678, guid: 1617d466ce790f046ac3922ea1ee7d59,
-        type: 2}
-      propertyPath: m_AnchorMax.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 224000013372182678, guid: 1617d466ce790f046ac3922ea1ee7d59,
-        type: 2}
-      propertyPath: m_AnchoredPosition.x
-      value: -15
-      objectReference: {fileID: 0}
-    - target: {fileID: 224000013372182678, guid: 1617d466ce790f046ac3922ea1ee7d59,
-        type: 2}
-      propertyPath: m_AnchorMin.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 224000013372182678, guid: 1617d466ce790f046ac3922ea1ee7d59,
-        type: 2}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 224000013372182678, guid: 1617d466ce790f046ac3922ea1ee7d59,
-        type: 2}
-      propertyPath: m_AnchoredPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 224000013372182678, guid: 1617d466ce790f046ac3922ea1ee7d59,
-        type: 2}
-      propertyPath: m_SizeDelta.y
-      value: 100
-      objectReference: {fileID: 0}
-    - target: {fileID: 224000013372182678, guid: 1617d466ce790f046ac3922ea1ee7d59,
-        type: 2}
-      propertyPath: m_Pivot.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 224000013372182678, guid: 1617d466ce790f046ac3922ea1ee7d59,
-        type: 2}
-      propertyPath: m_Pivot.y
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 1617d466ce790f046ac3922ea1ee7d59, type: 2}
   m_IsPrefabParent: 0
@@ -717,6 +678,11 @@ Prefab:
       propertyPath: Upcomming_4
       value: 
       objectReference: {fileID: 2124586276}
+    - target: {fileID: 114000013988874362, guid: 29f94dac6694b2045aaf35850b45c64f,
+        type: 2}
+      propertyPath: Ammo
+      value: 01234
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 29f94dac6694b2045aaf35850b45c64f, type: 2}
   m_IsPrefabParent: 0
@@ -1005,22 +971,12 @@ Prefab:
         type: 2}
       propertyPath: scoreText
       value: 
+      objectReference: {fileID: 106590960}
+    - target: {fileID: 114000012280701770, guid: ff6b655613cbfd14a9701ba4f7cc1da9,
+        type: 2}
+      propertyPath: ammoText
+      value: 
       objectReference: {fileID: 1057621705}
-    - target: {fileID: 114000012280701770, guid: ff6b655613cbfd14a9701ba4f7cc1da9,
-        type: 2}
-      propertyPath: tomateText
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 114000012280701770, guid: ff6b655613cbfd14a9701ba4f7cc1da9,
-        type: 2}
-      propertyPath: bombText
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 114000012280701770, guid: ff6b655613cbfd14a9701ba4f7cc1da9,
-        type: 2}
-      propertyPath: scoreToWin
-      value: 1000
-      objectReference: {fileID: 0}
     - target: {fileID: 114000012280701770, guid: ff6b655613cbfd14a9701ba4f7cc1da9,
         type: 2}
       propertyPath: targetObjects

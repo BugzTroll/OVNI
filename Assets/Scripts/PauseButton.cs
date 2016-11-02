@@ -67,7 +67,7 @@ public class PauseButton : MonoBehaviour {
     {
         pausePanel.SetActive(false);
         optionsTint.SetActive(false);
-        pauseButton.SetActive(true);
+        //pauseButton.SetActive(true);
     }
 
     public void ChangeLevelButtonPressed()
