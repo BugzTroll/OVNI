@@ -7,13 +7,14 @@ using System.Linq;
 using Windows.Kinect;
 using AForge.Imaging;
 using AForge.Imaging.Filters;
-using MathNet.Numerics;
 using UnityEngine.Events;
 using Color = System.Drawing.Color;
 using Image = AForge.Imaging.Image;
 
 public class BlobTracker : MonoBehaviour
 {
+    public static event UnityAction<float, float> ImpactPointDetected;
+
     public GameObject ColorManager;
     public GameObject DepthManager;
     public Vector2[] ScreenCorners = new Vector2[4];
@@ -22,16 +23,13 @@ public class BlobTracker : MonoBehaviour
     [Range(1, 30)] public int MinSizeBlob = 6;
     [Range(1, 50)] public int MaxSizeBlob = 20;
     [Range(0, 255)] public int ThresholdBlob = 30;
-    [Range(0, 50)] public int ThresholdTrajectory = 10;
     [Range(0, 30)] public int FramesWithoutBlobNeededToClear = 10;
-    [Range(0, 5)] public int ColorNeighborhoodSize = 2;
-    [Range(2, 10)] public int MinPointRequired = 2;
+    [Range(2, 5)] public int MinPointRequired = 2;
+    [Range(0, 100)] public float PercentThresholdZMiss = 80.0f;
 
     private KinectSensor _sensor;
     private ProjectileShooter shooter = null;
-    public static event UnityAction<float, float> ImpactPointDetected;
-
-    private int framebetweenthrow = 0;
+    private int _nbFrameBetweenThrow;
 
     private DepthSourceManager _depthManager;
     private Bitmap _resizedZBuffer;
@@ -54,6 +52,7 @@ public class BlobTracker : MonoBehaviour
 
     public void SetShooter(ProjectileShooter shoot)
     {
+        //TODO this should go away with the new event system
         shooter = shoot;
     }
 
@@ -62,27 +61,31 @@ public class BlobTracker : MonoBehaviour
         DepthSpacePoint[] p = new DepthSpacePoint[1920*1080];
         _sensor.CoordinateMapper.MapColorFrameToDepthSpace(_depthManager.GetRawData(), p);
 
-        var lb = new Vector2(ScreenCorners[0].x*1920, ScreenCorners[0].y*1080);
-        var lt = new Vector2(ScreenCorners[1].x*1920, ScreenCorners[1].y*1080);
-        var rt = new Vector2(ScreenCorners[2].x*1920, ScreenCorners[2].y*1080);
-        var rb = new Vector2(ScreenCorners[3].x*1920, ScreenCorners[3].y*1080);
+        var lb = new Vector2(ScreenCorners[0].x*1920, ScreenCorners[0].y*1080); // left bottom
+        var lt = new Vector2(ScreenCorners[1].x*1920, ScreenCorners[1].y*1080); // left top
+        var rt = new Vector2(ScreenCorners[2].x*1920, ScreenCorners[2].y*1080); // right top
+        var rb = new Vector2(ScreenCorners[3].x*1920, ScreenCorners[3].y*1080); // right bottom
+        var mm = (lb + rt)/2.0f; // midle
 
         DepthSpacePoint dlb = p[(int) lb.y*1920 + (int) lb.x];
         DepthSpacePoint dlt = p[(int) lt.y*1920 + (int) lt.x];
         DepthSpacePoint drt = p[(int) rt.y*1920 + (int) rt.x];
         DepthSpacePoint drb = p[(int) rb.y*1920 + (int) rb.x];
+        DepthSpacePoint dmm = p[(int) mm.y*1920 + (int) mm.x];
 
-        if (!Single.IsNegativeInfinity(dlb.X) && !Single.IsNegativeInfinity(dlb.Y) &&
-            !Single.IsNegativeInfinity(dlt.X) && !Single.IsNegativeInfinity(dlt.Y) &&
-            !Single.IsNegativeInfinity(drt.X) && !Single.IsNegativeInfinity(drt.Y) &&
-            !Single.IsNegativeInfinity(drb.X) && !Single.IsNegativeInfinity(drb.Y))
+        if (!float.IsNegativeInfinity(dlb.X) && !float.IsNegativeInfinity(dlb.Y) &&
+            !float.IsNegativeInfinity(dlt.X) && !float.IsNegativeInfinity(dlt.Y) &&
+            !float.IsNegativeInfinity(drt.X) && !float.IsNegativeInfinity(drt.Y) &&
+            !float.IsNegativeInfinity(drb.X) && !float.IsNegativeInfinity(drb.Y) &&
+            !float.IsNegativeInfinity(dmm.X) && !float.IsNegativeInfinity(dmm.Y))
         {
             int zlb = _depthManager.GetRawZ((int) dlb.X, (int) dlb.Y);
             int zlt = _depthManager.GetRawZ((int) dlt.X, (int) dlt.Y);
             int zrt = _depthManager.GetRawZ((int) drt.X, (int) drt.Y);
             int zrb = _depthManager.GetRawZ((int) drb.X, (int) drb.Y);
+            int zmm = _depthManager.GetRawZ((int) dmm.X, (int) dmm.Y);
 
-            _projectionDistance = Mathf.Min(zlb, Mathf.Min(zlt, Mathf.Min(zrb, zrt)));
+            _projectionDistance = Mathf.Min(zlb, Mathf.Min(zlt, Mathf.Min(zrb, Math.Min(zmm, zrt))));
         }
         else
         {
@@ -95,14 +98,14 @@ public class BlobTracker : MonoBehaviour
 
     void Start()
     {
-        Application.targetFrameRate = 60;
-
-        _sensor = KinectSensor.GetDefault();
+        //TODO this should go away with the new event system
         GameObject projectileShooterObject = GameObject.Find("Player");
         if (projectileShooterObject != null)
         {
             shooter = projectileShooterObject.GetComponent<ProjectileShooter>();
         }
+
+        _sensor = KinectSensor.GetDefault();
         _grey2Rgb = new GrayscaleToRGB();
 
         _depthManager = DepthManager.GetComponent<DepthSourceManager>();
@@ -110,9 +113,11 @@ public class BlobTracker : MonoBehaviour
 
         _blobs = new Blob[0];
         _trajectory = new List<Vector3>();
+        _speed = new Vector3(0, 0, 0);
         _framesWithoutBlob = 0;
         _lastDist = 0;
-        _speed = new Vector3(0, 0, 0);
+        _nbFrameBetweenThrow = 0;
+        _projectionDistance = 0;
 
         _resizedZBuffer = new Bitmap(1, 1, PixelFormat.Format8bppIndexed);
         _thresholdedZBuffer = new Bitmap(1, 1, PixelFormat.Format8bppIndexed);
@@ -121,12 +126,10 @@ public class BlobTracker : MonoBehaviour
 
         _colorImpactLin = new Vector3(0, 0, 0);
         _depthImpactLin = new Vector3(0, 0, 0);
-        _projectionDistance = 2700;
     }
 
     void Update()
     {
-        framebetweenthrow++;
         var depthFrameDescriptor = _depthManager.GetDescriptor();
 
         // Create z-buffer bitmap from depth manager data (16 bit/pixel greyscale)
@@ -156,8 +159,8 @@ public class BlobTracker : MonoBehaviour
 
         _resizedColor = resizeFilter.Apply(colorImg);
 
-        // Mean filter TODO : combiner les filtres en les faisant a la main pour faire moins de passes sur le bmp? est-ce qu'on est clutch?
-        Mean filter = new Mean(); // TODO tu coute cher mon ptit maudit (3-4 fps)
+        // Mean filter TODO : combiner les filtres ( threshold et median ) en les faisant a la main pour faire moins de passes sur le bmp
+        Mean filter = new Mean(); // TODO coute cher (3-4 fps) 
         _meanZBuffer = filter.Apply(_resizedZBuffer);
 
         // Threshold z-buffer to reduce noise
@@ -180,67 +183,8 @@ public class BlobTracker : MonoBehaviour
         // Analyse trajectory
         AnalyseTrajectory();
 
-        // Color analysis
-        // AnalyseColor();
-
-        //Compute impact point
-        if (_trajectory.Count >= MinPointRequired)
-        {
-            // Compute impact point with linear eqtn
-            int linZ = _projectionDistance;
-            var deltaZ = _projectionDistance - _trajectory.Last()[2];
-            int linX = (int) (deltaZ*_speed.normalized[0] + _trajectory.Last()[0]);
-            int linY = (int) (deltaZ*_speed.normalized[1] + _trajectory.Last()[1]);
-
-            if (linX >= 0 && linX < 512 &&
-                linY >= 0 && linY < 424)
-            {
-                _depthImpactLin = new Vector3(linX, linY, linZ);
-                _colorImpactLin = DepthPoint2ColorPoint(_depthImpactLin);
-                //TODO : WE COULD PASS LBS ET RTS TO DEPTH INSTED OF IMPACT TO COLOR
-            }
-
-            // If we should hit the wall at next frame
-            if (_lastDist + _speed[2] > _projectionDistance - 100)
-            {
-                float[] points = Projection2Square(ScreenCorners, _colorImpactLin[0]/1920.0f,
-                    (1080 - _colorImpactLin[1])/1080.0f);
-
-                float xNormalized = 1.0f - points[0];
-                float yNormalized = points[1];
-
-                if (xNormalized >= 0.0f && xNormalized <= 1.0f &&
-                    yNormalized >= 0.0f && yNormalized <= 1.0f)
-                {
-                    if (shooter)
-                    {
-                        if (framebetweenthrow > 10)
-                        {
-                            ImpactPointDetected(xNormalized * Screen.width, yNormalized * Screen.height);
-                            shooter.ShootProjectile(
-                                new Vector3(xNormalized*Screen.width, yNormalized*Screen.height),
-                                Vector3.forward);
-                            Debug.Log(framebetweenthrow);
-                        }
-                        framebetweenthrow = 0;
-                    }
-                    else
-                    {
-                        if (DebugManager.Debug)
-                        {
-                            Debug.Log("No Shooter set to BlobTracker");
-                        }
-                    }
-
-                    if (DebugManager.Debug)
-                    {
-                        Debug.Log("impact : " + _depthImpactLin);
-                        Debug.Log("speed : " + _speed);
-                    }
-                }
-                ResetTrajectory();
-            }
-        }
+        // Compute impact point and notify game manager
+        ComputeImpactPoint();
     }
 
     private Vector3 DepthPoint2ColorPoint(Vector3 depthPoint)
@@ -276,17 +220,20 @@ public class BlobTracker : MonoBehaviour
         return L_Out;
     }
 
-    #region Trajectory
-
     private void ResetTrajectory()
     {
         _speed = new Vector3(0, 0, 0);
         _trajectory.Clear();
         _lastDist = 500;
+        _depthImpactLin = Vector3.zero;
+        _colorImpactLin = Vector3.zero;
     }
 
     private void AnalyseTrajectory()
     {
+        // update count of frame between throw
+        _nbFrameBetweenThrow++;
+
         // Get biggest blob
         Blob biggestBlob = null;
         int maxArea = 0;
@@ -302,11 +249,7 @@ public class BlobTracker : MonoBehaviour
         // Get ball position
         if (biggestBlob != null)
         {
-            if (_framesWithoutBlob > 0 && _framesWithoutBlob < 10 && DebugManager.Debug)
-            {
-                Debug.Log("frame without blob : " + _framesWithoutBlob);
-            }
-
+            // Blob found
             _framesWithoutBlob = 0;
 
             int x = (int) biggestBlob.CenterOfGravity.X;
@@ -330,7 +273,6 @@ public class BlobTracker : MonoBehaviour
                     if (z > maxZ)
                     {
                         maxZ = z;
-                        break;
                     }
                 }
             }
@@ -340,7 +282,7 @@ public class BlobTracker : MonoBehaviour
                 maxZ > KinectSensor.GetDefault().DepthFrameSource.DepthMinReliableDistance &&
                 maxZ > _lastDist)
             {
-                if (_trajectory.Count >= MinPointRequired - 1)
+                if (_trajectory.Count > 0)
                 {
                     var newPoint = new Vector3(x/ZBufferScale, y/ZBufferScale, maxZ); //full depth rez 512x424
                     _speed = (newPoint - _trajectory.Last())/(_framesWithoutBlob + 1);
@@ -349,7 +291,7 @@ public class BlobTracker : MonoBehaviour
                 }
                 else
                 {
-                    // Add the point // TODO we need to make sure no false point pass through here
+                    // Add the point
                     _trajectory.Add(new Vector3(x/ZBufferScale, y/ZBufferScale, maxZ)); //full depth rez 512x424
                     _lastDist = maxZ;
                 }
@@ -357,6 +299,44 @@ public class BlobTracker : MonoBehaviour
         }
         else
         {
+            if (_colorImpactLin.magnitude > 1e-5)
+            {
+                float[] points = Projection2Square(ScreenCorners, _colorImpactLin[0] / 1920.0f,
+                    (1080 - _colorImpactLin[1]) / 1080.0f);
+
+                float xNormalized = 1.0f - points[0];
+                float yNormalized = points[1];
+
+                if (xNormalized >= 0.0f && xNormalized <= 1.0f &&
+                    yNormalized >= 0.0f && yNormalized <= 1.0f)
+                {
+                    if (shooter)
+                    {
+                        if (_nbFrameBetweenThrow > 10)
+                        {
+                            ImpactPointDetected(xNormalized * Screen.width, yNormalized * Screen.height);
+                            shooter.ShootProjectile(
+                                new Vector3(xNormalized * Screen.width, yNormalized * Screen.height),
+                                Vector3.forward);
+                        }
+                        _nbFrameBetweenThrow = 0;
+                    }
+                    else
+                    {
+                        if (DebugManager.Debug)
+                        {
+                            Debug.Log("No Shooter set to BlobTracker");
+                        }
+                    }
+
+                    if (DebugManager.Debug)
+                    {
+                        Debug.Log("impact : " + _depthImpactLin);
+                        Debug.Log("speed : " + _speed);
+                    }
+                }
+                ResetTrajectory();
+            }
             // No ball detected
             _framesWithoutBlob++;
             if (_framesWithoutBlob >= FramesWithoutBlobNeededToClear)
@@ -366,62 +346,65 @@ public class BlobTracker : MonoBehaviour
         }
     }
 
-    #endregion
-
-    #region Color
-
-    private void AnalyseColor()
+    private void ComputeImpactPoint()
     {
-        List<int> colorMax = new List<int>() {0, 0, 0};
-
-        Color[] colors =
+        if (_trajectory.Count >= MinPointRequired)
         {
-            Color.Red,
-            Color.Green,
-            Color.Blue
-        };
+            // Compute impact point with linear eqtn
+            int linZ = _projectionDistance;
+            var deltaZ = _projectionDistance - _trajectory.Last()[2];
+            var _normzSpeed = _speed/_speed[2];
+            int linX = (int)(deltaZ * _normzSpeed[0] + _trajectory.Last()[0]);
+            int linY = (int)(deltaZ * _normzSpeed[1] + _trajectory.Last()[1]);
 
-        List<Vector3> colorTrajectory = GetColorTrajectory();
-
-        foreach (Vector3 position in colorTrajectory)
-        {
-            var ballPosition = new Vector3(position.x/ColorScale, position.y/ColorScale);
-            for (int x = -ColorNeighborhoodSize; x < ColorNeighborhoodSize + 1; x++)
+            if (linX >= 0 && linX < 512 &&
+                linY >= 0 && linY < 424)
             {
-                for (int y = -ColorNeighborhoodSize; y < ColorNeighborhoodSize + 1; y++)
+                _depthImpactLin = new Vector3(linX, linY, linZ);
+                _colorImpactLin = DepthPoint2ColorPoint(_depthImpactLin);
+            }
+
+            // If we should hit the wall at next frame
+            if (_lastDist + _speed[2] > _projectionDistance - 100)
+            {
+                float[] points = Projection2Square(ScreenCorners, _colorImpactLin[0] / 1920.0f,
+                    (1080 - _colorImpactLin[1]) / 1080.0f);
+
+                float xNormalized = 1.0f - points[0];
+                float yNormalized = points[1];
+
+                if (xNormalized >= 0.0f && xNormalized <= 1.0f &&
+                    yNormalized >= 0.0f && yNormalized <= 1.0f)
                 {
-                    if ((int) ballPosition[0] + x >= 0 && (int) ballPosition[0] + x < _resizedColor.Width &&
-                        (int) ballPosition[1] + y >= 0 && (int) ballPosition[1] + y < _resizedColor.Height)
+                    if (shooter)
                     {
-                        Color current = _resizedColor.GetPixel((int) ballPosition[0] + x,
-                            (int) ballPosition[1] + y);
-
-                        short min = -1;
-                        float distMin = Single.MaxValue;
-
-                        for (short c = 0; c < colors.Length; c++)
+                        if (_nbFrameBetweenThrow > 10)
                         {
-                            float dist = MyHelper.ColorSquareDiff(current, colors[c]);
-
-                            if (dist < distMin)
-                            {
-                                min = c;
-                                distMin = dist;
-                            }
+                            ImpactPointDetected(xNormalized * Screen.width, yNormalized * Screen.height);
+                            shooter.ShootProjectile(
+                                new Vector3(xNormalized * Screen.width, yNormalized * Screen.height),
+                                Vector3.forward);
                         }
+                        _nbFrameBetweenThrow = 0;
+                    }
+                    else
+                    {
+                        if (DebugManager.Debug)
+                        {
+                            Debug.Log("No Shooter set to BlobTracker");
+                        }
+                    }
 
-                        colorMax[min] += 1;
+                    if (DebugManager.Debug)
+                    {
+                        Debug.Log("impact : " + _depthImpactLin);
+                        Debug.Log("speed : " + _speed);
                     }
                 }
+                ResetTrajectory();
             }
         }
-
-        int maxValue = colorMax.Max();
-        int maxIndex = colorMax.IndexOf(maxValue);
-        _blobColor = colors[maxIndex];
     }
-
-    #endregion
 
     #region Getter
 
