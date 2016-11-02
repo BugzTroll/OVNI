@@ -1,10 +1,12 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Collections;
 using System.Drawing;
 using System.Drawing.Imaging;
 using Windows.Kinect;
 using AForge.Imaging;
 using AForge.Imaging.Filters;
+using Color = Microsoft.Kinect.Face.Color;
 
 public class KinectProjectionConfig : MonoBehaviour
 {
@@ -34,7 +36,7 @@ public class KinectProjectionConfig : MonoBehaviour
         Bitmap template =
             (Bitmap)
             Bitmap.FromFile(
-                "C:\\Users\\nadm2208\\Documents\\OVNI\\Assets\\Resources\\4f89eb55d2007a0f1e84553ff5105411.jpg");
+                "C:\\Users\\nadm2208\\Documents\\OVNI\\Assets\\Resources\\Alien.jpg");
 
         var resizeFilter = new ResizeNearestNeighbor((int) (0.18*template.Width),
             (int) (0.16*template.Height));
@@ -128,4 +130,5 @@ public class KinectProjectionConfig : MonoBehaviour
         }
         _clickCounter++;
     }
+
 }
