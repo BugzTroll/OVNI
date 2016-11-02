@@ -315,9 +315,6 @@ public class BlobTracker : MonoBehaviour
                         if (_nbFrameBetweenThrow > 10)
                         {
                             ImpactPointDetected(xNormalized * Screen.width, yNormalized * Screen.height);
-                            shooter.ShootProjectile(
-                                new Vector3(xNormalized * Screen.width, yNormalized * Screen.height),
-                                Vector3.forward);
                         }
                         _nbFrameBetweenThrow = 0;
                     }
@@ -381,9 +378,6 @@ public class BlobTracker : MonoBehaviour
                         if (_nbFrameBetweenThrow > 10)
                         {
                             ImpactPointDetected(xNormalized * Screen.width, yNormalized * Screen.height);
-                            shooter.ShootProjectile(
-                                new Vector3(xNormalized * Screen.width, yNormalized * Screen.height),
-                                Vector3.forward);
                         }
                         _nbFrameBetweenThrow = 0;
                     }
