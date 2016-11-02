@@ -184,7 +184,7 @@ MonoBehaviour:
   ColorManager: {fileID: 758322602}
   BlobTracker: {fileID: 1493827631}
   ViewManager: {fileID: 274274447}
-  AlienDetection: 0
+  AlienDetection: 1
 --- !u!65 &1127260366
 BoxCollider:
   m_ObjectHideFlags: 0

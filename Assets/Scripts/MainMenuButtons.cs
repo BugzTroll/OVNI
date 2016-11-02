@@ -4,7 +4,7 @@ using System.Collections;
 public class MainMenuButtons : MonoBehaviour
 {
 
-    public int startScene = 1;
+    public string startScene;
 
     public GameObject optionsPanel;                         //Store a reference to the Game Object OptionsPanel 
     public GameObject optionsTint;                          //Store a reference to the Game Object OptionsTint 
