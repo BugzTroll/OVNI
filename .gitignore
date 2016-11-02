@@ -2,7 +2,7 @@
 *.slo
 *.lo
 *.o
-*.obj
+#*.obj
 
 # Precompiled Headers
 *.gch
@@ -74,7 +74,3 @@ Assets/ColorDetection/dll/LZ4Sharp.dll.meta
 Assets/ColorDetection/dll/MathNet.Numerics.dll.meta
 Assets/ColorDetection/dll/System.Drawing.dll.meta
 Assets/ColorDetection/dll/System.Threading.dll.meta
-Assets/Materials/Square_Border.mat
-Assets/Materials/Square_Border.mat.meta
-Assets/Resources/Textures/Square_Border.png
-Assets/Resources/Textures/Square_Border.png.meta
