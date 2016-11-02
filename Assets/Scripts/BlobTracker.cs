@@ -50,12 +50,6 @@ public class BlobTracker : MonoBehaviour
     private int _framesWithoutBlob;
     private float _lastDist;
 
-    public void SetShooter(ProjectileShooter shoot)
-    {
-        //TODO this should go away with the new event system
-        shooter = shoot;
-    }
-
     public void InitProjectionDistance()
     {
         DepthSpacePoint[] p = new DepthSpacePoint[1920*1080];
@@ -98,13 +92,6 @@ public class BlobTracker : MonoBehaviour
 
     void Start()
     {
-        //TODO this should go away with the new event system
-        GameObject projectileShooterObject = GameObject.Find("Player");
-        if (projectileShooterObject != null)
-        {
-            shooter = projectileShooterObject.GetComponent<ProjectileShooter>();
-        }
-
         _sensor = KinectSensor.GetDefault();
         _grey2Rgb = new GrayscaleToRGB();
 
@@ -310,21 +297,11 @@ public class BlobTracker : MonoBehaviour
                 if (xNormalized >= 0.0f && xNormalized <= 1.0f &&
                     yNormalized >= 0.0f && yNormalized <= 1.0f)
                 {
-                    if (shooter)
+                    if (_nbFrameBetweenThrow > 10)
                     {
-                        if (_nbFrameBetweenThrow > 10)
-                        {
-                            ImpactPointDetected(xNormalized * Screen.width, yNormalized * Screen.height);
-                        }
-                        _nbFrameBetweenThrow = 0;
+                        ImpactPointDetected(xNormalized * Screen.width, yNormalized * Screen.height);
                     }
-                    else
-                    {
-                        if (DebugManager.Debug)
-                        {
-                            Debug.Log("No Shooter set to BlobTracker");
-                        }
-                    }
+                    _nbFrameBetweenThrow = 0;
 
                     if (DebugManager.Debug)
                     {
@@ -373,21 +350,12 @@ public class BlobTracker : MonoBehaviour
                 if (xNormalized >= 0.0f && xNormalized <= 1.0f &&
                     yNormalized >= 0.0f && yNormalized <= 1.0f)
                 {
-                    if (shooter)
+                    if (_nbFrameBetweenThrow > 10)
                     {
-                        if (_nbFrameBetweenThrow > 10)
-                        {
-                            ImpactPointDetected(xNormalized * Screen.width, yNormalized * Screen.height);
-                        }
-                        _nbFrameBetweenThrow = 0;
+                        ImpactPointDetected(xNormalized * Screen.width, yNormalized * Screen.height);
                     }
-                    else
-                    {
-                        if (DebugManager.Debug)
-                        {
-                            Debug.Log("No Shooter set to BlobTracker");
-                        }
-                    }
+                    _nbFrameBetweenThrow = 0;
+
 
                     if (DebugManager.Debug)
                     {

@@ -28,6 +28,9 @@ public class LevelSelection : MonoBehaviour {
     {
         if (Input.GetMouseButtonDown(0))
         {
+            if (UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
+                return;
+
             GameManager.Instance.ActionFromBallOrClick(Input.mousePosition.x, Input.mousePosition.y);
         }
 	}

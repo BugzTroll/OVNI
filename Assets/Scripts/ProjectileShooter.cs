@@ -43,19 +43,11 @@ public class ProjectileShooter : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
-        {
-            // Make sure the click was not on a UI object (an object linked to an EventSystem)
-            if (UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
-                return;
-
-            ShootProjectile(Input.mousePosition, Vector3.forward);
             if (Ammo.Length > projectilesShooted)
             {
                 equippedProjectile = (ProjectileType)((int)char.GetNumericValue(Ammo[projectilesShooted]));    
             }
-            updateAmmoPictures();
-        }      
+            updateAmmoPictures();     
     }
 
     // temp fix; ammo should be a dynamic array (remove a projectile from it when it is used)

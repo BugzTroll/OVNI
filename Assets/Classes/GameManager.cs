@@ -206,25 +206,6 @@ public class GameManager
     {
         if (DebugManager.Debug)
             Debug.Log("New scene loaded: " + newScene.buildIndex + ", " + newScene.name);
-
-        GameObject projectileShooterObject = GameObject.Find("PlayerController");
-        GameObject blobTracker = GameObject.Find("BlobTracker");
-        if (blobTracker && projectileShooterObject)
-        {
-            var shooter = projectileShooterObject.GetComponent<ProjectileShooter>();
-            var tracker = blobTracker.GetComponent<BlobTracker>();
-            if (tracker)
-            {
-                if (shooter)
-                {
-                    tracker.SetShooter(shooter);
-                }
-                else
-                {
-                    tracker.SetShooter(null);
-                }
-            }
-        }
     }
 
     public void UpdateProgression(Scene level)
