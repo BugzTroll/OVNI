@@ -336,6 +336,11 @@ Prefab:
       propertyPath: m_Name
       value: CubeObstacle (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 114000010757309134, guid: 8bfbc7a8b93a0f348ba9ce039db56f35,
+        type: 2}
+      propertyPath: durability
+      value: 100
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 8bfbc7a8b93a0f348ba9ce039db56f35, type: 2}
   m_IsPrefabParent: 0
@@ -498,6 +503,51 @@ Prefab:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 224000013372182678, guid: 1617d466ce790f046ac3922ea1ee7d59,
+        type: 2}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224000013372182678, guid: 1617d466ce790f046ac3922ea1ee7d59,
+        type: 2}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224000013372182678, guid: 1617d466ce790f046ac3922ea1ee7d59,
+        type: 2}
+      propertyPath: m_AnchoredPosition.x
+      value: -15
+      objectReference: {fileID: 0}
+    - target: {fileID: 224000013372182678, guid: 1617d466ce790f046ac3922ea1ee7d59,
+        type: 2}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224000013372182678, guid: 1617d466ce790f046ac3922ea1ee7d59,
+        type: 2}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224000013372182678, guid: 1617d466ce790f046ac3922ea1ee7d59,
+        type: 2}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224000013372182678, guid: 1617d466ce790f046ac3922ea1ee7d59,
+        type: 2}
+      propertyPath: m_SizeDelta.y
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 224000013372182678, guid: 1617d466ce790f046ac3922ea1ee7d59,
+        type: 2}
+      propertyPath: m_Pivot.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224000013372182678, guid: 1617d466ce790f046ac3922ea1ee7d59,
+        type: 2}
+      propertyPath: m_Pivot.y
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 1617d466ce790f046ac3922ea1ee7d59, type: 2}
   m_IsPrefabParent: 0
@@ -563,15 +613,15 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4000013233102966, guid: d86b861d0dce48b409a9b45e010747d6, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 0.31
       objectReference: {fileID: 0}
     - target: {fileID: 4000013233102966, guid: d86b861d0dce48b409a9b45e010747d6, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 3.58
+      value: 3.48
       objectReference: {fileID: 0}
     - target: {fileID: 4000013233102966, guid: d86b861d0dce48b409a9b45e010747d6, type: 2}
       propertyPath: m_LocalPosition.z
-      value: -14.29
+      value: -13.28
       objectReference: {fileID: 0}
     - target: {fileID: 4000013233102966, guid: d86b861d0dce48b409a9b45e010747d6, type: 2}
       propertyPath: m_LocalRotation.x
@@ -667,11 +717,6 @@ Prefab:
       propertyPath: Upcomming_4
       value: 
       objectReference: {fileID: 2124586276}
-    - target: {fileID: 114000013988874362, guid: 29f94dac6694b2045aaf35850b45c64f,
-        type: 2}
-      propertyPath: Ammo
-      value: 101010101
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 29f94dac6694b2045aaf35850b45c64f, type: 2}
   m_IsPrefabParent: 0
@@ -804,11 +849,11 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4000010019968784, guid: 8bfbc7a8b93a0f348ba9ce039db56f35, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -11.1
+      value: -5.63
       objectReference: {fileID: 0}
     - target: {fileID: 4000010019968784, guid: 8bfbc7a8b93a0f348ba9ce039db56f35, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 10.47
+      value: 5.3
       objectReference: {fileID: 0}
     - target: {fileID: 4000010019968784, guid: 8bfbc7a8b93a0f348ba9ce039db56f35, type: 2}
       propertyPath: m_LocalPosition.z

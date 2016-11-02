@@ -8,6 +8,9 @@ public class ProjectileShooter : MonoBehaviour
     {
         TOMATO,
         BOMB,
+        ACID,
+        ROCK,
+        MISSILE,
         TYPE_COUNT
         // TO BE CONTINUED
     }
@@ -19,6 +22,9 @@ public class ProjectileShooter : MonoBehaviour
     public UnityEngine.UI.RawImage Upcomming_4;
     public GameObject tomatoPrefab;
     public GameObject bombPrefab;
+    public GameObject acidePrefab;
+    public GameObject rockPrefab;
+    public GameObject missilePrefab;
     public string Ammo;
 
 
@@ -37,16 +43,6 @@ public class ProjectileShooter : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //if (Input.GetKeyDown("space")) // find kinect gesture eventually ?
-        //{
-        //    // cycle between available projectile types
-        //    int nextType = ((int)equippedProjectile) + 1;
-        //    nextType = nextType % ((int)ProjectileType.TYPE_COUNT);
-        //    equippedProjectile = (ProjectileType)nextType;
-        //    if(DebugManager.Debug)
-        //        Debug.Log("Switched to: " + equippedProjectile.ToString());
-        //}
-
         if (Input.GetMouseButtonDown(0))
         {
             // Make sure the click was not on a UI object (an object linked to an EventSystem)
@@ -59,8 +55,7 @@ public class ProjectileShooter : MonoBehaviour
                 equippedProjectile = (ProjectileType)((int)char.GetNumericValue(Ammo[projectilesShooted]));    
             }
             updateAmmoPictures();
-        }
-        
+        }      
     }
 
     // temp fix; ammo should be a dynamic array (remove a projectile from it when it is used)
@@ -68,7 +63,6 @@ public class ProjectileShooter : MonoBehaviour
     {
         return Ammo.Length - projectilesShooted;
     }
-
 
     void updateAmmoPictures()
     {
@@ -84,6 +78,15 @@ public class ProjectileShooter : MonoBehaviour
 
                 case ProjectileType.TOMATO:
                     Upcomming_0.texture = Resources.Load("Textures/Tomate") as Texture2D;
+                    break;
+                case ProjectileType.ACID:
+                    Upcomming_0.texture = Resources.Load("Textures/Acid") as Texture2D;
+                    break;
+                case ProjectileType.ROCK:
+                    Upcomming_0.texture = Resources.Load("Textures/rock") as Texture2D;
+                    break;
+                case ProjectileType.MISSILE:
+                    Upcomming_0.texture = Resources.Load("Textures/missile") as Texture2D;
                     break;
             }
         }
@@ -106,6 +109,15 @@ public class ProjectileShooter : MonoBehaviour
                 case ProjectileType.TOMATO:
                     Upcomming_1.texture = Resources.Load("Textures/Tomate") as Texture2D;
                     break;
+                case ProjectileType.ACID:
+                    Upcomming_1.texture = Resources.Load("Textures/Acid") as Texture2D;
+                    break;
+                case ProjectileType.ROCK:
+                    Upcomming_1.texture = Resources.Load("Textures/rock") as Texture2D;
+                    break;
+                case ProjectileType.MISSILE:
+                    Upcomming_1.texture = Resources.Load("Textures/missile") as Texture2D;
+                    break;
             }
         }
         else
@@ -127,6 +139,15 @@ public class ProjectileShooter : MonoBehaviour
                 case ProjectileType.TOMATO:
                     Upcomming_2.texture = Resources.Load("Textures/Tomate") as Texture2D;
                     break;
+                case ProjectileType.ACID:
+                    Upcomming_2.texture = Resources.Load("Textures/Acid") as Texture2D;
+                    break;
+                case ProjectileType.ROCK:
+                    Upcomming_2.texture = Resources.Load("Textures/rock") as Texture2D;
+                    break;
+                case ProjectileType.MISSILE:
+                    Upcomming_2.texture = Resources.Load("Textures/missile") as Texture2D;
+                    break;
             }
         }
         else
@@ -146,6 +167,15 @@ public class ProjectileShooter : MonoBehaviour
 
                 case ProjectileType.TOMATO:
                     Upcomming_3.texture = Resources.Load("Textures/Tomate") as Texture2D;
+                    break;
+                case ProjectileType.ACID:
+                    Upcomming_3.texture = Resources.Load("Textures/Acid") as Texture2D;
+                    break;
+                case ProjectileType.ROCK:
+                    Upcomming_3.texture = Resources.Load("Textures/rock") as Texture2D;
+                    break;
+                case ProjectileType.MISSILE:
+                    Upcomming_3.texture = Resources.Load("Textures/missile") as Texture2D;
                     break;
             }
         }
@@ -167,6 +197,15 @@ public class ProjectileShooter : MonoBehaviour
 
                 case ProjectileType.TOMATO:
                     Upcomming_4.texture = Resources.Load("Textures/Tomate") as Texture2D;
+                    break;
+                case ProjectileType.ACID:
+                    Upcomming_4.texture = Resources.Load("Textures/Acid") as Texture2D;
+                    break;
+                case ProjectileType.ROCK:
+                    Upcomming_4.texture = Resources.Load("Textures/rock") as Texture2D;
+                    break;
+                case ProjectileType.MISSILE:
+                    Upcomming_4.texture = Resources.Load("Textures/missile") as Texture2D;
                     break;
             }
         }
@@ -209,6 +248,15 @@ public class ProjectileShooter : MonoBehaviour
 
                 case ProjectileType.TOMATO:
                     CreateProjectile(tomatoPrefab, worldPosition, velocity.normalized);
+                    break;
+                case ProjectileType.ACID:
+                    CreateProjectile(acidePrefab, worldPosition, velocity.normalized);
+                    break;
+                case ProjectileType.ROCK:
+                    CreateProjectile(rockPrefab, worldPosition, velocity.normalized);
+                    break;
+                case ProjectileType.MISSILE:
+                    CreateProjectile(missilePrefab, worldPosition, velocity.normalized);
                     break;
             }
             projectilesShooted++;
