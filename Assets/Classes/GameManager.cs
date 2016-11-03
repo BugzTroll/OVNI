@@ -145,7 +145,7 @@ public class GameManager
             if (projectileShooterObject != null)
             {
                 ProjectileShooter shooter = projectileShooterObject.GetComponent<ProjectileShooter>();
-                shooter.ShootProjectile(new Vector3(x, y, 0), Vector3.forward);  
+                shooter.ShootProjectile(new Vector3(x, y, 0));  
             }
         }
 

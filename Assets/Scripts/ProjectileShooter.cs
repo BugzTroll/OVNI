@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine.Events;
 
 public class ProjectileShooter : MonoBehaviour
@@ -8,12 +10,13 @@ public class ProjectileShooter : MonoBehaviour
 
     public enum ProjectileType
     {
-        TOMATO,
-        BOMB,
-        ACID,
-        ROCK,
-        MISSILE,
-        TYPE_COUNT
+        NONE = -1,
+        TOMATO = 0,
+        BOMB = 1,
+        ACID = 2,
+        ROCK = 3,
+        MISSILE = 4,
+        TYPE_COUNT = 5
         // TO BE CONTINUED
     }
 
@@ -24,35 +27,36 @@ public class ProjectileShooter : MonoBehaviour
     public UnityEngine.UI.RawImage Upcomming_4;
     public GameObject tomatoPrefab;
     public GameObject bombPrefab;
-    public GameObject acidePrefab;
+    public GameObject acidPrefab;
     public GameObject rockPrefab;
     public GameObject missilePrefab;
     public string Ammo;
+    public float speed = 10; // change per prefab
 
-
-    // change per prefab
-    public  float speed = 10;
-    private int projectilesShooted;
+    private int currentProjectileIdx;
     private ProjectileType equippedProjectile;
+    private List<Texture2D> AmmoPictures;
 
     // Used to create projectiles and create the GUI for remaining ammo
     void Start()
     {
-        equippedProjectile = (ProjectileType)((int)char.GetNumericValue(Ammo[projectilesShooted]));
-        updateAmmoPictures();
+        Random.InitState((int)(Time.deltaTime/1000.0f));
+        equippedProjectile = (ProjectileType) ((int) char.GetNumericValue(Ammo[currentProjectileIdx]));
+      
+        AmmoPictures = new List<Texture2D>();
+        AmmoPictures.Add(Resources.Load("Textures/Tomate") as Texture2D);
+        AmmoPictures.Add(Resources.Load("Textures/Bomb") as Texture2D);
+        AmmoPictures.Add(Resources.Load("Textures/Acid") as Texture2D);
+        AmmoPictures.Add(Resources.Load("Textures/rock") as Texture2D);
+        AmmoPictures.Add(Resources.Load("Textures/missile") as Texture2D);
+        AmmoPictures.Add(Resources.Load("Textures/Red-X") as Texture2D);
 
-
+        UpdateAmmoPictures();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Ammo.Length > projectilesShooted)
-        {
-            equippedProjectile = (ProjectileType)((int)char.GetNumericValue(Ammo[projectilesShooted]));    
-        }
-        updateAmmoPictures();
-
         if (Input.GetMouseButtonDown(0))
         {
             ClickDetected(Input.mousePosition.x, Input.mousePosition.y);
@@ -62,202 +66,95 @@ public class ProjectileShooter : MonoBehaviour
     // temp fix; ammo should be a dynamic array (remove a projectile from it when it is used)
     public int GetCurrentAmmoCount()
     {
-        return Ammo.Length - projectilesShooted;
+        return Ammo.Length - currentProjectileIdx;
     }
 
-    void updateAmmoPictures()
+    void UpdateAmmoPictures()
     {
-        // Image du prochain projectile
-        if (Ammo.Length > projectilesShooted)
-        {
-            ProjectileType type = (ProjectileType)((int)char.GetNumericValue(Ammo[projectilesShooted]));
-            switch (type)
-            {
-                case ProjectileType.BOMB:
-                    Upcomming_0.texture = Resources.Load("Textures/Bomb") as Texture2D;
-                    break;
-                case ProjectileType.TOMATO:
-                    Upcomming_0.texture = Resources.Load("Textures/Tomate") as Texture2D;
-                    break;
-                case ProjectileType.ACID:
-                    Upcomming_0.texture = Resources.Load("Textures/Acid") as Texture2D;
-                    break;
-                case ProjectileType.ROCK:
-                    Upcomming_0.texture = Resources.Load("Textures/rock") as Texture2D;
-                    break;
-                case ProjectileType.MISSILE:
-                    Upcomming_0.texture = Resources.Load("Textures/missile") as Texture2D;
-                    break;
-            }
-        }
-        else
-        {
-            Upcomming_0.texture = Resources.Load("Textures/Red-X") as Texture2D;
+        // Image du projectile courant
+        Upcomming_0.texture = currentProjectileIdx < Ammo.Length
+            ? AmmoPictures[(int) char.GetNumericValue(Ammo[currentProjectileIdx])]
+            : AmmoPictures.Last();
 
-        }
+        // Image du projectile 1
+        Upcomming_1.texture = currentProjectileIdx + 1 < Ammo.Length
+            ? AmmoPictures[(int) char.GetNumericValue(Ammo[currentProjectileIdx + 1])]
+            : AmmoPictures.Last();
 
-        // Image du +1
-        if (Ammo.Length > projectilesShooted + 1)
-        {
-            ProjectileType type1 = (ProjectileType)((int)char.GetNumericValue(Ammo[projectilesShooted +1]));
-            switch (type1)
-            {
-                case ProjectileType.BOMB:
-                    Upcomming_1.texture = Resources.Load("Textures/Bomb") as Texture2D;
-                    break;
-                case ProjectileType.TOMATO:
-                    Upcomming_1.texture = Resources.Load("Textures/Tomate") as Texture2D;
-                    break;
-                case ProjectileType.ACID:
-                    Upcomming_1.texture = Resources.Load("Textures/Acid") as Texture2D;
-                    break;
-                case ProjectileType.ROCK:
-                    Upcomming_1.texture = Resources.Load("Textures/rock") as Texture2D;
-                    break;
-                case ProjectileType.MISSILE:
-                    Upcomming_1.texture = Resources.Load("Textures/missile") as Texture2D;
-                    break;
-            }
-        }
-        else
-        {
-            Upcomming_1.texture = Resources.Load("Textures/Red-X") as Texture2D;
+        // Image du projectile 2
+        Upcomming_2.texture = currentProjectileIdx + 2 < Ammo.Length
+            ? AmmoPictures[(int) char.GetNumericValue(Ammo[currentProjectileIdx + 2])]
+            : AmmoPictures.Last();
 
-        }
+        // Image du projectile 3
+        Upcomming_3.texture = currentProjectileIdx + 3 < Ammo.Length
+            ? AmmoPictures[(int) char.GetNumericValue(Ammo[currentProjectileIdx + 3])]
+            : AmmoPictures.Last();
 
-        // Image du +2
-        if (Ammo.Length > projectilesShooted + 2)
-        {
-            ProjectileType type2 = (ProjectileType)((int)char.GetNumericValue(Ammo[projectilesShooted +2]));
-            switch (type2)
-            {
-                case ProjectileType.BOMB:
-                    Upcomming_2.texture = Resources.Load("Textures/Bomb") as Texture2D;
-                    break;
-                case ProjectileType.TOMATO:
-                    Upcomming_2.texture = Resources.Load("Textures/Tomate") as Texture2D;
-                    break;
-                case ProjectileType.ACID:
-                    Upcomming_2.texture = Resources.Load("Textures/Acid") as Texture2D;
-                    break;
-                case ProjectileType.ROCK:
-                    Upcomming_2.texture = Resources.Load("Textures/rock") as Texture2D;
-                    break;
-                case ProjectileType.MISSILE:
-                    Upcomming_2.texture = Resources.Load("Textures/missile") as Texture2D;
-                    break;
-            }
-        }
-        else
-        {
-            Upcomming_2.texture = Resources.Load("Textures/Red-X") as Texture2D;
-
-        }
-        // Image du +3
-        if (Ammo.Length > projectilesShooted + 3)
-        {
-            ProjectileType type3 = (ProjectileType)((int)char.GetNumericValue(Ammo[projectilesShooted +3]));
-            switch (type3)
-            {
-                case ProjectileType.BOMB:
-                    Upcomming_3.texture = Resources.Load("Textures/Bomb") as Texture2D;
-                    break;
-                case ProjectileType.TOMATO:
-                    Upcomming_3.texture = Resources.Load("Textures/Tomate") as Texture2D;
-                    break;
-                case ProjectileType.ACID:
-                    Upcomming_3.texture = Resources.Load("Textures/Acid") as Texture2D;
-                    break;
-                case ProjectileType.ROCK:
-                    Upcomming_3.texture = Resources.Load("Textures/rock") as Texture2D;
-                    break;
-                case ProjectileType.MISSILE:
-                    Upcomming_3.texture = Resources.Load("Textures/missile") as Texture2D;
-                    break;
-            }
-        }
-        else
-        {
-            Upcomming_3.texture = Resources.Load("Textures/Red-X") as Texture2D;
-
-        }
-
-        // Image du +4
-        if (Ammo.Length > projectilesShooted + 4)
-        {
-            ProjectileType type4 = (ProjectileType)((int)char.GetNumericValue(Ammo[projectilesShooted + 4]));
-            switch (type4)
-            {
-                case ProjectileType.BOMB:
-                    Upcomming_4.texture = Resources.Load("Textures/Bomb") as Texture2D;
-                    break;
-                case ProjectileType.TOMATO:
-                    Upcomming_4.texture = Resources.Load("Textures/Tomate") as Texture2D;
-                    break;
-                case ProjectileType.ACID:
-                    Upcomming_4.texture = Resources.Load("Textures/Acid") as Texture2D;
-                    break;
-                case ProjectileType.ROCK:
-                    Upcomming_4.texture = Resources.Load("Textures/rock") as Texture2D;
-                    break;
-                case ProjectileType.MISSILE:
-                    Upcomming_4.texture = Resources.Load("Textures/missile") as Texture2D;
-                    break;
-            }
-        }
-        else
-        {
-            Upcomming_4.texture = Resources.Load("Textures/Red-X") as Texture2D;
-
-        }
-
+        // Image du projectile 4
+        Upcomming_4.texture = currentProjectileIdx + 4 < Ammo.Length
+            ? AmmoPictures[(int) char.GetNumericValue(Ammo[currentProjectileIdx + 4])]
+            : AmmoPictures.Last();
     }
 
-    void CreateProjectile(GameObject projectilePrefab, Vector3 startPosition, Vector3 startTrajectory)
+    void CreateProjectile(Vector3 startPosition, Vector3 startTrajectory)
     {
-        GameObject projectile = Instantiate(projectilePrefab) as GameObject;
+        GameObject projectilePrefab = null;
+        switch (equippedProjectile)
+        {    
+            case ProjectileType.TOMATO:
+                projectilePrefab = tomatoPrefab;
+                break;
+            case ProjectileType.BOMB:
+                projectilePrefab = bombPrefab;
+                break;
+            case ProjectileType.ACID:
+                projectilePrefab = acidPrefab;
+                break;
+            case ProjectileType.ROCK:
+                projectilePrefab = rockPrefab;
+                break;
+            case ProjectileType.MISSILE:
+                projectilePrefab = missilePrefab;
+                break;
+        }
+        GameObject projectile = Instantiate(projectilePrefab);
 
         // Initial Projectile Position
         projectile.transform.position = startPosition;
+        var angle = -Mathf.Acos(Vector3.Dot(startTrajectory, Vector3.forward))*Mathf.Rad2Deg;
+        var axis = Vector3.Cross(startTrajectory, Vector3.forward);
+        Quaternion quat = Quaternion.AngleAxis(angle, axis);
+        projectile.transform.rotation *= quat;
 
         //Velocity
         Rigidbody rb = projectile.GetComponent<Rigidbody>();
 
+        if(equippedProjectile != ProjectileType.MISSILE)
+            rb.AddTorque(new Vector3(GetRandom(10), GetRandom(10), GetRandom(10)));
+
         // temp (will come from the "speed" of the tracking)
-        rb.velocity = startTrajectory * speed;
+        rb.velocity = startTrajectory*speed;
     }
 
-    public void ShootProjectile(Vector3 screenPosition, Vector3 velocity)
+    float GetRandom(float max)
+    {
+        return Random.Range(-max, max);
+    }
+
+    //TODO ajouter speed en y et velocity
+    public void ShootProjectile(Vector3 screenPosition)
     {
         screenPosition.z = 1;
-
         Vector3 worldPosition = Camera.main.ScreenToWorldPoint(screenPosition);
-        velocity = worldPosition - Camera.main.gameObject.transform.position;
-        if (projectilesShooted < Ammo.Length)
+        Vector3 velocity = worldPosition - Camera.main.gameObject.transform.position;
+        velocity.Normalize();
+        if (currentProjectileIdx < Ammo.Length)
         {
-            ProjectileType type = equippedProjectile;
-            switch (type)
-            {
-                case ProjectileType.BOMB:
-                    CreateProjectile(bombPrefab, worldPosition, velocity.normalized);
-                    break;
-
-                case ProjectileType.TOMATO:
-                    CreateProjectile(tomatoPrefab, worldPosition, velocity.normalized);
-                    break;
-                case ProjectileType.ACID:
-                    CreateProjectile(acidePrefab, worldPosition, velocity.normalized);
-                    break;
-                case ProjectileType.ROCK:
-                    CreateProjectile(rockPrefab, worldPosition, velocity.normalized);
-                    break;
-                case ProjectileType.MISSILE:
-                    CreateProjectile(missilePrefab, worldPosition, velocity.normalized);
-                    break;
-            }
-            projectilesShooted++;
+            CreateProjectile(worldPosition, velocity);
+            currentProjectileIdx++;
+            equippedProjectile = currentProjectileIdx < Ammo.Length ? (ProjectileType)char.GetNumericValue(Ammo[currentProjectileIdx]) : ProjectileType.NONE;
         }
+        UpdateAmmoPictures();
     }
-
-
 }

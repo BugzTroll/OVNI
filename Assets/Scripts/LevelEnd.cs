@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Collections;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -6,16 +7,16 @@ using UnityEngine.UI;
 
 public class LevelEnd : MonoBehaviour
 {
-
-    private ProjectileShooter shooter;
-    private GameLevelController gameLvlController;
     public GameObject levelEndPanel;
     public GameObject optionsTint;
     public GameObject pauseBtn;
     public GameObject RetryBtn;
-    [Range(0, 1)]
-    public float endScreenSlowMoFactor;
+    [Range(0, 1)] public float endScreenSlowMoFactor;
+    [Range(0, 30)] public float TimeToLose = 3.0f;
 
+    private ProjectileShooter shooter;
+    private GameLevelController gameLvlController;
+    private float timer = 0.0f;
 
     // Use this for initialization
     void Start()
@@ -43,7 +44,6 @@ public class LevelEnd : MonoBehaviour
             CheckAmmoCount();
             CheckWinCondition();
         }
-
         else
         {
             if (Input.GetMouseButtonDown(0))
@@ -63,15 +63,17 @@ public class LevelEnd : MonoBehaviour
 
     void CheckAmmoCount()
     {
-        if (shooter.GetCurrentAmmoCount() <= 0)
+        if (shooter.GetCurrentAmmoCount() == 0)
+        {
+            timer += Time.deltaTime;
+        }
+        if (timer > TimeToLose)
         {
             LevelFailed();
         }
-
     }
     void CheckWinCondition()
     {
-
         if (gameLvlController.score > gameLvlController.scoreToWin
             || gameLvlController.CheckIfAllTargetsDestroyed())
         {
