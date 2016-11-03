@@ -7,9 +7,10 @@ using UnityEngine;
 
 public class GameManager
 {
-
-    
-
+    public static GameManager Instance
+    {
+        get { return instance; }
+    }
     public enum GameState
     {
         NONE = -1,
@@ -26,66 +27,16 @@ public class GameManager
     public enum GameLevel
     {
         Planete1 = 1,
-        Planete2,
-        Planete3,
-        Planete4,
-        Planete5,
+        Planete2 = 2,
+        Planete3 = 3,
+        Planete4 = 4,
+        Planete5 = 5,
         //OTHERS PLANETS
     }
-    private static GameManager instance = new GameManager();
 
     public List<GameLevel> LevelProgression = new List<GameLevel>();
 
-    private GameState currentState;
-
-    private Scene currentScene;
-
-    private GameObject KinectMenuInteraction;
-
-    // make sure the constructor is private, so it can only be instantiated here
-    private GameManager()
-    {
-        currentState = GameState.NONE;
-        currentScene = SceneManager.GetSceneAt(0);
-        SceneManager.activeSceneChanged += OnSceneChanged; // unsubscribe
-
-        if (DebugManager.Debug)
-            Debug.Log("GameManager was created");
-
-        BlobTracker.ImpactPointDetected += OnImpactPointDetected;
-    }
-
-    public void InitIfNeeded()
-    {
-        if (DebugManager.Debug)
-            Debug.Log("GameManager exists");
-    }
-
-    private void InitKIM()
-    {
-        KinectMenuInteraction = new GameObject();
-        KinectManager km = KinectMenuInteraction.AddComponent<KinectManager>();
-        InteractionManager im = KinectMenuInteraction.AddComponent<InteractionManager>();
-        KinectMenuInteraction.tag = "Kinect";
-        im.controlMouseCursor = true;
-        im.controlMouseDrag = true;
-        KinectMenuInteraction.name = "KinectInteractionManager";
-        if (DebugManager.Debug)
-        {
-            Debug.Log("-----" + KinectMenuInteraction.scene.buildIndex);
-
-            Debug.Log("Kinect Interaction Manager was created");
-        }
-
-        // textures
-    }
-
-    public static GameManager Instance
-    {
-        get { return instance; }
-    }
-
-    public GameState CurrentState   // static ?
+    public GameState CurrentState
     {
         get { return currentState; }
         set
@@ -108,7 +59,7 @@ public class GameManager
                     //UI.showInGameUI
                     break;
                 //TODO: shooting vs preparing/ball color detection
-                
+
                 case GameState.GAME_SUCCESS:
                     if (currentState == GameState.GAME_OVER)
                         value = currentState;
@@ -128,9 +79,60 @@ public class GameManager
         }
     }
 
+    private static GameManager instance = new GameManager();
+
+    private GameState currentState;
+    private Scene currentScene;
+    private GameObject KinectMenuInteraction; // TODO is it still used?
+
+    // make sure the constructor is private, so it can only be instantiated here
+    private GameManager()
+    {
+        currentState = GameState.NONE;
+        currentScene = SceneManager.GetSceneAt(0);
+        SceneManager.activeSceneChanged += OnSceneChanged; // unsubscribe
+
+        if (DebugManager.Debug)
+            Debug.Log("GameManager was created");
+
+        BlobTracker.ImpactPointDetected += OnImpactPointDetected;
+        ProjectileShooter.ClickDetected += OnClickDetected;
+    }
+
+    public void InitIfNeeded()
+    {
+        if (DebugManager.Debug)
+            Debug.Log("GameManager exists");
+    }
+
+    private void InitKIM() // TODO is it still used?
+    {
+        KinectMenuInteraction = new GameObject();
+        KinectManager km = KinectMenuInteraction.AddComponent<KinectManager>();
+        InteractionManager im = KinectMenuInteraction.AddComponent<InteractionManager>();
+        KinectMenuInteraction.tag = "Kinect";
+        im.controlMouseCursor = true;
+        im.controlMouseDrag = true;
+        KinectMenuInteraction.name = "KinectInteractionManager";
+        if (DebugManager.Debug)
+        {
+            Debug.Log("-----" + KinectMenuInteraction.scene.buildIndex);
+
+            Debug.Log("Kinect Interaction Manager was created");
+        }
+
+        // textures
+    }
+
     void OnImpactPointDetected(float x, float y)
     {
         Debug.Log("point d'impact ! " + x + "," + y);
+        Instance.ActionFromBallOrClick(x, y);
+    }
+
+    void OnClickDetected(float x, float y)
+    {
+        Debug.Log("point de click ! " + x + "," + y);
         Instance.ActionFromBallOrClick(x, y);
     }
 
@@ -185,8 +187,6 @@ public class GameManager
 
             }
         }
-
-
         // other cases such as transition between levels
     }
 

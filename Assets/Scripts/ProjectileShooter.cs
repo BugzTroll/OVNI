@@ -1,8 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.Events;
 
 public class ProjectileShooter : MonoBehaviour
 {
+    public static event UnityAction<float, float> ClickDetected;
 
     public enum ProjectileType
     {
@@ -38,16 +40,23 @@ public class ProjectileShooter : MonoBehaviour
     {
         equippedProjectile = (ProjectileType)((int)char.GetNumericValue(Ammo[projectilesShooted]));
         updateAmmoPictures();
+
+
     }
 
     // Update is called once per frame
     void Update()
     {
-            if (Ammo.Length > projectilesShooted)
-            {
-                equippedProjectile = (ProjectileType)((int)char.GetNumericValue(Ammo[projectilesShooted]));    
-            }
-            updateAmmoPictures();     
+        if (Ammo.Length > projectilesShooted)
+        {
+            equippedProjectile = (ProjectileType)((int)char.GetNumericValue(Ammo[projectilesShooted]));    
+        }
+        updateAmmoPictures();
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            ClickDetected(Input.mousePosition.x, Input.mousePosition.y);
+        }
     }
 
     // temp fix; ammo should be a dynamic array (remove a projectile from it when it is used)
@@ -67,7 +76,6 @@ public class ProjectileShooter : MonoBehaviour
                 case ProjectileType.BOMB:
                     Upcomming_0.texture = Resources.Load("Textures/Bomb") as Texture2D;
                     break;
-
                 case ProjectileType.TOMATO:
                     Upcomming_0.texture = Resources.Load("Textures/Tomate") as Texture2D;
                     break;
@@ -97,7 +105,6 @@ public class ProjectileShooter : MonoBehaviour
                 case ProjectileType.BOMB:
                     Upcomming_1.texture = Resources.Load("Textures/Bomb") as Texture2D;
                     break;
-
                 case ProjectileType.TOMATO:
                     Upcomming_1.texture = Resources.Load("Textures/Tomate") as Texture2D;
                     break;
@@ -127,7 +134,6 @@ public class ProjectileShooter : MonoBehaviour
                 case ProjectileType.BOMB:
                     Upcomming_2.texture = Resources.Load("Textures/Bomb") as Texture2D;
                     break;
-
                 case ProjectileType.TOMATO:
                     Upcomming_2.texture = Resources.Load("Textures/Tomate") as Texture2D;
                     break;
@@ -156,7 +162,6 @@ public class ProjectileShooter : MonoBehaviour
                 case ProjectileType.BOMB:
                     Upcomming_3.texture = Resources.Load("Textures/Bomb") as Texture2D;
                     break;
-
                 case ProjectileType.TOMATO:
                     Upcomming_3.texture = Resources.Load("Textures/Tomate") as Texture2D;
                     break;
@@ -186,7 +191,6 @@ public class ProjectileShooter : MonoBehaviour
                 case ProjectileType.BOMB:
                     Upcomming_4.texture = Resources.Load("Textures/Bomb") as Texture2D;
                     break;
-
                 case ProjectileType.TOMATO:
                     Upcomming_4.texture = Resources.Load("Textures/Tomate") as Texture2D;
                     break;
