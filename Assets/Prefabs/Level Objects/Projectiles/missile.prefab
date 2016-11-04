@@ -23,6 +23,7 @@ GameObject:
   - 114: {fileID: 114000011492697484}
   - 114: {fileID: 114000011006764826}
   - 65: {fileID: 65000012124519554}
+  - 114: {fileID: 114000012552716428}
   m_Layer: 0
   m_Name: missile
   m_TagString: Projectile
@@ -224,6 +225,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseDamage: 1000
+--- !u!114 &114000012552716428
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000010584731482}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: faedffd4cae5ce14bb53067228380adb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  LifeTime: 10
 --- !u!123 &123000011145936418
 LensFlare:
   m_ObjectHideFlags: 1
