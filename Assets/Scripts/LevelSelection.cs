@@ -1,30 +1,51 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.Events;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine.SceneManagement;
 
 public class LevelSelection : MonoBehaviour
 {
     public static event UnityAction<float, float> ClickDetected;
 
-    public GameObject Shadow_planete2;
-    public GameObject Sphere_planete2;
 
-    public GameObject Shadow_planete3;
-    public GameObject Sphere_planete3;
-
-    public GameObject Shadow_planete4;
-    public GameObject Sphere_planete4;
-
-    public GameObject Shadow_planete5;
-    public GameObject Sphere_planete5;
 
     // Use this for initialization
     void Start ()
     {
         GameManager.Instance.CurrentState = GameManager.GameState.LevelSelect;
-        Time.timeScale = 1;
-        updatePlanetUI();
+        Time.timeScale = 1.0f;
+
+        if (GameManager.Instance.LevelProgression.Count > 0)
+        {
+            GameManager.GameLevel lastLevelDone = GameManager.Instance.LevelProgression.Last();
+            Debug.Log("Last level done: " + lastLevelDone.ToString());
+
+            switch(lastLevelDone)
+            {
+                case GameManager.GameLevel.Planete1:
+                    // show level 2 and 3 by moving camera, etc.
+                    break;
+
+                case GameManager.GameLevel.Planete2:
+                    // check if 3 was done previously
+                    // update scene to show that planet 2 has been done and 3 still needs to be done (or not)
+
+                    break;
+
+                case GameManager.GameLevel.Planete3:
+                    // check if 2 was done previously
+                    // update scene to show that planet 3 has been done and 2 still needs to be done (or not)
+
+                    break;
+
+                case GameManager.GameLevel.Planete4:
+                    // CONGRATS ! do stuff for winning (cool unlocks ? choose order ?)
+                    break;
+            }
+        }
+            
     }
 	
 	// Update is called once per frame
@@ -37,23 +58,5 @@ public class LevelSelection : MonoBehaviour
             if (ClickDetected != null)
                 ClickDetected(Input.mousePosition.x, Input.mousePosition.y);
         }
-    }
-
-    void updatePlanetUI()
-    {
-        //if (GameManager.Instance.LevelProgression.Contains(GameManager.GameLevel.Planete1))
-        //{
-        //    Shadow_planete2.SetActive(false);
-        //    Sphere_planete2.tag = "Clickable";
-
-        //    Shadow_planete3.SetActive(false);
-        //    Sphere_planete3.tag = "Clickable";
-        //}
-
-        //if (GameManager.Instance.LevelProgression.Contains(GameManager.GameLevel.Planete2) && GameManager.Instance.LevelProgression.Contains(GameManager.GameLevel.Planete3))
-        //{
-        //    Shadow_planete4.SetActive(false);
-        //    Sphere_planete4.tag = "Clickable";
-        //}
     }
 }
