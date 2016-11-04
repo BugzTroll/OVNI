@@ -25,6 +25,7 @@ GameObject:
   - 54: {fileID: 54000010980350292}
   - 114: {fileID: 114000013622548044}
   - 114: {fileID: 114000012906542548}
+  - 114: {fileID: 114000013040744258}
   m_Layer: 0
   m_Name: tomato
   m_TagString: Projectile
@@ -108,6 +109,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   destroyOnFirstHit: 1
+--- !u!114 &114000013040744258
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000012715797112}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: faedffd4cae5ce14bb53067228380adb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  LifeTime: 10
 --- !u!114 &114000013622548044
 MonoBehaviour:
   m_ObjectHideFlags: 1

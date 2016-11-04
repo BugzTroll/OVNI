@@ -51,18 +51,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea9aeea090e8128408344d21db028d9f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Upcomming_0: {fileID: 0}
-  Upcomming_1: {fileID: 0}
-  Upcomming_2: {fileID: 0}
-  Upcomming_3: {fileID: 0}
-  Upcomming_4: {fileID: 0}
-  tomatoPrefab: {fileID: 1000012715797112, guid: b332305ce86fc9b419459c0fad936138,
+  TomatoPrefab: {fileID: 1000012715797112, guid: b332305ce86fc9b419459c0fad936138,
     type: 2}
-  bombPrefab: {fileID: 1000010160355638, guid: dfcaa55b0ea3f1b44b06c92b3c8fb747, type: 2}
-  acidePrefab: {fileID: 1000014279280266, guid: ed382b34b247055429a1f948644e7f9f,
+  BombPrefab: {fileID: 1000010160355638, guid: dfcaa55b0ea3f1b44b06c92b3c8fb747, type: 2}
+  AcidPrefab: {fileID: 1000014279280266, guid: ed382b34b247055429a1f948644e7f9f, type: 2}
+  RockPrefab: {fileID: 1000010247676706, guid: 5cdda31f1a684f9428b2e23aad44e835, type: 2}
+  MissilePrefab: {fileID: 1000010584731482, guid: 8262bcef48a6b0946aeca734e37ac548,
     type: 2}
-  rockPrefab: {fileID: 1000010247676706, guid: 5cdda31f1a684f9428b2e23aad44e835, type: 2}
-  missilePrefab: {fileID: 1000010584731482, guid: 8262bcef48a6b0946aeca734e37ac548,
-    type: 2}
-  Ammo: 44444
-  speed: 20
+  Ammo: 00112233440011223344
+  Speed: 20

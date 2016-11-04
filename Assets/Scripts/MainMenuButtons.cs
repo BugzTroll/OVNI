@@ -29,7 +29,7 @@ public class MainMenuButtons : MonoBehaviour
 
     public void QuitButtonClicked()
     {
-        GameManager.Instance.CurrentState = GameManager.GameState.QUIT;
+        GameManager.Instance.CurrentState = GameManager.GameState.Quit;
     }
 
 }

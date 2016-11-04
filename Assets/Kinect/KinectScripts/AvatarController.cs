@@ -276,7 +276,7 @@ public class AvatarController : MonoBehaviour
 		// Map bones to the points the Kinect tracks
 		MapBones();
 
-		// Set model's arms to be in T-pose, if needed
+		// Set model's arms to be in TargetObject-pose, if needed
 		SetModelArmsInTpose();
 
 		// Initial rotations and directions of the bones.
@@ -819,7 +819,7 @@ public class AvatarController : MonoBehaviour
 		}
 	}
 	
-	// Set model's arms to be in T-pose
+	// Set model's arms to be in TargetObject-pose
 	protected void SetModelArmsInTpose()
 	{
 		Vector3 vTposeLeftDir = transform.TransformDirection(Vector3.left);
@@ -1129,7 +1129,7 @@ public class AvatarController : MonoBehaviour
 //		Debug.Log("Collision exited");
 //	}
 	
-	// dictionaries to speed up bones' processing
+	// dictionaries to Speed up bones' processing
 	// the author of the terrific idea for kinect-joints to mecanim-bones mapping
 	// along with its initial implementation, including following dictionary is
 	// Mikhail Korchun (korchoon@gmail.com). Big thanks to this guy!

@@ -26,6 +26,7 @@ GameObject:
   - 54: {fileID: 54000013437645396}
   - 114: {fileID: 114000010677727294}
   - 114: {fileID: 114000011692189242}
+  - 114: {fileID: 114000013498075646}
   m_Layer: 0
   m_Name: rock
   m_TagString: Projectile
@@ -150,3 +151,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   destroyOnFirstHit: 1
+--- !u!114 &114000013498075646
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000010247676706}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: faedffd4cae5ce14bb53067228380adb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  LifeTime: 10

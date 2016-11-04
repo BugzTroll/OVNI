@@ -1,8 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 
-public class LevelSelection : MonoBehaviour {
+public class LevelSelection : MonoBehaviour
+{
+    public static event UnityAction<float, float> ClickDetected;
 
     public GameObject Shadow_planete2;
     public GameObject Sphere_planete2;
@@ -19,7 +22,8 @@ public class LevelSelection : MonoBehaviour {
     // Use this for initialization
     void Start ()
     {
-        GameManager.Instance.CurrentState = GameManager.GameState.LEVEL_SELECT;
+        GameManager.Instance.CurrentState = GameManager.GameState.LevelSelect;
+        Time.timeScale = 1;
         updatePlanetUI();
     }
 	
@@ -30,10 +34,10 @@ public class LevelSelection : MonoBehaviour {
         {
             if (UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
                 return;
-
-            GameManager.Instance.ActionFromBallOrClick(Input.mousePosition.x, Input.mousePosition.y);
+            if (ClickDetected != null)
+                ClickDetected(Input.mousePosition.x, Input.mousePosition.y);
         }
-	}
+    }
 
     void updatePlanetUI()
     {

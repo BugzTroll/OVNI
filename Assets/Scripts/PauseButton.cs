@@ -44,7 +44,7 @@ public class PauseButton : MonoBehaviour {
     {
         //Set isPaused to false
         isPaused = false;
-        //Set time.timescale to 1, this will cause animations and physics to continue updating at regular speed
+        //Set time.timescale to 1, this will cause animations and physics to continue updating at regular Speed
         Time.timeScale = 1;
         //call the HidePausePanel function of the ShowPanels script
         HidePausePanel();
