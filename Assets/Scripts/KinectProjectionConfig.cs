@@ -98,7 +98,7 @@ public class KinectProjectionConfig : MonoBehaviour
 
                 _source.UnlockBits(data);
                 _source.Save("C:\\Users\\nadm2208\\Desktop\\AlienDetecter.bmp");
-                GameManager.Instance.CurrentState = GameManager.GameState.MAIN_MENU;
+                GameManager.Instance.CurrentState = GameManager.GameState.MainMenu;
             }
         }
         else
@@ -126,7 +126,7 @@ public class KinectProjectionConfig : MonoBehaviour
         if (_clickCounter == 3)
         {
             _blobTracker.InitProjectionDistance();
-            GameManager.Instance.CurrentState = GameManager.GameState.MAIN_MENU;
+            GameManager.Instance.CurrentState = GameManager.GameState.MainMenu;
         }
         _clickCounter++;
     }

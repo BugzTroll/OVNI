@@ -29,4 +29,9 @@ public class MyHelper : MonoBehaviour
         }
         return avColor/cpt;
     }
+
+    public static float GetRandom(float max)
+    {
+        return UnityEngine.Random.Range(-max, max);
+    }
 }

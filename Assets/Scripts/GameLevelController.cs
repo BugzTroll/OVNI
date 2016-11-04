@@ -1,68 +1,93 @@
 ﻿using UnityEngine;
-using System.Collections;
+using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
-public class GameLevelController : MonoBehaviour {
+public class GameLevelController : MonoBehaviour
+{
+    public static event UnityAction<float> ScoreUpdated;
 
-    private ProjectileShooter shooter;
+    public int ScoreToWin;
+    public GameObject TargetObject;
+    [Range(0, 30)] public float TimeToLose = 3.0f;
+    [Range(0, 1)] public float EndScreenSlowMoFactor;
 
-    public UnityEngine.UI.Text scoreText;
-    public UnityEngine.UI.Text ammoText;
+    private float _score;
+    private float _timer = 0.0f;
+    private ProjectileShooter _shooter;
 
-    public int score = 0;
-    public int scoreToWin;
-    public GameObject targetObjects;
+    public void AddScore(int addScore)
+    {
+        _score += addScore;
 
-	// Use this for initialization
-	void Start () {
-        Time.timeScale = 1.0f;  // put it at 1 again in case it got slowed down during the fail/win screen !
+        if (ScoreUpdated != null)
+        {
+            ScoreUpdated(_score);
+        }
+    }
 
-        if (targetObjects != null)
-            scoreToWin = 1000000000;
+    public void RetryLevel()
+    {
+        GameManager.Instance.RestartScene();
+    }
+
+    public void ReturnToLevelSelection()
+    {
+        GameManager.Instance.ChangeScene("LevelSelect");
+    }
+
+    private void Start ()
+    {
+        GameManager.Instance.CurrentState = GameManager.GameState.InGame;
 
         GameObject projectileShooterObject = GameObject.Find("PlayerController");
         if (projectileShooterObject != null)
         {
-            shooter = projectileShooterObject.GetComponent<ProjectileShooter>();
+            _shooter = projectileShooterObject.GetComponent<ProjectileShooter>();
         }
 
-        score = 0;
-        scoreText.text = "Score: ";
-        // tomateText.text = " Tomates Restantes ";
-        // bombText.text = " Bombes Restantes ";
+        Time.timeScale = 1.0f;  // put it at 1 again in case it got slowed down during the fail/win screen !
+
+        // Hacked Score
+        if (TargetObject != null)
+            ScoreToWin = 1000000000;
+
+        _score = 0;
     }
 	
-	// Update is called once per frame
-	void Update () {
-
-        UpdateScoreText();
-        UpdateAmmoText();
-
-        // it would be better here than in LevelEnd
-        //CheckIfAllTargetsDestroyed(targetObjects);
+	private void Update ()
+    {
+        if (GameManager.Instance.CurrentState == GameManager.GameState.InGame)
+        {
+            CheckfailureCondition();
+            CheckWinCondition();
+        }
 	}
 
-    void UpdateScoreText()
+    private void CheckfailureCondition()
     {
-        scoreText.text = "Score: " + score;
-    }
-    void UpdateAmmoText()
-    {
-        if (shooter)
+        if (_shooter.GetRemainingAmmoCount() == 0)
         {
-            ammoText.text = "Projectiles restants: " + shooter.GetCurrentAmmoCount();
+            _timer += Time.deltaTime;
+        }
+        if (_timer > TimeToLose)
+        {
+            LevelFailed();
         }
     }
 
-
-    public void AddScore(int addScore)
+    private void CheckWinCondition()
     {
-        score += addScore;
+        if (_score > ScoreToWin
+            || CheckIfAllTargetsDestroyed())
+        {
+            LevelSuccess();
+        }
     }
 
-    public bool CheckIfAllTargetsDestroyed()
+    private bool CheckIfAllTargetsDestroyed()
     {
         int remainingObjects = 0;
-        foreach (Transform child in targetObjects.transform)
+        foreach (Transform child in TargetObject.transform)
         {
             if (child.gameObject.tag == "Container")
             {
@@ -80,4 +105,22 @@ public class GameLevelController : MonoBehaviour {
         return true;
     }
 
+    private void LevelFailed()
+    {
+        Debug.Assert(GameManager.Instance.CurrentState == GameManager.GameState.InGame);
+
+        GameManager.Instance.CurrentState = GameManager.GameState.GameOver;
+        Time.timeScale = EndScreenSlowMoFactor;
+    }
+
+    private void LevelSuccess()
+    {
+        Debug.Assert(GameManager.Instance.CurrentState == GameManager.GameState.InGame);
+
+        GameManager.Instance.CurrentState = GameManager.GameState.GameSuccess;
+        Time.timeScale = EndScreenSlowMoFactor;
+
+        // Ajoute la planète a la liste de progression
+        GameManager.Instance.UpdateProgression(SceneManager.GetActiveScene());
+    }
 }

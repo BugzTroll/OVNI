@@ -124,7 +124,7 @@ namespace Helper
                     }
                     else if(typeof(T) == typeof(System.Object)) 
                     {
-                        //T is an object, so lets just pass back our IntPtr, which is an object.
+                        //TargetObject is an object, so lets just pass back our IntPtr, which is an object.
                         outputValue = (T)(System.Object)nativePtr;
                     }
                 }

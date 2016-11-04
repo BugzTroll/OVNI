@@ -297,7 +297,7 @@ public class BlobTracker : MonoBehaviour
                 if (xNormalized >= 0.0f && xNormalized <= 1.0f &&
                     yNormalized >= 0.0f && yNormalized <= 1.0f)
                 {
-                    if (_nbFrameBetweenThrow > 10)
+                    if (_nbFrameBetweenThrow > 10 && ImpactPointDetected != null)
                     {
                         ImpactPointDetected(xNormalized * Screen.width, yNormalized * Screen.height);
                     }
@@ -306,7 +306,7 @@ public class BlobTracker : MonoBehaviour
                     if (DebugManager.Debug)
                     {
                         Debug.Log("impact : " + _depthImpactLin);
-                        Debug.Log("speed : " + _speed);
+                        Debug.Log("Speed : " + _speed);
                     }
                 }
                 ResetTrajectory();
@@ -350,7 +350,7 @@ public class BlobTracker : MonoBehaviour
                 if (xNormalized >= 0.0f && xNormalized <= 1.0f &&
                     yNormalized >= 0.0f && yNormalized <= 1.0f)
                 {
-                    if (_nbFrameBetweenThrow > 10)
+                    if (_nbFrameBetweenThrow > 10 && ImpactPointDetected != null)
                     {
                         ImpactPointDetected(xNormalized * Screen.width, yNormalized * Screen.height);
                     }
@@ -360,7 +360,7 @@ public class BlobTracker : MonoBehaviour
                     if (DebugManager.Debug)
                     {
                         Debug.Log("impact : " + _depthImpactLin);
-                        Debug.Log("speed : " + _speed);
+                        Debug.Log("Speed : " + _speed);
                     }
                 }
                 ResetTrajectory();

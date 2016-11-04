@@ -49,7 +49,10 @@ public class DurabilityManager : MonoBehaviour
                 rend.material.color = altColor;
 
                 durability = 1;
-                Debug.Log("Remaining durability: " + durability);
+                if (DebugManager.Debug)
+                {
+                    Debug.Log("Remaining durability: " + durability);
+                }
             }
             else
             {

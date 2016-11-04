@@ -702,6 +702,7 @@ GameObject:
   - 114: {fileID: 114000013403104636}
   - 114: {fileID: 114000011260824232}
   - 114: {fileID: 114000010862671118}
+  - 114: {fileID: 114000010119007412}
   m_Layer: 5
   m_Name: GameUI
   m_TagString: Untagged
@@ -736,6 +737,24 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114000010119007412
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000014168298408}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0153a61009065da4fb2b78b0cb6f8e4e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ScoreText: {fileID: 114000012104699744}
+  AmmoText: {fileID: 114000013822277436}
+  Upcoming0: {fileID: 114000012922852360}
+  Upcoming1: {fileID: 114000012463482764}
+  Upcoming2: {fileID: 114000013815525798}
+  Upcoming3: {fileID: 114000013045493168}
+  Upcoming4: {fileID: 114000011860313760}
 --- !u!114 &114000010119624016
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -948,11 +967,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7eee44c62dfa9784d9b9acb8cdc712e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelEndPanel: {fileID: 1000012525243574}
-  optionsTint: {fileID: 1000010853213950}
-  pauseBtn: {fileID: 1000011248130742}
-  RetryBtn: {fileID: 1000010614677014}
-  endScreenSlowMoFactor: 0.4
+  LevelEndPanel: {fileID: 1000012525243574}
 --- !u!114 &114000011097795608
 MonoBehaviour:
   m_ObjectHideFlags: 1
