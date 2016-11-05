@@ -22,6 +22,7 @@ public class GameManager
     }
     public enum GameLevel
     {
+        None = 0,
         Planete1 = 1,
         Planete2 = 2,
         Planete3 = 3,
@@ -52,24 +53,28 @@ public class GameManager
 
     public void UpdateProgression(Scene level)
     {
+        GameLevel latestLevelDone = GameLevel.None;
         switch (level.name)
         {
             case "Planete1":
-                LevelProgression.Add(GameLevel.Planete1);
+                latestLevelDone = GameLevel.Planete1;
                 break;
             case "Planete2":
-                LevelProgression.Add(GameLevel.Planete2);
+                latestLevelDone = GameLevel.Planete2;
                 break;
             case "Planete3":
-                LevelProgression.Add(GameLevel.Planete3);
+                latestLevelDone = GameLevel.Planete3;
                 break;
             case "Planete4":
-                LevelProgression.Add(GameLevel.Planete4);
-                break;
-            case "Planete5":
-                LevelProgression.Add(GameLevel.Planete5);
+                latestLevelDone = GameLevel.Planete4;
                 break;
         }
+        if (!LevelProgression.Contains(latestLevelDone) && latestLevelDone != GameLevel.None)
+        {
+            LevelProgression.Add(latestLevelDone);
+        }
+        
+
     }
 
     public GameState CurrentState

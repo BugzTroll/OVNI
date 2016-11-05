@@ -9,13 +9,16 @@ public class LevelSelection : MonoBehaviour
 {
     public static event UnityAction<float, float> ClickDetected;
 
-
+    private Animator _cameraAnimator;
 
     // Use this for initialization
     void Start ()
     {
         GameManager.Instance.CurrentState = GameManager.GameState.LevelSelect;
         Time.timeScale = 1.0f;
+
+        _cameraAnimator = GameObject.Find("LevelSelectCamera").GetComponent<Animator>();
+        _cameraAnimator.enabled = false;
 
         if (GameManager.Instance.LevelProgression.Count > 0)
         {
@@ -25,6 +28,7 @@ public class LevelSelection : MonoBehaviour
             switch(lastLevelDone)
             {
                 case GameManager.GameLevel.Planete1:
+                    MoveToPlanets2And3();
                     // show level 2 and 3 by moving camera, etc.
                     break;
 
@@ -51,6 +55,15 @@ public class LevelSelection : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
+        if (_cameraAnimator.enabled)
+        {
+            if (_cameraAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime > 1 && !_cameraAnimator.IsInTransition(0))
+            {
+                _cameraAnimator.enabled = false;
+            }
+
+        }
+
         if (Input.GetMouseButtonDown(0))
         {
             if (UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
@@ -58,5 +71,14 @@ public class LevelSelection : MonoBehaviour
             if (ClickDetected != null)
                 ClickDetected(Input.mousePosition.x, Input.mousePosition.y);
         }
+
+
     }
+
+    private void MoveToPlanets2And3()
+    {
+        _cameraAnimator.enabled = true;
+
+    }
+
 }
