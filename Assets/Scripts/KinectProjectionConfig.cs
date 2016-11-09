@@ -4,6 +4,7 @@ using System.Collections;
 using System.Drawing;
 using System.Drawing.Imaging;
 using Windows.Kinect;
+using AForge;
 using AForge.Imaging;
 using AForge.Imaging.Filters;
 using Color = Microsoft.Kinect.Face.Color;
@@ -33,19 +34,19 @@ public class KinectProjectionConfig : MonoBehaviour
         _blobTracker = BlobTracker.GetComponent<BlobTracker>();
         _viewManager = ViewManager.GetComponent<ViewManager>();
 
-        Bitmap template =
-            (Bitmap)
-            Bitmap.FromFile(
-                "C:\\Users\\nadm2208\\Documents\\OVNI\\Assets\\Resources\\Alien.jpg");
+        //Bitmap template =
+        //    (Bitmap)
+        //    Bitmap.FromFile(
+        //        "C:\\Users\\nadm2208\\Documents\\OVNI\\Assets\\Resources\\Alien.jpg");
 
-        var resizeFilter = new ResizeNearestNeighbor((int) (0.18*template.Width),
-            (int) (0.16*template.Height));
+        //var resizeFilter = new ResizeNearestNeighbor((int) (0.18*template.Width),
+        //    (int) (0.16*template.Height));
 
-        _template = resizeFilter.Apply(template);
+        //_template = resizeFilter.Apply(template);
         if (AlienDetection)
         {
             _texture = new Texture2D(1920, 1080, TextureFormat.RGB24, false);
-            _texture = Resources.Load("OVNI") as Texture;
+            _texture = Resources.Load("calibration") as Texture;
         }
         else
         {
@@ -61,43 +62,78 @@ public class KinectProjectionConfig : MonoBehaviour
             cpt++;
             if (cpt > 60)
             {
+                //var source = Converter.ByteArray2Bmp(_colorManager.GetData(), _colorManager.GetDescriptor().Width,
+                //    _colorManager.GetDescriptor().Height, PixelFormat.Format32bppArgb);
+
+                //var colorFrameDescriptor = _colorManager.GetDescriptor();
+                //var resizeFilter = new ResizeBilinear((int) (0.3*colorFrameDescriptor.Width),
+                //    (int) (0.3*colorFrameDescriptor.Height));
+
+                //_source = resizeFilter.Apply(source);
+
+                //var grey = new Grayscale(0.2125, 0.7154, 0.0721);
+
+                //var greySource = grey.Apply(_source);
+                //greySource.Save("C:\\Users\\nadm2208\\Desktop\\Alien1.bmp");
+
+                //var thres = new Threshold(220);
+                //var temp = thres.Apply(greySource);
+                //temp.Save("C:\\Users\\nadm2208\\Desktop\\Alien2.bmp");
+
+                //ExhaustiveTemplateMatching tm = new ExhaustiveTemplateMatching(0.75f);
+
+                //var greytemplate = grey.Apply(_template);
+                //greytemplate.Save("C:\\Users\\nadm2208\\Desktop\\Alien3.bmp");
+
+                //// image formate trouble -> ony 24bpp
+                //TemplateMatch[] matchings = tm.ProcessImage(temp, greytemplate);
+
+                //BitmapData data = _source.LockBits(
+                //    new Rectangle(0, 0, _source.Width, _source.Height),
+                //    ImageLockMode.ReadWrite, _source.PixelFormat);
+
+                //foreach (TemplateMatch m in matchings)
+                //{
+                //    Drawing.Rectangle(data, m.Rectangle, System.Drawing.Color.Tomato);
+                //}
+
+                //_source.UnlockBits(data);
+                //_source.Save("C:\\Users\\nadm2208\\Desktop\\AlienDetecter.bmp");
+                //GameManager.Instance.CurrentState = GameManager.GameState.MainMenu;
+
+
                 var source = Converter.ByteArray2Bmp(_colorManager.GetData(), _colorManager.GetDescriptor().Width,
                     _colorManager.GetDescriptor().Height, PixelFormat.Format32bppArgb);
 
+                var scalefactor = 0.3;
                 var colorFrameDescriptor = _colorManager.GetDescriptor();
-                var resizeFilter = new ResizeBilinear((int) (0.3*colorFrameDescriptor.Width),
-                    (int) (0.3*colorFrameDescriptor.Height));
+                var resizeFilter = new ResizeBilinear((int)(scalefactor * colorFrameDescriptor.Width),
+                    (int)(scalefactor * colorFrameDescriptor.Height));
 
                 _source = resizeFilter.Apply(source);
+                _source.Save("C:\\Users\\nadm2208\\Desktop\\Corner.bmp");
 
-                var grey = new Grayscale(0.2125, 0.7154, 0.0721);
+                // create filter
+                // create filter
+                EuclideanColorFiltering filter = new EuclideanColorFiltering();
+                // set center colol and radius
+                filter.CenterColor = new RGB(30, 215, 30);
+                filter.Radius = 140;
+                // apply the filter
+                Bitmap colorFilter1 = filter.Apply(_source);
+                colorFilter1.Save("C:\\Users\\nadm2208\\Desktop\\ColorFilter1.bmp");
 
-                var greySource = grey.Apply(_source);
-                greySource.Save("C:\\Users\\nadm2208\\Desktop\\Alien1.bmp");
+                // create filter
+                HSLFiltering filterH = new HSLFiltering();
+                // set color ranges to keep
+                filterH.Hue = new IntRange(90, 150);
+                filterH.Saturation = new Range(0.1f, 1);
+                filterH.Luminance = new Range(0.1f, 1);
+                // apply the filter
+                Bitmap colorFilter2 = filterH.Apply(_source);
 
-                var thres = new Threshold(220);
-                var temp = thres.Apply(greySource);
-                temp.Save("C:\\Users\\nadm2208\\Desktop\\Alien2.bmp");
+                colorFilter2.Save("C:\\Users\\nadm2208\\Desktop\\ColorFilter2.bmp");
 
-                ExhaustiveTemplateMatching tm = new ExhaustiveTemplateMatching(0.75f);
-
-                var greytemplate = grey.Apply(_template);
-                greytemplate.Save("C:\\Users\\nadm2208\\Desktop\\Alien3.bmp");
-
-                // image formate trouble -> ony 24bpp
-                TemplateMatch[] matchings = tm.ProcessImage(temp, greytemplate);
-
-                BitmapData data = _source.LockBits(
-                    new Rectangle(0, 0, _source.Width, _source.Height),
-                    ImageLockMode.ReadWrite, _source.PixelFormat);
-
-                foreach (TemplateMatch m in matchings)
-                {
-                    Drawing.Rectangle(data, m.Rectangle, System.Drawing.Color.Tomato);
-                }
-
-                _source.UnlockBits(data);
-                _source.Save("C:\\Users\\nadm2208\\Desktop\\AlienDetecter.bmp");
                 GameManager.Instance.CurrentState = GameManager.GameState.MainMenu;
             }
         }

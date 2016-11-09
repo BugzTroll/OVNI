@@ -164,10 +164,9 @@ MonoBehaviour:
   MinSizeBlob: 6
   MaxSizeBlob: 20
   ThresholdBlob: 50
-  ThresholdTrajectory: 10
-  FramesWithoutBlobNeededToClear: 6
-  ColorNeighborhoodSize: 2
+  FramesWithoutBlobNeededToClear: 10
   MinPointRequired: 2
+  PercentThresholdZMiss: 19.9
 --- !u!114 &114000012972750216
 MonoBehaviour:
   m_ObjectHideFlags: 1

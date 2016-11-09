@@ -2,6 +2,7 @@ using RootSystem = System;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using AForge.Imaging;
 
 namespace Microsoft.Kinect.Face
 {

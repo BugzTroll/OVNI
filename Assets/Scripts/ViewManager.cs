@@ -84,23 +84,19 @@ public class ViewManager : MonoBehaviour
                 ? _blobTracker.GetColorTrajectory()
                 : _blobTracker.GetDepthTrajectory();
 
-
-            if (trajectory.Count > 0)
+            foreach (var position in trajectory)
             {
-                foreach (var position in trajectory)
-                {
-                    var pos = position*scale;
-                    int iMin = (pos[0] - SizeOfPoint >= 0) ? (int) pos[0] - SizeOfPoint :0;
-                    int iMax = (pos[0] + SizeOfPoint < _texture.width) ? (int) pos[0] + SizeOfPoint : _texture.width;
-                    int jMin = (pos[1] - SizeOfPoint >= 0) ? (int) pos[1] - SizeOfPoint : 0;
-                    int jMax = (pos[1] + SizeOfPoint < _texture.height) ? (int) pos[1] + SizeOfPoint : _texture.height;
+                var pos = position*scale;
+                int iMin = (pos[0] - SizeOfPoint >= 0) ? (int) pos[0] - SizeOfPoint :0;
+                int iMax = (pos[0] + SizeOfPoint < _texture.width) ? (int) pos[0] + SizeOfPoint : _texture.width;
+                int jMin = (pos[1] - SizeOfPoint >= 0) ? (int) pos[1] - SizeOfPoint : 0;
+                int jMax = (pos[1] + SizeOfPoint < _texture.height) ? (int) pos[1] + SizeOfPoint : _texture.height;
 
-                    for (int i = iMin; i <= iMax; i++)
+                for (int i = iMin; i <= iMax; i++)
+                {
+                    for (int j = jMin; j <= jMax; j++)
                     {
-                        for (int j = jMin; j <= jMax; j++)
-                        {
-                            _texture.SetPixel(i, j, Color.green);
-                        }
+                        _texture.SetPixel(i, j, Color.green);
                     }
                 }
             }
