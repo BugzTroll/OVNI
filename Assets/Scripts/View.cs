@@ -12,7 +12,6 @@ public class View : MonoBehaviour
         {
             this.gameObject.SetActive(false);
         }
-
         gameObject.GetComponent<Renderer>().material.SetTextureScale("_MainTex", new Vector2(-1, 1));
     }
 

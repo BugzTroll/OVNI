@@ -180,9 +180,9 @@ MonoBehaviour:
   ShowDepth: 0
   ShowMeanBuffer: 0
   ShowThresholdedZBuffer: 0
-  ShowPositions: 1
-  ShowTrajectory: 1
-  ShowImpactPoint: 1
+  ShowPositions: 0
+  ShowTrajectory: 0
+  ShowImpactPoint: 0
 --- !u!114 &114000013568284968
 MonoBehaviour:
   m_ObjectHideFlags: 1
