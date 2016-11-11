@@ -48,6 +48,13 @@ public class ProjectileShooter : MonoBehaviour
 
     private void Update()
     {
+        // Avoids registering clicks when on ui (i.e. pause panel buttons) when in game (so it works when in GameOver or GameSuccess)
+        if (GameManager.Instance.CurrentState == GameManager.GameState.InGame &&
+            UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
+        {
+            return;
+        }
+
         // TODO find a better place to handle click event
         if (Input.GetMouseButtonDown(0))
         {

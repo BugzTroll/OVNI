@@ -7,14 +7,6 @@ using UnityEngine.SceneManagement;
 
 public class LevelSelection : MonoBehaviour
 {
-
-    private enum CameraProgress
-    {
-        Planet1,
-        Planets2and3,
-        Planet4
-    }
-
     public static event UnityAction<float, float> ClickDetected;
 
     private Animator _cameraAnimator;
@@ -32,10 +24,6 @@ public class LevelSelection : MonoBehaviour
         _cameraAnimator = GameObject.Find("LevelSelectCamera").GetComponent<Animator>();
         _cameraAnimator.enabled = true;
 
-        //_cameraProgress = CameraProgress.Planet1;
-
-        //if (GameManager.Instance.LevelProgression.Count > 0)
-        //{
         GameManager.GameLevel lastLevelDone = GameManager.GameLevel.None;
 
         if (GameManager.Instance.LevelProgression.Count > 0)
@@ -54,7 +42,16 @@ public class LevelSelection : MonoBehaviour
 
             case GameManager.GameLevel.Planete2:
                 _cameraAnimator.SetTrigger("EnteringPlanets2&3");
-                MoveToPlanet4();
+                if (GameManager.Instance.LevelProgression.Contains(GameManager.GameLevel.Planete3))
+                {
+                    MoveToPlanet4();
+                }
+                else
+                {
+                    GameObject.Find("Planete2").GetComponent<Renderer>().material.color = Color.black;
+                    GameObject.Find("Planete2").GetComponent<Collider>().enabled = false;
+                }
+                    
                 // check if 3 was done previously
                 // update scene to show that planet 2 has been done and 3 still needs to be done (or not)
 
@@ -62,7 +59,16 @@ public class LevelSelection : MonoBehaviour
 
             case GameManager.GameLevel.Planete3:
                 _cameraAnimator.SetTrigger("EnteringPlanets2&3");
-                MoveToPlanet4();
+                if (GameManager.Instance.LevelProgression.Contains(GameManager.GameLevel.Planete2))
+                {
+                    MoveToPlanet4();
+                }
+                else
+                {
+                    GameObject.Find("Planete3").GetComponent<Renderer>().material.color = Color.black;
+                    GameObject.Find("Planete3").GetComponent<Collider>().enabled = false;
+                }
+
                 // check if 2 was done previously
                 // update scene to show that planet 3 has been done and 2 still needs to be done (or not)
                 break;
@@ -93,8 +99,10 @@ public class LevelSelection : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
+            // avoid clicking on ui, if any is shown in the scene
             if (UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
                 return;
+
             if (ClickDetected != null)
                 ClickDetected(Input.mousePosition.x, Input.mousePosition.y);
         }
@@ -105,13 +113,11 @@ public class LevelSelection : MonoBehaviour
     private void MoveToPlanets2And3()
     {
         _cameraAnimator.SetTrigger("ToPlanets2&3");
-        //_cameraProgress = CameraProgress.Planets2and3;
     }
 
     private void MoveToPlanet4()
     {
         _cameraAnimator.SetTrigger("ToPlanet4");
-        //_cameraProgress = CameraProgress.Planet4;
     }
 
 }
