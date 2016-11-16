@@ -29,8 +29,11 @@ public class GameLevelController : MonoBehaviour
 
         if (TargetObject == null)
         {
-            var component = ProgressBar.GetComponent<ProgressBarBehaviour>();
-            component.SetFillerSizeAsPercentage((float) (_score/(float) (ScoreToWin))*100.0f);
+            var progressbar = ProgressBar.GetComponent<ProgressBarBehaviour>();
+            if (progressbar)
+            {
+                progressbar.SetFillerSizeAsPercentage((float) (_score/(float) (ScoreToWin))*100.0f);
+            }
         }
     }
 
@@ -60,16 +63,18 @@ public class GameLevelController : MonoBehaviour
         if (TargetObject != null)
             ScoreToWin = 1000000000;
 
-
-        foreach (Transform child in TargetObject.transform)
+        if (TargetObject)
         {
-            if (child.gameObject.tag == "Container")
+            foreach (Transform child in TargetObject.transform)
             {
-                TargetCounts += child.childCount;
-            }
-            else
-            {
-                TargetCounts++;
+                if (child.gameObject.tag == "Container")
+                {
+                    TargetCounts += child.childCount;
+                }
+                else
+                {
+                    TargetCounts++;
+                }
             }
         }
 
@@ -99,8 +104,8 @@ public class GameLevelController : MonoBehaviour
 
     private void CheckWinCondition()
     {
-        if (_score > ScoreToWin
-            || CheckIfAllTargetsDestroyed())
+        if (_score >= ScoreToWin
+            || (TargetObject != null && CheckIfAllTargetsDestroyed()))
         {
             LevelSuccess();
         }
@@ -122,8 +127,12 @@ public class GameLevelController : MonoBehaviour
 
         if (TargetObject != null)
         {
-            var component = ProgressBar.GetComponent<ProgressBarBehaviour>();
-            component.SetFillerSizeAsPercentage((float) ((TargetCounts - remainingObjects)/(float) TargetCounts)*100.0f);
+            var progressbar = ProgressBar.GetComponent<ProgressBarBehaviour>();
+            if (progressbar)
+            {
+                progressbar.SetFillerSizeAsPercentage((float) ((TargetCounts - remainingObjects)/(float) TargetCounts)*
+                                                      100.0f);
+            }
         }
 
         if (remainingObjects > 0)
