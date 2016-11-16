@@ -55,13 +55,23 @@ public class ProjectileShooter : MonoBehaviour
         }
     }
 
-    public void ShootProjectile(Vector2 screenPos)
+    public void ShootProjectile(Vector2 screenPos, Vector2 yaw = default(Vector2))
     {
         //TODO ajouter Speed en y et velocity
         Vector3 screenPosition = new Vector3(screenPos.x, screenPos.y, 1);
+        Vector3 yaw3 = new Vector3(0, yaw.x, yaw.y);
         Vector3 worldPosition = Camera.main.ScreenToWorldPoint(screenPosition);
         Vector3 velocity = worldPosition - Camera.main.gameObject.transform.position;
         velocity.Normalize();
+
+        if (yaw3.magnitude > 0)
+        {
+            yaw3.Normalize();
+            yaw3 /= Mathf.Sqrt(velocity.y*velocity.y + velocity.z*velocity.z);
+            velocity.y = yaw3.y;
+            velocity.z = yaw3.z;
+        }
+
         if (_currentProjectileIdx < Ammo.Length)
         {
             CreateProjectile(worldPosition, velocity);

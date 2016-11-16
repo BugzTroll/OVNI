@@ -13,7 +13,7 @@ using Image = AForge.Imaging.Image;
 
 public class BlobTracker : MonoBehaviour
 {
-    public static event UnityAction<float, float> ImpactPointDetected;
+    public static event UnityAction<float, float, Vector2> ImpactPointDetected;
 
     public GameObject ColorManager;
     public GameObject DepthManager;
@@ -26,6 +26,7 @@ public class BlobTracker : MonoBehaviour
     [Range(0, 30)] public int FramesWithoutBlobNeededToClear = 10;
     [Range(2, 5)] public int MinPointRequired = 2;
     [Range(0, 100)] public float PercentThresholdZMiss = 80.0f;
+    [Range(0, 10)] public float YawRatio = 1.5f;
 
     private KinectSensor _sensor;
     private ProjectileShooter shooter = null;
@@ -293,7 +294,7 @@ public class BlobTracker : MonoBehaviour
         }
         else
         {
-            if (_colorImpactLin.z < 0 && _initDone)
+            if (_colorImpactLin.z > 0 && _initDone)
             {
                 float[] points = Projection2Square(ScreenCorners, _colorImpactLin[0]/1920.0f,
                     (1080 - _colorImpactLin[1])/1080.0f);
@@ -306,9 +307,13 @@ public class BlobTracker : MonoBehaviour
                 {
                     if (_nbFrameBetweenThrow > 10 && ImpactPointDetected != null)
                     {
-                        ImpactPointDetected(xNormalized*Screen.width, yNormalized*Screen.height);
+                        Vector2 yaw = new Vector2(_speed.y/_thresholdedZBuffer.Height, _speed.z*YawRatio/4000.0f);
+                        yaw = Vector2.zero;
+                        ImpactPointDetected(xNormalized*Screen.width, yNormalized*Screen.height, yaw);
                     }
                     _nbFrameBetweenThrow = 0;
+
+                    ResetTrajectory();
 
                     if (DebugManager.Debug)
                     {
@@ -316,7 +321,6 @@ public class BlobTracker : MonoBehaviour
                         Debug.Log("Speed : " + _speed);
                     }
                 }
-                ResetTrajectory();
             }
             // No ball detected
             _framesWithoutBlob++;
@@ -359,10 +363,13 @@ public class BlobTracker : MonoBehaviour
                 {
                     if (_nbFrameBetweenThrow > 10 && ImpactPointDetected != null)
                     {
-                        ImpactPointDetected(xNormalized*Screen.width, yNormalized*Screen.height);
+                        Vector2 yaw = new Vector2(_speed.y/_thresholdedZBuffer.Height, _speed.z*YawRatio/4000.0f);
+                        yaw = Vector2.zero;
+                        ImpactPointDetected(xNormalized*Screen.width, yNormalized*Screen.height, yaw);
                     }
                     _nbFrameBetweenThrow = 0;
 
+                    ResetTrajectory();
 
                     if (DebugManager.Debug)
                     {
@@ -370,7 +377,6 @@ public class BlobTracker : MonoBehaviour
                         Debug.Log("Speed : " + _speed);
                     }
                 }
-                ResetTrajectory();
             }
         }
     }
