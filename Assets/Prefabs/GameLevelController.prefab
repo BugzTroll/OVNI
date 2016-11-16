@@ -51,10 +51,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02330094d7a5462478757ec792762883, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ScoreText: {fileID: 0}
-  AmmoText: {fileID: 0}
-  Score: 0
   ScoreToWin: 100000000
   TargetObject: {fileID: 0}
+  ProgressBar: {fileID: 1000013340215174, guid: 1617d466ce790f046ac3922ea1ee7d59,
+    type: 2}
   TimeToLose: 3
   EndScreenSlowMoFactor: 0.4

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using ProgressBar;
+using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 
@@ -8,12 +9,14 @@ public class GameLevelController : MonoBehaviour
 
     public int ScoreToWin;
     public GameObject TargetObject;
+    public GameObject ProgressBar;
     [Range(0, 30)] public float TimeToLose = 3.0f;
     [Range(0, 1)] public float EndScreenSlowMoFactor;
 
     private float _score;
     private float _timer = 0.0f;
     private ProjectileShooter _shooter;
+    private int TargetCounts;
 
     public void AddScore(int addScore)
     {
@@ -22,6 +25,12 @@ public class GameLevelController : MonoBehaviour
         if (ScoreUpdated != null)
         {
             ScoreUpdated(_score);
+        }
+
+        if (TargetObject == null)
+        {
+            var component = ProgressBar.GetComponent<ProgressBarBehaviour>();
+            component.SetFillerSizeAsPercentage((float) (_score/(float) (ScoreToWin))*100.0f);
         }
     }
 
@@ -35,7 +44,7 @@ public class GameLevelController : MonoBehaviour
         GameManager.Instance.ChangeScene("LevelSelect");
     }
 
-    private void Start ()
+    private void Start()
     {
         GameManager.Instance.CurrentState = GameManager.GameState.InGame;
 
@@ -45,23 +54,36 @@ public class GameLevelController : MonoBehaviour
             _shooter = projectileShooterObject.GetComponent<ProjectileShooter>();
         }
 
-        Time.timeScale = 1.0f;  // put it at 1 again in case it got slowed down during the fail/win screen !
+        Time.timeScale = 1.0f; // put it at 1 again in case it got slowed down during the fail/win screen !
 
         // Hacked Score
         if (TargetObject != null)
             ScoreToWin = 1000000000;
 
+
+        foreach (Transform child in TargetObject.transform)
+        {
+            if (child.gameObject.tag == "Container")
+            {
+                TargetCounts += child.childCount;
+            }
+            else
+            {
+                TargetCounts++;
+            }
+        }
+
         _score = 0;
     }
-	
-	private void Update ()
+
+    private void Update()
     {
         if (GameManager.Instance.CurrentState == GameManager.GameState.InGame)
         {
             CheckfailureCondition();
             CheckWinCondition();
         }
-	}
+    }
 
     private void CheckfailureCondition()
     {
@@ -96,11 +118,16 @@ public class GameLevelController : MonoBehaviour
 
             else
                 remainingObjects++;
-
-            if (remainingObjects > 0)
-                return false;
-
         }
+
+        if (TargetObject != null)
+        {
+            var component = ProgressBar.GetComponent<ProgressBarBehaviour>();
+            component.SetFillerSizeAsPercentage((float) ((TargetCounts - remainingObjects)/(float) TargetCounts)*100.0f);
+        }
+
+        if (remainingObjects > 0)
+            return false;
 
         return true;
     }
