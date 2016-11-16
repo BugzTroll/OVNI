@@ -3,10 +3,10 @@ using System.Collections;
 
 public class Destroy : MonoBehaviour
 {
-    public float LifeTime = 10.0f;
+    public float LifeTime = 8.0f;
 	
 	// Update is called once per frame
-	void Update () {
+	void Start () {
 	 Destroy(gameObject, LifeTime);   
 	}
 }
