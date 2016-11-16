@@ -1539,8 +1539,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114000010862671118}
-        m_MethodName: RetryButtonClicked
+      - m_Target: {fileID: 114000011260824232}
+        m_MethodName: RetryButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
