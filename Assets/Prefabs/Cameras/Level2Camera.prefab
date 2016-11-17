@@ -25,7 +25,6 @@ GameObject:
   - 81: {fileID: 81000014034578298}
   - 114: {fileID: 114000012225005050}
   - 45: {fileID: 45000011594383008}
-  - 95: {fileID: 95000010025166982}
   m_Layer: 0
   m_Name: Level2Camera
   m_TagString: MainCamera
@@ -102,23 +101,6 @@ Behaviour:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000013756728636}
   m_Enabled: 1
---- !u!95 &95000010025166982
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000013756728636}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
 --- !u!114 &114000012225005050
 MonoBehaviour:
   m_ObjectHideFlags: 1

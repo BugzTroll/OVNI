@@ -32,7 +32,9 @@ public class GameLevelController : MonoBehaviour
 
     public void ReturnToLevelSelection()
     {
-        GameManager.Instance.ChangeScene("LevelSelect");
+        Time.timeScale = 1.0f;
+        GameObject.Find("Fading").GetComponent<Fader>().EndScene("LevelSelect");
+        //GameManager.Instance.ChangeScene("LevelSelect");
     }
 
     private void Start ()
