@@ -8,10 +8,8 @@ public class GameLevelController : MonoBehaviour
     public static event UnityAction<float> ScoreUpdated;
 
     public int ScoreToWin;
-
     public GameObject TargetObject;
     public GameObject ProgressBar;
-
     [Range(0, 30)] public float TimeToLose = 3.0f;
     [Range(0, 1)] public float EndScreenSlowMoFactor;
 
@@ -31,8 +29,11 @@ public class GameLevelController : MonoBehaviour
 
         if (TargetObject == null)
         {
-            var component = ProgressBar.GetComponent<ProgressBarBehaviour>();
-            component.SetFillerSizeAsPercentage((float) (_score/(float) (ScoreToWin))*100.0f);
+            var progressbar = ProgressBar.GetComponent<ProgressBarBehaviour>();
+            if (progressbar)
+            {
+                progressbar.SetFillerSizeAsPercentage((float) (_score/(float) (ScoreToWin))*100.0f);
+            }
         }
     }
 
@@ -43,9 +44,7 @@ public class GameLevelController : MonoBehaviour
 
     public void ReturnToLevelSelection()
     {
-        Time.timeScale = 1.0f;
-        GameObject.Find("Fading").GetComponent<Fader>().EndScene("LevelSelect");
-        //GameManager.Instance.ChangeScene("LevelSelect");
+        GameManager.Instance.ChangeScene("LevelSelect");
     }
 
     private void Start()
@@ -64,16 +63,18 @@ public class GameLevelController : MonoBehaviour
         if (TargetObject != null)
             ScoreToWin = 1000000000;
 
-
-        foreach (Transform child in TargetObject.transform)
+        if (TargetObject)
         {
-            if (child.gameObject.tag == "Container")
+            foreach (Transform child in TargetObject.transform)
             {
-                TargetCounts += child.childCount;
-            }
-            else
-            {
-                TargetCounts++;
+                if (child.gameObject.tag == "Container")
+                {
+                    TargetCounts += child.childCount;
+                }
+                else
+                {
+                    TargetCounts++;
+                }
             }
         }
 
@@ -103,7 +104,8 @@ public class GameLevelController : MonoBehaviour
 
     private void CheckWinCondition()
     {
-        if (_score > ScoreToWin || (TargetObject != null  && CheckIfAllTargetsDestroyed()))
+        if (_score >= ScoreToWin
+            || (TargetObject != null && CheckIfAllTargetsDestroyed()))
         {
             LevelSuccess();
         }
@@ -125,8 +127,12 @@ public class GameLevelController : MonoBehaviour
 
         if (TargetObject != null)
         {
-            var component = ProgressBar.GetComponent<ProgressBarBehaviour>();
-            component.SetFillerSizeAsPercentage((float) ((TargetCounts - remainingObjects)/(float) TargetCounts)*100.0f);
+            var progressbar = ProgressBar.GetComponent<ProgressBarBehaviour>();
+            if (progressbar)
+            {
+                progressbar.SetFillerSizeAsPercentage((float) ((TargetCounts - remainingObjects)/(float) TargetCounts)*
+                                                      100.0f);
+            }
         }
 
         if (remainingObjects > 0)
