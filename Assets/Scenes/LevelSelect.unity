@@ -199,7 +199,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Lancez une balle ici pour commencer !
+  m_Text: "Tirez sur une plan\xE8te pour commencer !"
 --- !u!222 &405889372
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -302,6 +302,11 @@ Prefab:
         type: 2}
       propertyPath: m_Pivot.y
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000011292740064, guid: bc536a50c1086984b936ce288555999a,
+        type: 2}
+      propertyPath: fadeSpeed
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: bc536a50c1086984b936ce288555999a, type: 2}
