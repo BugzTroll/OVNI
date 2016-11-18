@@ -8,8 +8,10 @@ public class GameLevelController : MonoBehaviour
     public static event UnityAction<float> ScoreUpdated;
 
     public int ScoreToWin;
+
     public GameObject TargetObject;
     public GameObject ProgressBar;
+
     [Range(0, 30)] public float TimeToLose = 3.0f;
     [Range(0, 1)] public float EndScreenSlowMoFactor;
 
@@ -41,7 +43,9 @@ public class GameLevelController : MonoBehaviour
 
     public void ReturnToLevelSelection()
     {
-        GameManager.Instance.ChangeScene("LevelSelect");
+        Time.timeScale = 1.0f;
+        GameObject.Find("Fading").GetComponent<Fader>().EndScene("LevelSelect");
+        //GameManager.Instance.ChangeScene("LevelSelect");
     }
 
     private void Start()
@@ -99,8 +103,7 @@ public class GameLevelController : MonoBehaviour
 
     private void CheckWinCondition()
     {
-        if (_score > ScoreToWin
-            || CheckIfAllTargetsDestroyed())
+        if (_score > ScoreToWin || (TargetObject != null  && CheckIfAllTargetsDestroyed()))
         {
             LevelSuccess();
         }

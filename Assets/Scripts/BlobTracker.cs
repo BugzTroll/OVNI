@@ -29,7 +29,6 @@ public class BlobTracker : MonoBehaviour
     [Range(0, 10)] public float YawRatio = 1.5f;
 
     private KinectSensor _sensor;
-    private ProjectileShooter shooter = null;
     private int _nbFrameBetweenThrow;
 
     private DepthSourceManager _depthManager;
