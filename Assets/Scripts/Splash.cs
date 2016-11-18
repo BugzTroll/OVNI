@@ -6,7 +6,7 @@ public class Splash : MonoBehaviour
     public Material BaseMaterial;
     public Material SplashMaterial;
 
-    private Renderer renderer;
+    private new Renderer renderer = null;
     private bool NeverBeenHit = true;
 
     // Use this for initialization

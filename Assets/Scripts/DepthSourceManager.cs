@@ -27,7 +27,6 @@ public class DepthSourceManager : MonoBehaviour
         if (_sensor != null)
         {
             _reader = _sensor.DepthFrameSource.OpenReader();
-            var frameDesc = _sensor.DepthFrameSource.FrameDescription;
             _bufferSize = _sensor.DepthFrameSource.FrameDescription.LengthInPixels;
 
             _rawData = new ushort[_bufferSize];
@@ -49,8 +48,6 @@ public class DepthSourceManager : MonoBehaviour
             var frame = _reader.AcquireLatestFrame();
             if (frame != null)
             {
-                var desc = frame.FrameDescription;
-
                 // Get current Frame Data
                 frame.CopyFrameDataToArray(_rawData);
 
