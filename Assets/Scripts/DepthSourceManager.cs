@@ -12,7 +12,6 @@ public class DepthSourceManager : MonoBehaviour
 
     private KinectSensor _sensor;
     private DepthFrameReader _reader;
-    private Texture2D _texture;
     private ushort[] _rawData;
     private ushort[] _data;
     private ushort[,] _background;
@@ -31,7 +30,6 @@ public class DepthSourceManager : MonoBehaviour
             var frameDesc = _sensor.DepthFrameSource.FrameDescription;
             _bufferSize = _sensor.DepthFrameSource.FrameDescription.LengthInPixels;
 
-            _texture = new Texture2D(frameDesc.Width, frameDesc.Height, TextureFormat.RGB24, false);
             _rawData = new ushort[_bufferSize];
             _data = new ushort[_bufferSize];
 
@@ -74,22 +72,12 @@ public class DepthSourceManager : MonoBehaviour
                         {
                             _backgroundMean[i] += (ushort) (_background[j, i]/(float) NbFrameForBackgroundSuppression);
                         }
-                    }
 
-                    // compute mean of backgrounds to supress
-                    for (int i = 0; i < _bufferSize; ++i)
-                    {
-                        _data[i] = (ushort) Math.Max((_backgroundMean[i] - _rawData[i])*ScalingFactorZBuffer, 0);
+                        // compute mean of backgrounds to supress
+                        var t = (_backgroundMean[i] - _rawData[i]) * ScalingFactorZBuffer;
+                        _data[i] = (ushort) (t >= 0 ? t : 0);
                     }
                 }
-                var zBuffer = AForge.Imaging.Image.Convert16bppTo8bpp(Converter.ByteArray2Bmp(Converter.ShortArray2ByteArray(_data), 
-                    desc.Width,
-                    desc.Height,
-                    PixelFormat.Format16bppGrayScale));
-                var grey2Rgb = new GrayscaleToRGB();
-                zBuffer = grey2Rgb.Apply(zBuffer);
-
-                _texture.LoadRawTextureData(Converter.Bmp2ByteArray(zBuffer));
 
                 frame.Dispose();
                 frame = null;
@@ -124,17 +112,12 @@ public class DepthSourceManager : MonoBehaviour
 
     public ushort GetRawZ(int i, int j)
     {
-        return _rawData[i + j * GetDescriptor().Width];
+        return _rawData[i + j*GetDescriptor().Width];
     }
 
     public ushort[] GetRawData()
     {
         return _rawData;
-    }
-
-    public Texture2D GetDepthTexture()
-    {
-        return _texture;
     }
 
     public FrameDescription GetDescriptor()

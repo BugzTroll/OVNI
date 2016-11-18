@@ -22,6 +22,22 @@ public class Converter : MonoBehaviour
         return img;
     }
 
+    public static Bitmap ShortArray2Bmp(short[] arr, int width, int height, PixelFormat format)
+    {
+        Bitmap img = new Bitmap(width, height, format);
+
+        BitmapData bitmapData = img.LockBits(
+            new Rectangle(0, 0, width, height),
+            ImageLockMode.ReadWrite,
+            img.PixelFormat);
+
+        // Copy byte[] to bitmap
+        Marshal.Copy(arr, 0, bitmapData.Scan0, arr.Length);
+        img.UnlockBits(bitmapData);
+
+        return img;
+    }
+
     public static byte[] Bmp2ByteArray(System.Drawing.Bitmap img)
     {
         BitmapData bitmapData = img.LockBits(

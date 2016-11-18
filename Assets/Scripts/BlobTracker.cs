@@ -13,7 +13,7 @@ using Image = AForge.Imaging.Image;
 
 public class BlobTracker : MonoBehaviour
 {
-    public static event UnityAction<float, float> ImpactPointDetected;
+    public static event UnityAction<float, float, Vector2> ImpactPointDetected;
 
     public GameObject ColorManager;
     public GameObject DepthManager;
@@ -26,6 +26,7 @@ public class BlobTracker : MonoBehaviour
     [Range(0, 30)] public int FramesWithoutBlobNeededToClear = 10;
     [Range(2, 5)] public int MinPointRequired = 2;
     [Range(0, 100)] public float PercentThresholdZMiss = 80.0f;
+    [Range(0, 10)] public float YawRatio = 1.5f;
 
     private KinectSensor _sensor;
     private int _nbFrameBetweenThrow;
@@ -39,6 +40,7 @@ public class BlobTracker : MonoBehaviour
     private GrayscaleToRGB _grey2Rgb;
     private Bitmap _resizedColor;
     private Color _blobColor;
+    private bool _initDone;
 
     private List<Vector3> _trajectory;
     private Vector3 _colorImpactLin;
@@ -79,6 +81,8 @@ public class BlobTracker : MonoBehaviour
             int zmm = _depthManager.GetRawZ((int) dmm.X, (int) dmm.Y);
 
             _projectionDistance = Mathf.Min(zlb, Mathf.Min(zlt, Mathf.Min(zrb, Math.Min(zmm, zrt))));
+            _initDone = true;
+            _colorManager.Shutdown();
         }
         else
         {
@@ -104,6 +108,7 @@ public class BlobTracker : MonoBehaviour
         _lastDist = 0;
         _nbFrameBetweenThrow = 0;
         _projectionDistance = 0;
+        _initDone = false;
 
         _resizedZBuffer = new Bitmap(1, 1, PixelFormat.Format8bppIndexed);
         _thresholdedZBuffer = new Bitmap(1, 1, PixelFormat.Format8bppIndexed);
@@ -132,18 +137,21 @@ public class BlobTracker : MonoBehaviour
         _resizedZBuffer = Image.Convert16bppTo8bpp(_resizedZBuffer);
 
         // Create color bitmap from color manager data (32 bit/pixel argb) 
-        var colorFrameDescriptor = _colorManager.GetDescriptor();
+        if (DebugManager.Debug || !_initDone)
+        {
+            var colorFrameDescriptor = _colorManager.GetDescriptor();
 
-        var colorImg = Converter.ByteArray2Bmp(_colorManager.GetData(),
-            colorFrameDescriptor.Width,
-            colorFrameDescriptor.Height,
-            PixelFormat.Format32bppArgb);
+            var colorImg = Converter.ByteArray2Bmp(_colorManager.GetData(),
+                colorFrameDescriptor.Width,
+                colorFrameDescriptor.Height,
+                PixelFormat.Format32bppArgb);
 
-        // Resize color bitmap
-        var resizeFilter = new ResizeNearestNeighbor((int) (ColorScale*colorFrameDescriptor.Width),
-            (int) (ColorScale*colorFrameDescriptor.Height));
+            // Resize color bitmap
+            var resizeFilter = new ResizeNearestNeighbor((int) (ColorScale*colorFrameDescriptor.Width),
+                (int) (ColorScale*colorFrameDescriptor.Height));
 
-        _resizedColor = resizeFilter.Apply(colorImg);
+            _resizedColor = resizeFilter.Apply(colorImg);
+        }
 
         // Mean filter TODO : combiner les filtres ( threshold et median ) en les faisant a la main pour faire moins de passes sur le bmp
         Mean filter = new Mean(); // TODO coute cher (3-4 fps) 
@@ -211,8 +219,8 @@ public class BlobTracker : MonoBehaviour
         _speed = new Vector3(0, 0, 0);
         _trajectory.Clear();
         _lastDist = 500;
-        _depthImpactLin = Vector3.zero;
-        _colorImpactLin = Vector3.zero;
+        _depthImpactLin = new Vector3(0, 0, -1);
+        _colorImpactLin = new Vector3(0, 0, -1);
     }
 
     private void AnalyseTrajectory()
@@ -285,10 +293,10 @@ public class BlobTracker : MonoBehaviour
         }
         else
         {
-            if (_colorImpactLin.magnitude > 1e-5)
+            if (_colorImpactLin.z > 0 && _initDone)
             {
-                float[] points = Projection2Square(ScreenCorners, _colorImpactLin[0] / 1920.0f,
-                    (1080 - _colorImpactLin[1]) / 1080.0f);
+                float[] points = Projection2Square(ScreenCorners, _colorImpactLin[0]/1920.0f,
+                    (1080 - _colorImpactLin[1])/1080.0f);
 
                 float xNormalized = 1.0f - points[0];
                 float yNormalized = points[1];
@@ -298,9 +306,13 @@ public class BlobTracker : MonoBehaviour
                 {
                     if (_nbFrameBetweenThrow > 10 && ImpactPointDetected != null)
                     {
-                        ImpactPointDetected(xNormalized * Screen.width, yNormalized * Screen.height);
+                        Vector2 yaw = new Vector2(_speed.y/_thresholdedZBuffer.Height, _speed.z*YawRatio/4000.0f);
+                        yaw = Vector2.zero;
+                        ImpactPointDetected(xNormalized*Screen.width, yNormalized*Screen.height, yaw);
                     }
                     _nbFrameBetweenThrow = 0;
+
+                    ResetTrajectory();
 
                     if (DebugManager.Debug)
                     {
@@ -308,11 +320,10 @@ public class BlobTracker : MonoBehaviour
                         Debug.Log("Speed : " + _speed);
                     }
                 }
-                ResetTrajectory();
             }
             // No ball detected
             _framesWithoutBlob++;
-            if (_framesWithoutBlob >= FramesWithoutBlobNeededToClear)
+            if (_framesWithoutBlob >= FramesWithoutBlobNeededToClear && _trajectory.Count > 0)
             {
                 ResetTrajectory();
             }
@@ -327,8 +338,8 @@ public class BlobTracker : MonoBehaviour
             int linZ = _projectionDistance;
             var deltaZ = _projectionDistance - _trajectory.Last()[2];
             var _normzSpeed = _speed/_speed[2];
-            int linX = (int)(deltaZ * _normzSpeed[0] + _trajectory.Last()[0]);
-            int linY = (int)(deltaZ * _normzSpeed[1] + _trajectory.Last()[1]);
+            int linX = (int) (deltaZ*_normzSpeed[0] + _trajectory.Last()[0]);
+            int linY = (int) (deltaZ*_normzSpeed[1] + _trajectory.Last()[1]);
 
             if (linX >= 0 && linX < 512 &&
                 linY >= 0 && linY < 424)
@@ -338,10 +349,10 @@ public class BlobTracker : MonoBehaviour
             }
 
             // If we should hit the wall at next frame
-            if (_lastDist + _speed[2] > _projectionDistance - 100)
+            if (_lastDist + _speed[2] > _projectionDistance - 100 && _initDone)
             {
-                float[] points = Projection2Square(ScreenCorners, _colorImpactLin[0] / 1920.0f,
-                    (1080 - _colorImpactLin[1]) / 1080.0f);
+                float[] points = Projection2Square(ScreenCorners, _colorImpactLin[0]/1920.0f,
+                    (1080 - _colorImpactLin[1])/1080.0f);
 
                 float xNormalized = 1.0f - points[0];
                 float yNormalized = points[1];
@@ -351,10 +362,13 @@ public class BlobTracker : MonoBehaviour
                 {
                     if (_nbFrameBetweenThrow > 10 && ImpactPointDetected != null)
                     {
-                        ImpactPointDetected(xNormalized * Screen.width, yNormalized * Screen.height);
+                        Vector2 yaw = new Vector2(_speed.y/_thresholdedZBuffer.Height, _speed.z*YawRatio/4000.0f);
+                        yaw = Vector2.zero;
+                        ImpactPointDetected(xNormalized*Screen.width, yNormalized*Screen.height, yaw);
                     }
                     _nbFrameBetweenThrow = 0;
 
+                    ResetTrajectory();
 
                     if (DebugManager.Debug)
                     {
@@ -362,7 +376,6 @@ public class BlobTracker : MonoBehaviour
                         Debug.Log("Speed : " + _speed);
                     }
                 }
-                ResetTrajectory();
             }
         }
     }

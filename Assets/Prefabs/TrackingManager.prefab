@@ -163,11 +163,11 @@ MonoBehaviour:
   ColorScale: 0.15
   MinSizeBlob: 6
   MaxSizeBlob: 20
-  ThresholdBlob: 50
-  ThresholdTrajectory: 10
-  FramesWithoutBlobNeededToClear: 6
-  ColorNeighborhoodSize: 2
+  ThresholdBlob: 30
+  FramesWithoutBlobNeededToClear: 10
   MinPointRequired: 2
+  PercentThresholdZMiss: 19.9
+  YawRatio: 10
 --- !u!114 &114000012972750216
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -180,7 +180,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ScalingFactorZBuffer: 10
-  NbFrameForBackgroundSuppression: 5
+  NbFrameForBackgroundSuppression: 2
 --- !u!114 &114000013367365030
 MonoBehaviour:
   m_ObjectHideFlags: 1

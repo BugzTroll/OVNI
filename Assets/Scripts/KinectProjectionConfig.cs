@@ -1,29 +1,23 @@
-﻿using System;
+﻿
 using UnityEngine;
-using System.Collections;
-using System.Drawing;
-using System.Drawing.Imaging;
-using Windows.Kinect;
-using AForge.Imaging;
-using AForge.Imaging.Filters;
-using Color = Microsoft.Kinect.Face.Color;
+using System.Collections.Generic;
+using System.Linq;
 
 public class KinectProjectionConfig : MonoBehaviour
 {
     public GameObject ColorManager;
     public GameObject BlobTracker;
     public GameObject ViewManager;
-    public bool AlienDetection;
 
     private ColorSourceManager _colorManager;
     private ViewManager _viewManager;
     private BlobTracker _blobTracker;
     private int _clickCounter;
-    private Bitmap _source;
-    private Bitmap _template;
-    private Bitmap bmp;
-    private Texture _texture;
-    private int cpt;
+    private Texture2D _texture;
+    private List<Vector2> _cornerPosition;
+    private string[] _labels;
+    private bool _depthConfigDone;
+
 
     // Use this for initialization
     void Start()
@@ -32,103 +26,106 @@ public class KinectProjectionConfig : MonoBehaviour
         _colorManager = ColorManager.GetComponent<ColorSourceManager>();
         _blobTracker = BlobTracker.GetComponent<BlobTracker>();
         _viewManager = ViewManager.GetComponent<ViewManager>();
+        _cornerPosition = new List<Vector2>();
+        _depthConfigDone = false;
+        _labels = new string[] {"Cliquer sur le coin en bas à gauche de la projection",
+            "Cliquer sur le coin en haut à gauche de la projection",
+            "Cliquer sur le coin en haut à droite de la projection",
+            "Cliquer sur le coin en bas à droite de la projection"};
 
-        Bitmap template =
-            (Bitmap)
-            Bitmap.FromFile(
-                "C:\\Users\\nadm2208\\Documents\\OVNI\\Assets\\Resources\\Alien.jpg");
-
-        var resizeFilter = new ResizeNearestNeighbor((int) (0.18*template.Width),
-            (int) (0.16*template.Height));
-
-        _template = resizeFilter.Apply(template);
-        if (AlienDetection)
-        {
-            _texture = new Texture2D(1920, 1080, TextureFormat.RGB24, false);
-            _texture = Resources.Load("OVNI") as Texture;
-        }
-        else
-        {
-            _texture = _viewManager.GetTexture();
-        }
+        _texture = _viewManager.GetTexture();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (AlienDetection)
+        if (!_depthConfigDone)
         {
-            cpt++;
-            if (cpt > 60)
+            if (Input.GetMouseButtonDown(0))
             {
-                var source = Converter.ByteArray2Bmp(_colorManager.GetData(), _colorManager.GetDescriptor().Width,
-                    _colorManager.GetDescriptor().Height, PixelFormat.Format32bppArgb);
-
-                var colorFrameDescriptor = _colorManager.GetDescriptor();
-                var resizeFilter = new ResizeBilinear((int) (0.3*colorFrameDescriptor.Width),
-                    (int) (0.3*colorFrameDescriptor.Height));
-
-                _source = resizeFilter.Apply(source);
-
-                var grey = new Grayscale(0.2125, 0.7154, 0.0721);
-
-                var greySource = grey.Apply(_source);
-                greySource.Save("C:\\Users\\nadm2208\\Desktop\\Alien1.bmp");
-
-                var thres = new Threshold(220);
-                var temp = thres.Apply(greySource);
-                temp.Save("C:\\Users\\nadm2208\\Desktop\\Alien2.bmp");
-
-                ExhaustiveTemplateMatching tm = new ExhaustiveTemplateMatching(0.75f);
-
-                var greytemplate = grey.Apply(_template);
-                greytemplate.Save("C:\\Users\\nadm2208\\Desktop\\Alien3.bmp");
-
-                // image formate trouble -> ony 24bpp
-                TemplateMatch[] matchings = tm.ProcessImage(temp, greytemplate);
-
-                BitmapData data = _source.LockBits(
-                    new Rectangle(0, 0, _source.Width, _source.Height),
-                    ImageLockMode.ReadWrite, _source.PixelFormat);
-
-                foreach (TemplateMatch m in matchings)
+                if (_clickCounter <= 3)
                 {
-                    Drawing.Rectangle(data, m.Rectangle, System.Drawing.Color.Tomato);
+                    _blobTracker.ScreenCorners[_clickCounter] = new Vector2(Input.mousePosition.x / Screen.width, Input.mousePosition.y / Screen.height);
+                    _cornerPosition.Add(new Vector2((Input.mousePosition.x / Screen.width) * _texture.width, (1 - Input.mousePosition.y / Screen.height) * _texture.height));
                 }
-
-                _source.UnlockBits(data);
-                _source.Save("C:\\Users\\nadm2208\\Desktop\\AlienDetecter.bmp");
-                GameManager.Instance.CurrentState = GameManager.GameState.MainMenu;
+                if (_clickCounter == 3)
+                {
+                    _blobTracker.InitProjectionDistance();
+                    _viewManager.ShowThresholdedZBuffer = true;
+                    _viewManager.ShowPositions = true;
+                    _depthConfigDone = true;
+                }
+                _clickCounter++;
+            }
+            else if (Input.GetMouseButtonDown(1) && _cornerPosition.Count > 0)
+            {
+                _cornerPosition.Remove(_cornerPosition.Last());
+                _clickCounter--;
             }
         }
         else
         {
-            _texture = _viewManager.GetTexture();
+            if (Input.GetKeyDown("down"))
+            {
+                if(_blobTracker.ThresholdBlob > 1)
+                {
+                    _blobTracker.ThresholdBlob--;
+                }
+            }
+            if (Input.GetKeyDown("up"))
+            {
+                if (_blobTracker.ThresholdBlob < 255)
+                {
+                    _blobTracker.ThresholdBlob++;
+                }
+            }
+            if (Input.GetKeyDown("return"))
+            {
+                _viewManager.ShowThresholdedZBuffer = false;
+                _viewManager.ShowPositions = false;
+                GameManager.Instance.CurrentState = GameManager.GameState.MainMenu;
+            }
         }
+
+
+        _texture = _viewManager.GetTexture();
+
+        if (!_depthConfigDone)
+        {
+            foreach (Vector2 corner in _cornerPosition)
+            {
+                _texture.SetPixel((int)corner.x - 1, (int)corner.y, UnityEngine.Color.red);
+                _texture.SetPixel((int)corner.x, (int)corner.y - 1, UnityEngine.Color.red);
+                _texture.SetPixel((int)corner.x, (int)corner.y, UnityEngine.Color.red);
+                _texture.SetPixel((int)corner.x + 1, (int)corner.y, UnityEngine.Color.red);
+                _texture.SetPixel((int)corner.x, (int)corner.y + 1, UnityEngine.Color.red);
+            }
+        }
+        _texture.Apply();
     }
 
     void OnGUI()
     {
-        Rect rect = AlienDetection
-            ? new Rect(0, 0, -1, 1)
-            : new Rect(0, 0, 1, -1);
         GUI.DrawTextureWithTexCoords(new Rect(0, 0, Screen.width, Screen.height), _texture,
-            rect);
-    }
+            new Rect(0, 0, 1, -1));
 
-    void OnMouseDown()
-    {
-        if (_clickCounter <= 3)
+        if (!_depthConfigDone)
         {
-            _blobTracker.ScreenCorners[_clickCounter] = new Vector2(Input.mousePosition.x/Screen.width,
-                Input.mousePosition.y/Screen.height);
-        }
-        if (_clickCounter == 3)
-        {
-            _blobTracker.InitProjectionDistance();
-            GameManager.Instance.CurrentState = GameManager.GameState.MainMenu;
-        }
-        _clickCounter++;
-    }
+            GUIStyle style = new GUIStyle();
+            style.fontSize = 30;
+            style.alignment = TextAnchor.MiddleCenter;
 
+            GUI.Label(new Rect(0, 0, Screen.width, Screen.height), _labels[_clickCounter], style);
+        }
+
+        if (_depthConfigDone)
+        {
+            GUIStyle style = new GUIStyle();
+            style.fontSize = 30;
+            style.alignment = TextAnchor.MiddleCenter;
+            style.normal.textColor = Color.white;
+
+            GUI.Label(new Rect(0, 0, Screen.width, Screen.height), "Ajuster le seuil : " + _blobTracker.ThresholdBlob.ToString() + "\n flèche gauche pour diminuer\n flèche droite pour augmenter\nEnter pour commencer", style);
+        }
+    }
 }
