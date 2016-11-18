@@ -138,7 +138,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: faedffd4cae5ce14bb53067228380adb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LifeTime: 1.5
+  LifeTime: 5
 --- !u!114 &114000013934001916
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -150,7 +150,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 503f70b9954d1924f89eb08a127bb7e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseDamage: 12
+  baseDamage: 0
 --- !u!114 &114000014091423470
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -163,4 +163,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pointsWhenDestroyed: 1
-  durability: 200
+  durability: 100

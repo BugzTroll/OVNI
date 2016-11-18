@@ -36,7 +36,7 @@ public class ExplodingProjectile : MonoBehaviour {
             expDmg.damageAtCenter = dmg.baseDamage;
         }
 
-        Destroy(explosion, 5);
+        Destroy(explosion, 2);
         Destroy(gameObject);
     }
 }

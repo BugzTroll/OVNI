@@ -30,6 +30,7 @@ public class GameplayUI : MonoBehaviour
         _ammoPictures.Add(Resources.Load("Textures/Acid") as Texture2D);
         _ammoPictures.Add(Resources.Load("Textures/rock") as Texture2D);
         _ammoPictures.Add(Resources.Load("Textures/missile") as Texture2D);
+        _ammoPictures.Add(Resources.Load("Textures/Fireball") as Texture2D);
         _ammoPictures.Add(Resources.Load("Textures/Red-X") as Texture2D);
 
         UpdateScoreText(0);

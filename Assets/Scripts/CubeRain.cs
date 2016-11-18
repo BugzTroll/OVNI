@@ -6,7 +6,8 @@ public class CubeRain : MonoBehaviour {
     public GameObject cubePrefab = null;
     public GameObject cadeauPrefab = null;
     public float rayon = 5.0f;
-    int test = 0;
+    int cadeau = 0;
+    int flocon = 0;
     // Use this for initialization
     void Start () {
 	
@@ -15,17 +16,21 @@ public class CubeRain : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
     {
-        test++;
-        if(test == 300)
+        cadeau++;
+        if(cadeau == 400)
         {
             GameObject projectile2 = Instantiate(cadeauPrefab);
             Vector3 position2 = new Vector3(Random.Range(-rayon, rayon), 0, Random.Range(-rayon, rayon));
             projectile2.transform.position = gameObject.transform.position - position2;
-            test = 0;
+            cadeau = 0;
         }
-        GameObject projectile = Instantiate(cubePrefab);
+        flocon++;
+        if (flocon == 5)
+        {
+            GameObject projectile = Instantiate(cubePrefab);
         Vector3 position = new Vector3(Random.Range(-rayon, rayon), 0, Random.Range(-rayon, rayon));
         projectile.transform.position = gameObject.transform.position - position;
-        
+            flocon = 0;
+        }
     }
 }

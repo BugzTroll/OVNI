@@ -55,6 +55,9 @@ GameObject:
   - 4: {fileID: 4000011356782260}
   - 198: {fileID: 198000012831875596}
   - 199: {fileID: 199000013953438510}
+  - 114: {fileID: 114000013660626828}
+  - 114: {fileID: 114000011647620670}
+  - 114: {fileID: 114000012752805282}
   m_Layer: 0
   m_Name: Ef_ExplosionParticle_02
   m_TagString: Untagged
@@ -165,6 +168,43 @@ Transform:
   m_Children: []
   m_Father: {fileID: 4000011356782260}
   m_RootOrder: 1
+--- !u!114 &114000011647620670
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000013063239222}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b4400db647dbf84a8b11f8995bf7f6a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damageAtCenter: 0
+  damageAtRadius: 0
+--- !u!114 &114000012752805282
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000013063239222}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 039587c051912eb4ead9e58344c5f3ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  multiplier: 1
+--- !u!114 &114000013660626828
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000013063239222}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ac1691131a8c844dafe8b6ace6a172a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  explosionForce: 4
 --- !u!198 &198000010245698542
 ParticleSystem:
   m_ObjectHideFlags: 1
