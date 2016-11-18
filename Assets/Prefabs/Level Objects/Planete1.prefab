@@ -22,7 +22,6 @@ GameObject:
   - 33: {fileID: 33000012922710136}
   - 135: {fileID: 135000011153333026}
   - 23: {fileID: 23000010028410064}
-  - 114: {fileID: 114000013596113876}
   - 114: {fileID: 114000011485955756}
   m_Layer: 0
   m_Name: Planete1
@@ -38,8 +37,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000010269299756}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 3.35, y: -1.96, z: -50.6}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 3.35, y: 0, z: -28.7}
+  m_LocalScale: {x: 12.689923, y: 12.689916, z: 12.689916}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 0}
@@ -91,26 +90,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9ae403453670ab47afcaaf8b46695c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  anglePerFrame: 40
---- !u!114 &114000013596113876
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000010269299756}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8db4b81e77dd2764188e3a6090bd9a3f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Shadow_planete2: {fileID: 0}
-  Sphere_planete2: {fileID: 0}
-  Shadow_planete3: {fileID: 0}
-  Sphere_planete3: {fileID: 0}
-  Shadow_planete4: {fileID: 0}
-  Sphere_planete4: {fileID: 0}
-  Shadow_planete5: {fileID: 0}
-  Sphere_planete5: {fileID: 0}
+  rotationAngle: 90
 --- !u!135 &135000011153333026
 SphereCollider:
   m_ObjectHideFlags: 1
@@ -121,5 +101,5 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
+  m_Radius: 1.02
   m_Center: {x: 0, y: 0, z: 0}

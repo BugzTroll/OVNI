@@ -74,4 +74,9 @@ public class PauseButton : MonoBehaviour {
     {
         GameManager.Instance.ChangeScene("LevelSelect");
     }
+
+    public void RetryButton()
+    {
+        GameManager.Instance.RestartScene();
+    }
 }

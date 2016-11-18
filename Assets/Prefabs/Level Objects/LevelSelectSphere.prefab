@@ -22,7 +22,6 @@ GameObject:
   - 33: {fileID: 33000011539300626}
   - 135: {fileID: 135000012363066434}
   - 23: {fileID: 23000012545944304}
-  - 114: {fileID: 114000012059649684}
   m_Layer: 0
   m_Name: LevelSelectSphere
   m_TagString: Clickable
@@ -79,19 +78,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000013902843498}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &114000012059649684
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000013902843498}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8db4b81e77dd2764188e3a6090bd9a3f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  optionsTintLvl2: {fileID: 0}
-  lvl2Sphere: {fileID: 0}
 --- !u!135 &135000012363066434
 SphereCollider:
   m_ObjectHideFlags: 1

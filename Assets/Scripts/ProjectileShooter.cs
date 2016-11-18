@@ -16,7 +16,8 @@ public class ProjectileShooter : MonoBehaviour
         ACID = 2,
         ROCK = 3,
         MISSILE = 4,
-        TYPE_COUNT = 5
+        FIREBALL = 5,
+        TYPE_COUNT = 6
         // TO BE CONTINUED
     }
     public GameObject TomatoPrefab;
@@ -24,6 +25,7 @@ public class ProjectileShooter : MonoBehaviour
     public GameObject AcidPrefab;
     public GameObject RockPrefab;
     public GameObject MissilePrefab;
+    public GameObject FireballPrefab;
     public string Ammo;
     public float Speed = 10; // change per prefab
 
@@ -48,6 +50,13 @@ public class ProjectileShooter : MonoBehaviour
 
     private void Update()
     {
+        // Avoids registering clicks when on ui (i.e. pause panel buttons) when in game (so it works when in GameOver or GameSuccess)
+        if (GameManager.Instance.CurrentState == GameManager.GameState.InGame &&
+            UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
+        {
+            return;
+        }
+
         // TODO find a better place to handle click event
         if (Input.GetMouseButtonDown(0))
         {
@@ -104,6 +113,9 @@ public class ProjectileShooter : MonoBehaviour
                 break;
             case ProjectileType.MISSILE:
                 projectilePrefab = MissilePrefab;
+                break;
+            case ProjectileType.FIREBALL:
+                projectilePrefab = FireballPrefab;
                 break;
         }
         GameObject projectile = Instantiate(projectilePrefab);
