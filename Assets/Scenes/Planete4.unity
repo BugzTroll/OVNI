@@ -309,6 +309,11 @@ MonoBehaviour:
     type: 2}
   m_PrefabInternal: {fileID: 49187696}
   m_Script: {fileID: 708705254, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+--- !u!1 &49187698 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1000013340215174, guid: 1617d466ce790f046ac3922ea1ee7d59,
+    type: 2}
+  m_PrefabInternal: {fileID: 49187696}
 --- !u!4 &87316267 stripped
 Transform:
   m_PrefabParentObject: {fileID: 400000, guid: 393d293a40bc23944a6fe113fffc1900, type: 3}
@@ -4145,6 +4150,11 @@ Prefab:
       propertyPath: TargetObject
       value: 
       objectReference: {fileID: 141000433}
+    - target: {fileID: 114000012280701770, guid: ff6b655613cbfd14a9701ba4f7cc1da9,
+        type: 2}
+      propertyPath: ProgressBar
+      value: 
+      objectReference: {fileID: 49187698}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: ff6b655613cbfd14a9701ba4f7cc1da9, type: 2}
   m_IsPrefabParent: 0

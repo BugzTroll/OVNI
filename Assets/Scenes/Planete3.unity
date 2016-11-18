@@ -3571,6 +3571,11 @@ Prefab:
       propertyPath: TargetObject
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 114000012280701770, guid: ff6b655613cbfd14a9701ba4f7cc1da9,
+        type: 2}
+      propertyPath: ProgressBar
+      value: 
+      objectReference: {fileID: 2104923150}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: ff6b655613cbfd14a9701ba4f7cc1da9, type: 2}
   m_IsPrefabParent: 0
@@ -4954,6 +4959,11 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 1617d466ce790f046ac3922ea1ee7d59, type: 2}
   m_IsPrefabParent: 0
+--- !u!1 &2104923150 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1000013340215174, guid: 1617d466ce790f046ac3922ea1ee7d59,
+    type: 2}
+  m_PrefabInternal: {fileID: 2104923149}
 --- !u!1 &2120059536
 GameObject:
   m_ObjectHideFlags: 0

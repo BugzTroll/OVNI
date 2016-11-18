@@ -8,12 +8,10 @@ public class GameLevelController : MonoBehaviour
     public static event UnityAction<float> ScoreUpdated;
 
     public int ScoreToWin;
-<<<<<<< HEAD
-    public GameObject TargetObject = null;
-=======
+
     public GameObject TargetObject;
     public GameObject ProgressBar;
->>>>>>> 6736f51f3c9441ca3bd6c2f46445bfbb736e334f
+
     [Range(0, 30)] public float TimeToLose = 3.0f;
     [Range(0, 1)] public float EndScreenSlowMoFactor;
 
