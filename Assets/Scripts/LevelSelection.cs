@@ -25,8 +25,8 @@ public class LevelSelection : MonoBehaviour
         if (GameManager.Instance.LevelProgression.Count > 0)
             lastLevelDone = GameManager.Instance.LevelProgression.Last();
 
-
-        Debug.Log("Last level done: " + lastLevelDone.ToString());
+        if(DebugManager.Debug)
+            Debug.Log("Last level done: " + lastLevelDone.ToString());
 
         switch(lastLevelDone)
         {

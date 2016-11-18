@@ -19,5 +19,3 @@ EditorBuildSettings:
     path: Assets/Scenes/Planete3.unity
   - enabled: 1
     path: Assets/Scenes/Planete4.unity
-  - enabled: 1
-    path: Assets/Scenes/Planete5.unity
