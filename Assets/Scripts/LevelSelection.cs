@@ -10,10 +10,6 @@ public class LevelSelection : MonoBehaviour
     public static event UnityAction<float, float> ClickDetected;
 
     private Animator _cameraAnimator;
-
-    // private  CameraProgress _cameraProgress;
-    private Transform lastZone;
-
     
     // Use this for initialization
     void Start ()
