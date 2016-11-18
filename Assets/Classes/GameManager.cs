@@ -48,7 +48,9 @@ public class GameManager
 
     public void RestartScene()
     {
-        ChangeScene(SceneManager.GetActiveScene().name);
+        Time.timeScale = 1.0f;
+        GameObject.Find("Fading").GetComponent<Fader>().EndScene(SceneManager.GetActiveScene().name);
+        // ChangeScene(SceneManager.GetActiveScene().name);
     }
 
     public void UpdateProgression(Scene level)
@@ -193,8 +195,10 @@ public class GameManager
                 {
                     if (hit.collider.tag == "Clickable")
                     {
-                        // This works only if the name of the objet is the same as the corresponding scene
-                        Instance.ChangeScene(hit.collider.name);
+                            // This works only if the name of the objet is the same as the corresponding scene
+
+                            //Instance.ChangeScene(hit.collider.name);
+                            GameObject.Find("Fading").GetComponent<Fader>().EndScene(hit.collider.name);
                     }
                 }
                 break;
