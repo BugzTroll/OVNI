@@ -13,7 +13,19 @@ public class Splash : MonoBehaviour
     void Start ()
     {
         renderer = gameObject.GetComponent<Renderer>();
-        renderer.material = BaseMaterial;
+        if (renderer)
+        {
+            renderer.material = BaseMaterial;
+        }
+        else
+        {
+            renderer = gameObject.GetComponentInChildren<Renderer>();
+
+            if (renderer)
+            {
+                renderer.material = BaseMaterial;
+            }
+        }
     }
 
     void OnCollisionEnter(Collision collision)
