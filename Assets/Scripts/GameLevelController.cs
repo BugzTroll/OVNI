@@ -49,7 +49,7 @@ public class GameLevelController : MonoBehaviour
 
     private void Start()
     {
-        GameManager.Instance.CurrentState = GameManager.GameState.InGame;
+        GameManager.Instance.CurrentState = GameManager.GameState.PopUp;
 
         GameObject projectileShooterObject = GameObject.Find("PlayerController");
         if (projectileShooterObject != null)
