@@ -14,6 +14,7 @@ public class GameManager
         MainMenu,
         OptionsMenu,
         Paused,
+        PopUp,
         InGame,
         LevelSelect,
         Quit,
@@ -33,17 +34,26 @@ public class GameManager
     public List<GameLevel> LevelProgression = new List<GameLevel>();
     private GameState _currentState;
     private Scene _currentScene;
+    public List<int> visitedPlanet = new List<int>();
 
     public void ChangeScene(int sceneIndex)
     {
         SceneManager.LoadScene(sceneIndex);
         _currentScene = SceneManager.GetActiveScene();
+        if (!visitedPlanet.Contains(sceneIndex))
+        {
+            visitedPlanet.Add(sceneIndex);
+        }
     }
 
     public void ChangeScene(string sceneName)
     {
         SceneManager.LoadScene(sceneName);
         _currentScene = SceneManager.GetActiveScene();
+        if (!visitedPlanet.Contains(_currentScene.buildIndex))
+        {
+            visitedPlanet.Add(_currentScene.buildIndex);
+        }
     }
 
     public void RestartScene()
