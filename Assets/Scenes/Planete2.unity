@@ -314,6 +314,27 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 29f94dac6694b2045aaf35850b45c64f, type: 2}
   m_IsPrefabParent: 0
+--- !u!1 &89042554 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 100000, guid: bb7af1ff296f4704c85d108c986c7d7c, type: 3}
+  m_PrefabInternal: {fileID: 1461573097}
+--- !u!64 &89042558
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 89042554}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Convex: 1
+  m_Mesh: {fileID: 4300000, guid: bb7af1ff296f4704c85d108c986c7d7c, type: 3}
+--- !u!1 &93403052 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1000013340215174, guid: 1617d466ce790f046ac3922ea1ee7d59,
+    type: 2}
+  m_PrefabInternal: {fileID: 1978602487}
 --- !u!4 &107708375 stripped
 Transform:
   m_PrefabParentObject: {fileID: 400002, guid: fb5feadadaae0e3458b32957e18d43d6, type: 3}
@@ -984,14 +1005,14 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 632910623}
-  - {fileID: 1589667898}
   - {fileID: 924914174}
+  - {fileID: 1589667898}
   - {fileID: 1575791728}
   - {fileID: 74698547}
   - {fileID: 392558355}
   - {fileID: 2027007232}
-  - {fileID: 1986589491}
   - {fileID: 895607549}
+  - {fileID: 1986589491}
   - {fileID: 547200961}
   - {fileID: 1933802645}
   - {fileID: 1668074642}
@@ -4943,6 +4964,16 @@ Prefab:
         type: 2}
       propertyPath: TargetObject
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000012280701770, guid: ff6b655613cbfd14a9701ba4f7cc1da9,
+        type: 2}
+      propertyPath: ProgressBar
+      value: 
+      objectReference: {fileID: 93403052}
+    - target: {fileID: 114000012280701770, guid: ff6b655613cbfd14a9701ba4f7cc1da9,
+        type: 2}
+      propertyPath: ScoreToWin
+      value: 600
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: ff6b655613cbfd14a9701ba4f7cc1da9, type: 2}
