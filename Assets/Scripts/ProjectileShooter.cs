@@ -27,7 +27,7 @@ public class ProjectileShooter : MonoBehaviour
     public GameObject MissilePrefab;
     public GameObject FireballPrefab;
     public string Ammo;
-    public float Speed = 10; // change per prefab
+    //public float Speed = 10; // change per prefab
 
     private int _currentProjectileIdx;
     private ProjectileType _equippedProjectile;
@@ -64,26 +64,17 @@ public class ProjectileShooter : MonoBehaviour
         }
     }
 
-    public void ShootProjectile(Vector2 screenPos, Vector2 yaw = default(Vector2))
+    public void ShootProjectile(Vector2 screenPos, float speed)
     {
         //TODO ajouter Speed en y et velocity
         Vector3 screenPosition = new Vector3(screenPos.x, screenPos.y, 1);
-        Vector3 yaw3 = new Vector3(0, yaw.x, yaw.y);
         Vector3 worldPosition = Camera.main.ScreenToWorldPoint(screenPosition);
         Vector3 velocity = worldPosition - Camera.main.gameObject.transform.position;
         velocity.Normalize();
 
-        if (yaw3.magnitude > 0)
-        {
-            yaw3.Normalize();
-            yaw3 /= Mathf.Sqrt(velocity.y*velocity.y + velocity.z*velocity.z);
-            velocity.y = yaw3.y;
-            velocity.z = yaw3.z;
-        }
-
         if (_currentProjectileIdx < Ammo.Length)
         {
-            CreateProjectile(worldPosition, velocity);
+            CreateProjectile(worldPosition, velocity, speed);
             _currentProjectileIdx++;
             _equippedProjectile = _currentProjectileIdx < Ammo.Length ? (ProjectileType)char.GetNumericValue(Ammo[_currentProjectileIdx]) : ProjectileType.NONE;
 
@@ -94,7 +85,7 @@ public class ProjectileShooter : MonoBehaviour
         }
     }
 
-    private void CreateProjectile(Vector3 startPosition, Vector3 startTrajectory)
+    private void CreateProjectile(Vector3 startPosition, Vector3 startTrajectory, float speed)
     {
         GameObject projectilePrefab = null;
         switch (_equippedProjectile)
@@ -134,6 +125,6 @@ public class ProjectileShooter : MonoBehaviour
             rb.AddTorque(new Vector3(MyHelper.GetRandom(10), MyHelper.GetRandom(10), MyHelper.GetRandom(10)));
 
         // temp (will come from the "Speed" of the tracking)
-        rb.velocity = startTrajectory * Speed;
+        rb.velocity = startTrajectory * speed;
     }
 }
