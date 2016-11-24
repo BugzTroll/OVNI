@@ -153,13 +153,13 @@ public class GameManager
         LevelSelection.ClickDetected -= OnClickDetected;
     }
 
-    private void OnImpactPointDetected(float x, float y, Vector2 yaw)
+    private void OnImpactPointDetected(float x, float y, float speed)
     {
         if (DebugManager.Debug)
         {
             Debug.Log("point d'impact ! " + x + "," + y);
         }
-        HandleInputPoint(x, y, yaw);
+        HandleInputPoint(x, y, speed);
     }
 
     private void OnClickDetected(float x, float y)
@@ -172,7 +172,7 @@ public class GameManager
     }
 
     // x and y in normalized screen space 
-    private void HandleInputPoint(float x, float y, Vector2 yaw = default(Vector2))
+    private void HandleInputPoint(float x, float y, float speed = 10.0f)
     {
         switch (_currentState)
         {
@@ -180,7 +180,7 @@ public class GameManager
             {
                 GameObject projectileShooterObject = GameObject.Find("PlayerController");
                 if (projectileShooterObject != null) 
-                    projectileShooterObject.GetComponent<ProjectileShooter>().ShootProjectile(new Vector2(x, y), yaw);        
+                    projectileShooterObject.GetComponent<ProjectileShooter>().ShootProjectile(new Vector2(x, y), speed);        
                 break;
             }
             case GameState.GameOver:
