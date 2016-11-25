@@ -17,7 +17,8 @@ public class ProjectileShooter : MonoBehaviour
         ROCK = 3,
         MISSILE = 4,
         FIREBALL = 5,
-        TYPE_COUNT = 6
+        GOLFBALL = 6,
+        TYPE_COUNT = 7
         // TO BE CONTINUED
     }
     public GameObject TomatoPrefab;
@@ -26,6 +27,7 @@ public class ProjectileShooter : MonoBehaviour
     public GameObject RockPrefab;
     public GameObject MissilePrefab;
     public GameObject FireballPrefab;
+    public GameObject GolfBallPrefab;
     public string Ammo;
     //public float Speed = 10; // change per prefab
 
@@ -107,6 +109,9 @@ public class ProjectileShooter : MonoBehaviour
                 break;
             case ProjectileType.FIREBALL:
                 projectilePrefab = FireballPrefab;
+                break;
+            case ProjectileType.GOLFBALL:
+                projectilePrefab = GolfBallPrefab;
                 break;
         }
         GameObject projectile = Instantiate(projectilePrefab);
