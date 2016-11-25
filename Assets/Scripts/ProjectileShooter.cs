@@ -13,12 +13,11 @@ public class ProjectileShooter : MonoBehaviour
         NONE = -1,
         TOMATO = 0,
         BOMB = 1,
-        ACID = 2,
+        GOLFBALL = 2,
         ROCK = 3,
         MISSILE = 4,
         FIREBALL = 5,
-        GOLFBALL = 6,
-        TYPE_COUNT = 7
+        TYPE_COUNT = 6
         // TO BE CONTINUED
     }
     public GameObject TomatoPrefab;
@@ -97,9 +96,6 @@ public class ProjectileShooter : MonoBehaviour
                 break;
             case ProjectileType.BOMB:
                 projectilePrefab = BombPrefab;
-                break;
-            case ProjectileType.ACID:
-                projectilePrefab = AcidPrefab;
                 break;
             case ProjectileType.ROCK:
                 projectilePrefab = RockPrefab;
