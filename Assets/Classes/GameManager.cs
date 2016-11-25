@@ -168,7 +168,7 @@ public class GameManager
         {
             Debug.Log("point de click ! " + x + "," + y);
         }
-        HandleInputPoint(x, y);
+        HandleInputPoint(x, y, 30.0f);
     }
 
     // x and y in normalized screen space 
