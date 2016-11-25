@@ -18,7 +18,7 @@ public class ExplosionDamage : MonoBehaviour {
         float multiplier = GetComponent<ParticleSystemMultiplier>().multiplier;
         float explosionForce = GetComponent<ExplosionPhysicsForce>().explosionForce;
 
-        float r = 10 * multiplier;
+        float r = 4 * multiplier;
         var cols = Physics.OverlapSphere(transform.position, r);
         var damagedObjectsDurability = new List<DurabilityManager>();
         foreach (var col in cols)
