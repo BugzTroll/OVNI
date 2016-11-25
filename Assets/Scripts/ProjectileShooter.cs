@@ -95,9 +95,6 @@ public class ProjectileShooter : MonoBehaviour
             case ProjectileType.BOMB:
                 projectilePrefab = BombPrefab;
                 break;
-            case ProjectileType.ROCK:
-                projectilePrefab = RockPrefab;
-                break;
             case ProjectileType.MISSILE:
                 projectilePrefab = MissilePrefab;
                 break;
