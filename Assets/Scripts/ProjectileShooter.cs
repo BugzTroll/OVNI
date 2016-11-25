@@ -14,19 +14,17 @@ public class ProjectileShooter : MonoBehaviour
         TOMATO = 0,
         BOMB = 1,
         GOLFBALL = 2,
-        ROCK = 3,
-        MISSILE = 4,
-        FIREBALL = 5,
-        TYPE_COUNT = 6
+        MISSILE = 3,
+        FIREBALL = 4,
+        TYPE_COUNT = 5
         // TO BE CONTINUED
     }
     public GameObject TomatoPrefab;
     public GameObject BombPrefab;
-    public GameObject AcidPrefab;
-    public GameObject RockPrefab;
+    public GameObject GolfBallPrefab;
     public GameObject MissilePrefab;
     public GameObject FireballPrefab;
-    public GameObject GolfBallPrefab;
+
     public string Ammo;
     //public float Speed = 10; // change per prefab
 
