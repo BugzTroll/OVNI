@@ -73,3 +73,19 @@ Assets/ColorDetection/dll/LZ4Sharp.dll.meta
 Assets/ColorDetection/dll/MathNet.Numerics.dll.meta
 Assets/ColorDetection/dll/System.Drawing.dll.meta
 Assets/ColorDetection/dll/System.Threading.dll.meta
+Assets/Resources/LowPoly_Environement/Low Poly v2/Materials/FrontColor.mat
+Assets/Resources/LowPoly_Environement/Low Poly v2/Materials/FrontColor.mat.meta
+Assets/ColorDetection.meta
+Assets/Dll.meta
+Assets/Dll/AForge.Imaging.Formats.dll.meta
+Assets/Dll/AForge.Imaging.IPPrototyper.dll.meta
+Assets/Dll/AForge.Imaging.dll.meta
+Assets/Dll/AForge.Math.dll.meta
+Assets/Dll/AForge.dll.meta
+Assets/Dll/MathNet.Numerics.dll.meta
+Assets/Dll/System.Drawing.dll.meta
+Assets/Dll/System.Threading.dll.meta
+Assets/Kinect/KinectScripts/LZ4Sharp.meta
+Assets/Kinect/KinectScripts/LZ4Sharp/LZ4Sharp.dll.meta
+Assets/Kinect/KinectScripts/SharpZipLib.meta
+Assets/Kinect/KinectScripts/SharpZipLib/ICSharpCode.SharpZipLib.dll.meta
