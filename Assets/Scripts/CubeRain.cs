@@ -25,7 +25,7 @@ public class CubeRain : MonoBehaviour {
             cadeau = 0;
         }
         flocon++;
-        if (flocon == 5)
+        if (flocon == 4)
         {
             GameObject projectile = Instantiate(cubePrefab);
         Vector3 position = new Vector3(Random.Range(-rayon, rayon), 0, Random.Range(-rayon, rayon));

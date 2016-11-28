@@ -14,6 +14,7 @@ public class GameManager
         MainMenu,
         OptionsMenu,
         Paused,
+        PopUp,
         InGame,
         LevelSelect,
         Quit,
@@ -33,17 +34,26 @@ public class GameManager
     public List<GameLevel> LevelProgression = new List<GameLevel>();
     private GameState _currentState;
     private Scene _currentScene;
+    public List<int> visitedPlanet = new List<int>();
 
     public void ChangeScene(int sceneIndex)
     {
         SceneManager.LoadScene(sceneIndex);
         _currentScene = SceneManager.GetActiveScene();
+        if (!visitedPlanet.Contains(sceneIndex))
+        {
+            visitedPlanet.Add(sceneIndex);
+        }
     }
 
     public void ChangeScene(string sceneName)
     {
         SceneManager.LoadScene(sceneName);
         _currentScene = SceneManager.GetActiveScene();
+        if (!visitedPlanet.Contains(_currentScene.buildIndex))
+        {
+            visitedPlanet.Add(_currentScene.buildIndex);
+        }
     }
 
     public void RestartScene()
@@ -143,13 +153,13 @@ public class GameManager
         LevelSelection.ClickDetected -= OnClickDetected;
     }
 
-    private void OnImpactPointDetected(float x, float y, Vector2 yaw)
+    private void OnImpactPointDetected(float x, float y, float speed)
     {
         if (DebugManager.Debug)
         {
             Debug.Log("point d'impact ! " + x + "," + y);
         }
-        HandleInputPoint(x, y, yaw);
+        HandleInputPoint(x, y, speed);
     }
 
     private void OnClickDetected(float x, float y)
@@ -158,11 +168,11 @@ public class GameManager
         {
             Debug.Log("point de click ! " + x + "," + y);
         }
-        HandleInputPoint(x, y);
+        HandleInputPoint(x, y, 30.0f);
     }
 
     // x and y in normalized screen space 
-    private void HandleInputPoint(float x, float y, Vector2 yaw = default(Vector2))
+    private void HandleInputPoint(float x, float y, float speed = 10.0f)
     {
         switch (_currentState)
         {
@@ -170,7 +180,7 @@ public class GameManager
             {
                 GameObject projectileShooterObject = GameObject.Find("PlayerController");
                 if (projectileShooterObject != null) 
-                    projectileShooterObject.GetComponent<ProjectileShooter>().ShootProjectile(new Vector2(x, y), yaw);        
+                    projectileShooterObject.GetComponent<ProjectileShooter>().ShootProjectile(new Vector2(x, y), speed);        
                 break;
             }
             case GameState.GameOver:
