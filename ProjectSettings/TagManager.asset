@@ -11,6 +11,7 @@ TagManager:
   - Destructable
   - Projectile
   - Container
+  - Cow
   layers:
   - Default
   - TransparentFX

@@ -30,6 +30,7 @@ public class GameplayUI : MonoBehaviour
         _ammoPictures.Add(Resources.Load("Textures/golf") as Texture2D);
         _ammoPictures.Add(Resources.Load("Textures/missile") as Texture2D);
         _ammoPictures.Add(Resources.Load("Textures/Fireball") as Texture2D);
+        _ammoPictures.Add(Resources.Load("Textures/cowBall") as Texture2D);
         _ammoPictures.Add(Resources.Load("Textures/Red-X") as Texture2D);
 
         UpdateScoreText(0);
@@ -82,6 +83,11 @@ public class GameplayUI : MonoBehaviour
         // Image du projectile 4
         Upcoming4.texture = currentProjectileIdx + 4 < _shooter.Ammo.Length
             ? _ammoPictures[(int)char.GetNumericValue(_shooter.Ammo[currentProjectileIdx + 4])]
+            : _ammoPictures.Last();
+
+        // Image du projectile 4
+        Upcoming4.texture = currentProjectileIdx + 5 < _shooter.Ammo.Length
+            ? _ammoPictures[(int)char.GetNumericValue(_shooter.Ammo[currentProjectileIdx + 5])]
             : _ammoPictures.Last();
     }
 }
