@@ -118,7 +118,7 @@ public class ProjectileShooter : MonoBehaviour
         Rigidbody rb = projectile.GetComponent<Rigidbody>();
 
         if (_equippedProjectile != ProjectileType.MISSILE)
-            rb.AddTorque(new Vector3(MyHelper.GetRandom(10), MyHelper.GetRandom(10), MyHelper.GetRandom(10)));
+            rb.AddTorque(new Vector3(MyHelper.GetRandom(150), MyHelper.GetRandom(150), MyHelper.GetRandom(150)));
 
         // temp (will come from the "Speed" of the tracking)
         rb.velocity = startTrajectory * speed;
