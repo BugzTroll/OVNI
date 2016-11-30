@@ -8,9 +8,11 @@ using UnityEngine.SceneManagement;
 public class LevelSelection : MonoBehaviour
 {
     public static event UnityAction<float, float> ClickDetected;
-
+    public int speed = 10;
     private Animator _cameraAnimator;
-    
+    public GameObject alienPrefrab;
+    private Vector3 startPosition;
+
     // Use this for initialization
     void Start ()
     {
@@ -100,9 +102,33 @@ public class LevelSelection : MonoBehaviour
                 return;
 
             if (ClickDetected != null)
-                ClickDetected(Input.mousePosition.x, Input.mousePosition.y);
+                projectileshooting(Input.mousePosition.x, Input.mousePosition.y);
         }
 
+
+    }
+
+    void projectileshooting( float x, float y)
+    {
+        Vector3 screenPosition = new Vector3(x, y, 1);
+        Vector3 worldPosition = Camera.main.ScreenToWorldPoint(screenPosition);
+        Vector3 velocity = worldPosition - Camera.main.gameObject.transform.position;
+        velocity.Normalize();
+
+        GameObject projectile = Instantiate(alienPrefrab);
+
+        // Initial Projectile Position
+        projectile.transform.position = worldPosition;
+        var angle = -Mathf.Acos(Vector3.Dot(velocity, Vector3.forward)) * Mathf.Rad2Deg;
+        var axis = Vector3.Cross(velocity, Vector3.forward);
+        Quaternion quat = Quaternion.AngleAxis(angle, axis);
+        projectile.transform.rotation *= quat;
+
+        //Velocity
+        Rigidbody rb = projectile.GetComponent<Rigidbody>();
+
+        // temp (will come from the "Speed" of the tracking)
+        rb.velocity = velocity * speed;
 
     }
 
