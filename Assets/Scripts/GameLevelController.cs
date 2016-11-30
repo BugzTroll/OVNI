@@ -30,7 +30,7 @@ public class GameLevelController : MonoBehaviour
         if (TargetObject == null)
         {
             var progressbar = ProgressBar.GetComponent<ProgressBarBehaviour>();
-            if (progressbar)
+            if (GameObject.Find("GameUI") && progressbar)
             {
                 progressbar.SetFillerSizeAsPercentage((float) (_score/(float) (ScoreToWin))*100.0f);
             }
@@ -49,7 +49,14 @@ public class GameLevelController : MonoBehaviour
 
     private void Start()
     {
-        GameManager.Instance.CurrentState = GameManager.GameState.PopUp;
+        if (!GameObject.Find("GameUI"))
+        {
+            GameManager.Instance.CurrentState = GameManager.GameState.InGame;
+        }
+        else
+        {
+            GameManager.Instance.CurrentState = GameManager.GameState.PopUp;
+        }
 
         GameObject projectileShooterObject = GameObject.Find("PlayerController");
         if (projectileShooterObject != null)
@@ -128,7 +135,7 @@ public class GameLevelController : MonoBehaviour
         if (TargetObject != null)
         {
             var progressbar = ProgressBar.GetComponent<ProgressBarBehaviour>();
-            if (progressbar)
+            if (GameObject.Find("GameUI") && progressbar)
             {
                 progressbar.SetFillerSizeAsPercentage((float) ((TargetCounts - remainingObjects)/(float) TargetCounts)*
                                                       100.0f);

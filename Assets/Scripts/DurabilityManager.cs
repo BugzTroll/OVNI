@@ -76,9 +76,12 @@ public class DurabilityManager : MonoBehaviour
         {
             Destroy(gameObject);
             // Destruction animation (?) would go here
-            gameController.AddScore(pointsWhenDestroyed);
-            if (DebugManager.Debug)
-                Debug.Log("Object destroyed! Points earned: " + pointsWhenDestroyed);
+            if (gameController != null)
+            {
+                gameController.AddScore(pointsWhenDestroyed);
+                if (DebugManager.Debug)
+                    Debug.Log("Object destroyed! Points earned: " + pointsWhenDestroyed);
+            }
         }
     }
 }
