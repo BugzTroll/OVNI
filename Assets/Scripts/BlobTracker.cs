@@ -13,7 +13,7 @@ using Image = AForge.Imaging.Image;
 
 public class BlobTracker : MonoBehaviour
 {
-    public static event UnityAction<float, float, Vector2> ImpactPointDetected;
+    public static event UnityAction<float, float, float> ImpactPointDetected;
 
     public GameObject ColorManager;
     public GameObject DepthManager;
@@ -307,8 +307,8 @@ public class BlobTracker : MonoBehaviour
                     if (_nbFrameBetweenThrow > 10 && ImpactPointDetected != null)
                     {
                         Vector2 yaw = new Vector2(_speed.y/_thresholdedZBuffer.Height, _speed.z*YawRatio/4000.0f);
-                        yaw = Vector2.zero;
-                        ImpactPointDetected(xNormalized*Screen.width, yNormalized*Screen.height, yaw);
+                        var speed = 10.0f;
+                        ImpactPointDetected(xNormalized*Screen.width, yNormalized*Screen.height, speed);
                     }
                     _nbFrameBetweenThrow = 0;
 
@@ -363,8 +363,8 @@ public class BlobTracker : MonoBehaviour
                     if (_nbFrameBetweenThrow > 10 && ImpactPointDetected != null)
                     {
                         Vector2 yaw = new Vector2(_speed.y/_thresholdedZBuffer.Height, _speed.z*YawRatio/4000.0f);
-                        yaw = Vector2.zero;
-                        ImpactPointDetected(xNormalized*Screen.width, yNormalized*Screen.height, yaw);
+                        var speed = 10.0f;
+                        ImpactPointDetected(xNormalized*Screen.width, yNormalized*Screen.height, speed);
                     }
                     _nbFrameBetweenThrow = 0;
 
