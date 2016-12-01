@@ -20,7 +20,8 @@ public class GameManager
         LevelSelect,
         Quit,
         GameSuccess,
-        GameOver
+        GameOver,
+        Animation
     }
     public enum GameLevel
     {
@@ -98,6 +99,11 @@ public class GameManager
         {
             switch (value)
             {
+                case GameState.Animation:
+                    {
+                        ChangeScene("animationScene");
+                        break;
+                    }
                 case GameState.MainMenu:
                     {
                         ChangeScene("MainMenu");

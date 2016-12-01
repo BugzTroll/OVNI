@@ -83,7 +83,7 @@ public class KinectProjectionConfig : MonoBehaviour
             {
                 _viewManager.ShowThresholdedZBuffer = false;
                 _viewManager.ShowPositions = false;
-                GameManager.Instance.CurrentState = GameManager.GameState.MainMenu;
+                GameManager.Instance.CurrentState = GameManager.GameState.Animation;
             }
         }
 
