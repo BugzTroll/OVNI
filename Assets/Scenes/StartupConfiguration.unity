@@ -361,16 +361,6 @@ Prefab:
       propertyPath: m_RootOrder
       value: 2
       objectReference: {fileID: 0}
-    - target: {fileID: 114000012266078916, guid: 659c08c554e144e439c263c9d3627c3f,
-        type: 2}
-      propertyPath: ThresholdBlob
-      value: 36
-      objectReference: {fileID: 0}
-    - target: {fileID: 114000012266078916, guid: 659c08c554e144e439c263c9d3627c3f,
-        type: 2}
-      propertyPath: YawRatio
-      value: 2
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 659c08c554e144e439c263c9d3627c3f, type: 2}
   m_IsPrefabParent: 0
