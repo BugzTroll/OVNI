@@ -79,8 +79,9 @@ public class KinectProjectionConfig : MonoBehaviour
                     _blobTracker.ThresholdBlob++;
                 }
             }
-            if (Input.GetKeyDown("return"))
+            if (Input.GetKeyDown("return") || Input.GetMouseButtonDown(0))
             {
+                _blobTracker.ActivateThrowing();
                 _viewManager.ShowThresholdedZBuffer = false;
                 _viewManager.ShowPositions = false;
                 GameManager.Instance.CurrentState = GameManager.GameState.Animation;
@@ -125,7 +126,7 @@ public class KinectProjectionConfig : MonoBehaviour
             style.alignment = TextAnchor.MiddleCenter;
             style.normal.textColor = Color.white;
 
-            GUI.Label(new Rect(0, 0, Screen.width, Screen.height), "Ajuster le seuil : " + _blobTracker.ThresholdBlob.ToString() + "\n flèche gauche pour diminuer\n flèche droite pour augmenter\nEnter pour commencer", style);
+            GUI.Label(new Rect(0, 0, Screen.width, Screen.height), "Ajuster le seuil : " + _blobTracker.ThresholdBlob.ToString() + "\n flèche 'bas' pour diminuer\n flèche 'haut' pour augmenter\nEnter pour commencer", style);
         }
     }
 }

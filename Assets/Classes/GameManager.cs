@@ -207,18 +207,9 @@ public class GameManager
                 }
             case GameState.LevelSelect:
             {
-                //Ray ray = Camera.main.ScreenPointToRay(new Vector3(x, y, 0));
-                //RaycastHit hit;
-                //if (Physics.Raycast(ray, out hit))
-                //{
-                //    if (hit.collider.tag == "Clickable")
-                //    {
-                //            // This works only if the name of the objet is the same as the corresponding scene
-
-                //            //Instance.ChangeScene(hit.collider.name);
-                //            GameObject.Find("Fading").GetComponent<Fader>().EndScene(hit.collider.name);
-                //    }
-                //}
+                GameObject obj = GameObject.Find("LevelSelector");
+                var lvlselect = obj.GetComponent<LevelSelection>();
+                lvlselect.ShootProjectile(x, y);
                 break;
             }
         }

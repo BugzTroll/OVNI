@@ -97,18 +97,16 @@ public class LevelSelection : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
-            // avoid clicking on ui, if any is shown in the scene
-            if (UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
-                return;
-
             if (ClickDetected != null)
-                projectileshooting(Input.mousePosition.x, Input.mousePosition.y);
+            {
+                ClickDetected(Input.mousePosition.x, Input.mousePosition.y);
+            }
         }
 
 
     }
 
-    void projectileshooting( float x, float y)
+    public void ShootProjectile( float x, float y)
     {
         Vector3 screenPosition = new Vector3(x, y, 1);
         Vector3 worldPosition = Camera.main.ScreenToWorldPoint(screenPosition);

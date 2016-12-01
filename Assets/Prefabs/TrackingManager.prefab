@@ -163,11 +163,13 @@ MonoBehaviour:
   ColorScale: 0.15
   MinSizeBlob: 6
   MaxSizeBlob: 20
-  ThresholdBlob: 30
-  FramesWithoutBlobNeededToClear: 10
+  ThresholdBlob: 36
+  FramesWithoutBlobNeededToClear: 20
   MinPointRequired: 2
   PercentThresholdZMiss: 19.9
-  YawRatio: 10
+  YawRatio: 2
+  SpeedRatio: 0.07
+  SpeedMin: 7
 --- !u!114 &114000012972750216
 MonoBehaviour:
   m_ObjectHideFlags: 1

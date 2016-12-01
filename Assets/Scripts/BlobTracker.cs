@@ -27,6 +27,8 @@ public class BlobTracker : MonoBehaviour
     [Range(2, 5)] public int MinPointRequired = 2;
     [Range(0, 100)] public float PercentThresholdZMiss = 80.0f;
     [Range(0, 10)] public float YawRatio = 1.5f;
+    [Range(0, 10)] public float SpeedRatio = 0.07f;
+    [Range(0, 10)] public float SpeedMin = 7f;
 
     private KinectSensor _sensor;
     private int _nbFrameBetweenThrow;
@@ -41,6 +43,7 @@ public class BlobTracker : MonoBehaviour
     private Bitmap _resizedColor;
     private Color _blobColor;
     private bool _initDone;
+    private bool _throwing;
 
     private List<Vector3> _trajectory;
     private Vector3 _colorImpactLin;
@@ -51,6 +54,11 @@ public class BlobTracker : MonoBehaviour
     private int _framesWithoutBlob;
     private float _lastDist;
 
+    public void ActivateThrowing(bool throwing = true)
+    {
+        _throwing = throwing;
+    }
+
     public void InitProjectionDistance()
     {
         DepthSpacePoint[] p = new DepthSpacePoint[1920*1080];
@@ -60,7 +68,7 @@ public class BlobTracker : MonoBehaviour
         var lt = new Vector2(ScreenCorners[1].x*1920, ScreenCorners[1].y*1080); // left top
         var rt = new Vector2(ScreenCorners[2].x*1920, ScreenCorners[2].y*1080); // right top
         var rb = new Vector2(ScreenCorners[3].x*1920, ScreenCorners[3].y*1080); // right bottom
-        var mm = (lb + rt)/2.0f; // midle
+        var mm = (lb + rt)/2.0f; // middle
 
         DepthSpacePoint dlb = p[(int) lb.y*1920 + (int) lb.x];
         DepthSpacePoint dlt = p[(int) lt.y*1920 + (int) lt.x];
@@ -109,6 +117,7 @@ public class BlobTracker : MonoBehaviour
         _nbFrameBetweenThrow = 0;
         _projectionDistance = 0;
         _initDone = false;
+        _throwing = false;
 
         _resizedZBuffer = new Bitmap(1, 1, PixelFormat.Format8bppIndexed);
         _thresholdedZBuffer = new Bitmap(1, 1, PixelFormat.Format8bppIndexed);
@@ -276,6 +285,7 @@ public class BlobTracker : MonoBehaviour
                 maxZ > KinectSensor.GetDefault().DepthFrameSource.DepthMinReliableDistance &&
                 maxZ > _lastDist)
             {
+                // Add point to trajectory
                 if (_trajectory.Count > 0)
                 {
                     var newPoint = new Vector3(x/ZBufferScale, y/ZBufferScale, maxZ); //full depth rez 512x424
@@ -293,7 +303,8 @@ public class BlobTracker : MonoBehaviour
         }
         else
         {
-            if (_colorImpactLin.z > 0 && _initDone)
+            // Hack to throw if we have an impact point but we didn't see any blob (either because the ball is to close to the wall or because of noise)
+            if (_colorImpactLin.z > 0 && _initDone && _throwing)
             {
                 float[] points = Projection2Square(ScreenCorners, _colorImpactLin[0]/1920.0f,
                     (1080 - _colorImpactLin[1])/1080.0f);
@@ -307,7 +318,8 @@ public class BlobTracker : MonoBehaviour
                     if (_nbFrameBetweenThrow > 10 && ImpactPointDetected != null)
                     {
                         Vector2 yaw = new Vector2(_speed.y/_thresholdedZBuffer.Height, _speed.z*YawRatio/4000.0f);
-                        var speed = 10.0f;
+                        //var speed = 10.0f;
+                        float speed = Math.Max(_speed.z * SpeedRatio, SpeedMin);
                         ImpactPointDetected(xNormalized*Screen.width, yNormalized*Screen.height, speed);
                     }
                     _nbFrameBetweenThrow = 0;
@@ -349,7 +361,7 @@ public class BlobTracker : MonoBehaviour
             }
 
             // If we should hit the wall at next frame
-            if (_lastDist + _speed[2] > _projectionDistance - 100 && _initDone)
+            if (_lastDist + _speed.z > _projectionDistance - 100 && _initDone && _throwing)
             {
                 float[] points = Projection2Square(ScreenCorners, _colorImpactLin[0]/1920.0f,
                     (1080 - _colorImpactLin[1])/1080.0f);
@@ -363,7 +375,8 @@ public class BlobTracker : MonoBehaviour
                     if (_nbFrameBetweenThrow > 10 && ImpactPointDetected != null)
                     {
                         Vector2 yaw = new Vector2(_speed.y/_thresholdedZBuffer.Height, _speed.z*YawRatio/4000.0f);
-                        var speed = 10.0f;
+                        //var speed = 10.0f;
+                        float speed = Math.Max(_speed.z * SpeedRatio, SpeedMin);
                         ImpactPointDetected(xNormalized*Screen.width, yNormalized*Screen.height, speed);
                     }
                     _nbFrameBetweenThrow = 0;
