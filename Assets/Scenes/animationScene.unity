@@ -1006,7 +1006,7 @@ Prefab:
         type: 2}
       propertyPath: scoreText
       value: 
-      objectReference: {fileID: 1513972009}
+      objectReference: {fileID: 0}
     - target: {fileID: 114000012280701770, guid: ff6b655613cbfd14a9701ba4f7cc1da9,
         type: 2}
       propertyPath: tomateText
@@ -1031,7 +1031,7 @@ Prefab:
         type: 2}
       propertyPath: ammoText
       value: 
-      objectReference: {fileID: 1298234963}
+      objectReference: {fileID: 0}
     - target: {fileID: 114000012280701770, guid: ff6b655613cbfd14a9701ba4f7cc1da9,
         type: 2}
       propertyPath: TargetObject
@@ -1041,7 +1041,7 @@ Prefab:
         type: 2}
       propertyPath: ProgressBar
       value: 
-      objectReference: {fileID: 1479643492}
+      objectReference: {fileID: 0}
     - target: {fileID: 114000012280701770, guid: ff6b655613cbfd14a9701ba4f7cc1da9,
         type: 2}
       propertyPath: ScoreToWin
@@ -1841,15 +1841,19 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4000012289984914, guid: b4a70b77dfb2718449c42cf7de5f9740, type: 2}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 304.5
+      value: -1.4770662
       objectReference: {fileID: 0}
     - target: {fileID: 4000012289984914, guid: b4a70b77dfb2718449c42cf7de5f9740, type: 2}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 86.156006
+      value: 81.765045
       objectReference: {fileID: 0}
     - target: {fileID: 4000012289984914, guid: b4a70b77dfb2718449c42cf7de5f9740, type: 2}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 363.735
+      value: -1.0999017
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000012289984914, guid: b4a70b77dfb2718449c42cf7de5f9740, type: 2}
+      propertyPath: m_LocalScale.z
+      value: 1.0000002
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b4a70b77dfb2718449c42cf7de5f9740, type: 2}
@@ -4341,13 +4345,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0153a61009065da4fb2b78b0cb6f8e4e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ScoreText: {fileID: 1513972009}
-  AmmoText: {fileID: 1298234963}
-  Upcoming0: {fileID: 452050693}
-  Upcoming1: {fileID: 909483682}
-  Upcoming2: {fileID: 120646417}
-  Upcoming3: {fileID: 1296139083}
-  Upcoming4: {fileID: 1351630105}
+  ScoreText: {fileID: 0}
+  AmmoText: {fileID: 0}
+  Upcoming0: {fileID: 0}
+  Upcoming1: {fileID: 0}
+  Upcoming2: {fileID: 0}
+  Upcoming3: {fileID: 0}
+  Upcoming4: {fileID: 0}
 --- !u!114 &1798636581
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4360,7 +4364,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7eee44c62dfa9784d9b9acb8cdc712e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LevelEndPanel: {fileID: 1535368255}
+  LevelEndPanel: {fileID: 0}
 --- !u!114 &1798636582
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4373,9 +4377,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29d4aa180d008c14f8176446cb3cb836, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pauseButton: {fileID: 321532569}
-  pausePanel: {fileID: 288246057}
-  optionsTint: {fileID: 1418266019}
+  pauseButton: {fileID: 0}
+  pausePanel: {fileID: 0}
+  optionsTint: {fileID: 0}
 --- !u!114 &1798636583
 MonoBehaviour:
   m_ObjectHideFlags: 0
