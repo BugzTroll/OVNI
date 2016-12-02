@@ -6,7 +6,7 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: flag 1
+  m_Name: golf flag
   m_Shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
   m_ShaderKeywords: _ALPHATEST_ON _EMISSION
   m_LightmapFlags: 1
@@ -76,7 +76,7 @@ Material:
       second: 1
     - first:
         name: _Cutoff
-      second: 0.82
+      second: 0.99
     - first:
         name: _DetailNormalMapScale
       second: 1
@@ -88,13 +88,13 @@ Material:
       second: 1
     - first:
         name: _Glossiness
-      second: 0.08
+      second: 0.5
     - first:
         name: _GlossyReflections
       second: 1
     - first:
         name: _InvFade
-      second: 1
+      second: 1.28
     - first:
         name: _Metallic
       second: 0
@@ -131,4 +131,4 @@ Material:
       second: {r: 0, g: 0, b: 0, a: 1}
     - first:
         name: _TintColor
-      second: {r: 0.3455882, g: 0.3455882, b: 0.3455882, a: 0.5}
+      second: {r: 0.5, g: 0.5, b: 0.5, a: 0.5}

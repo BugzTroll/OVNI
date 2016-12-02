@@ -2464,7 +2464,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b8fcd46d7325de4a9d0983c489f14e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  secondes: 15
+  secondes: 20
 --- !u!222 &1253326606
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3568,7 +3568,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b8fcd46d7325de4a9d0983c489f14e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  secondes: 15
+  secondes: 20
 --- !u!114 &1598577040
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3857,7 +3857,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0.5, y: 0}
-  m_SizeDelta: {x: 1156.36, y: 326}
+  m_SizeDelta: {x: 689.9, y: 245}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1649000001
 GameObject:
@@ -5109,7 +5109,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1101.75, y: 347.3}
+  m_SizeDelta: {x: 635.3, y: 347.3}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2122779954
 MonoBehaviour:
@@ -5144,8 +5144,8 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "OOOHHHH! WAAA!\nVous avez tout d\xE9truit! Quittez imm\xE9diatement notre
-    th\xE9atre!\n\n(Lancez pour continuer)"
+  m_Text: "Bien jou\xE9 !\nAllez voir dans le syst\xE8me voisin, vous y trouverez
+    peut-\xEAtre quelque chose d'int\xE9ressant...\n\n(Lancez pour continuer)"
 --- !u!222 &2122779955
 CanvasRenderer:
   m_ObjectHideFlags: 0
