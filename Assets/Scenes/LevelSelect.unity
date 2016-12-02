@@ -245,10 +245,10 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 326693424}
-  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: 548.1, y: 697.4, z: -1249}
+  m_LocalRotation: {x: -0, y: 0.9996654, z: -0, w: -0.02586778}
+  m_LocalPosition: {x: 560.4, y: 703.7, z: -1248.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 182.87799, z: 0}
   m_Children: []
   m_Father: {fileID: 1174144403}
   m_RootOrder: 2
@@ -266,7 +266,7 @@ TextMesh:
   m_Anchor: 0
   m_Alignment: 0
   m_TabSize: 4
-  m_FontSize: 100
+  m_FontSize: 120
   m_FontStyle: 1
   m_RichText: 1
   m_Font: {fileID: 12800000, guid: 59a08dc8fca50e648835ed162177fbf5, type: 3}
@@ -343,11 +343,11 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4000010841805810, guid: 8fec791d45352484a938c59aba06ff57, type: 2}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
+      value: 1.427
       objectReference: {fileID: 0}
     - target: {fileID: 4000010841805810, guid: 8fec791d45352484a938c59aba06ff57, type: 2}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: 183.50099
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 8fec791d45352484a938c59aba06ff57, type: 2}
