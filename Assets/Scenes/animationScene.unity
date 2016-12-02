@@ -215,7 +215,7 @@ Prefab:
     - target: {fileID: 218000011031961084, guid: 73e776afd6bdd494082b848abc8c2ef8,
         type: 2}
       propertyPath: m_TreeDistance
-      value: 1100
+      value: 751
       objectReference: {fileID: 0}
     - target: {fileID: 218000011031961084, guid: 73e776afd6bdd494082b848abc8c2ef8,
         type: 2}
@@ -225,7 +225,7 @@ Prefab:
     - target: {fileID: 218000011031961084, guid: 73e776afd6bdd494082b848abc8c2ef8,
         type: 2}
       propertyPath: m_DetailObjectDistance
-      value: 229
+      value: 123
       objectReference: {fileID: 0}
     - target: {fileID: 218000011031961084, guid: 73e776afd6bdd494082b848abc8c2ef8,
         type: 2}
