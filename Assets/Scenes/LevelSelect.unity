@@ -166,7 +166,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 120781751}
   m_LocalRotation: {x: 0, y: -0.38268343, z: 0, w: 0.92387956}
-  m_LocalPosition: {x: -449, y: 679, z: -296}
+  m_LocalPosition: {x: -448.5, y: 679, z: -295.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: -45, z: 0}
   m_Children: []
@@ -179,20 +179,20 @@ TextMesh:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 120781751}
-  m_Text: "Plan\xE8te Seb-Zero\n"
+  m_Text: "Polygla\xE7on\n"
   m_OffsetZ: 0
   m_CharacterSize: 1
   m_LineSpacing: 1
   m_Anchor: 0
   m_Alignment: 0
   m_TabSize: 4
-  m_FontSize: 35
-  m_FontStyle: 0
+  m_FontSize: 75
+  m_FontStyle: 1
   m_RichText: 1
-  m_Font: {fileID: 12800000, guid: 5f6cf7972ab78ff4186d6c04cfc98831, type: 3}
+  m_Font: {fileID: 12800000, guid: 59a08dc8fca50e648835ed162177fbf5, type: 3}
   m_Color:
     serializedVersion: 2
-    rgba: 4294967295
+    rgba: 4279096835
 --- !u!23 &120781754
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -206,7 +206,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 5f6cf7972ab78ff4186d6c04cfc98831, type: 3}
+  - {fileID: 2100000, guid: 59a08dc8fca50e648835ed162177fbf5, type: 3}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_ProbeAnchor: {fileID: 0}
@@ -246,7 +246,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 326693424}
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: 555.2, y: 697.4, z: -1249}
+  m_LocalPosition: {x: 548.1, y: 697.4, z: -1249}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
   m_Children: []
@@ -259,20 +259,20 @@ TextMesh:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 326693424}
-  m_Text: "Plan\xE8te Seb-Zero\n"
+  m_Text: Meuh-Meuh
   m_OffsetZ: 0
   m_CharacterSize: 1
   m_LineSpacing: 1
   m_Anchor: 0
   m_Alignment: 0
   m_TabSize: 4
-  m_FontSize: 35
-  m_FontStyle: 0
+  m_FontSize: 100
+  m_FontStyle: 1
   m_RichText: 1
-  m_Font: {fileID: 12800000, guid: 5f6cf7972ab78ff4186d6c04cfc98831, type: 3}
+  m_Font: {fileID: 12800000, guid: 59a08dc8fca50e648835ed162177fbf5, type: 3}
   m_Color:
     serializedVersion: 2
-    rgba: 4294967295
+    rgba: 4279096835
 --- !u!23 &326693427
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -286,7 +286,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 5f6cf7972ab78ff4186d6c04cfc98831, type: 3}
+  - {fileID: 2100000, guid: 59a08dc8fca50e648835ed162177fbf5, type: 3}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_ProbeAnchor: {fileID: 0}
@@ -343,11 +343,11 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4000010841805810, guid: 8fec791d45352484a938c59aba06ff57, type: 2}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 1.427
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4000010841805810, guid: 8fec791d45352484a938c59aba06ff57, type: 2}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 183.50099
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 8fec791d45352484a938c59aba06ff57, type: 2}
@@ -376,7 +376,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 683200070}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 153, y: 676.6, z: -719.4}
+  m_LocalPosition: {x: 151.7, y: 678, z: -726.7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
@@ -389,20 +389,20 @@ TextMesh:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 683200070}
-  m_Text: "Plan\xE8te Alpha"
+  m_Text: Golfotopia
   m_OffsetZ: 0
   m_CharacterSize: 1
   m_LineSpacing: 1
   m_Anchor: 0
   m_Alignment: 0
   m_TabSize: 4
-  m_FontSize: 35
-  m_FontStyle: 0
+  m_FontSize: 75
+  m_FontStyle: 1
   m_RichText: 1
-  m_Font: {fileID: 12800000, guid: 5f6cf7972ab78ff4186d6c04cfc98831, type: 3}
+  m_Font: {fileID: 12800000, guid: 59a08dc8fca50e648835ed162177fbf5, type: 3}
   m_Color:
     serializedVersion: 2
-    rgba: 4294967295
+    rgba: 4279096835
 --- !u!23 &683200073
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -416,7 +416,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 5f6cf7972ab78ff4186d6c04cfc98831, type: 3}
+  - {fileID: 2100000, guid: 59a08dc8fca50e648835ed162177fbf5, type: 3}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_ProbeAnchor: {fileID: 0}
@@ -819,6 +819,10 @@ Prefab:
       propertyPath: m_IsTrigger
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4000010736319928, guid: c7a919199b3f5b7468530d6e590d00ae, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: -10.1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: c7a919199b3f5b7468530d6e590d00ae, type: 2}
   m_IsPrefabParent: 0
@@ -1089,7 +1093,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1462568251}
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: 3.87, y: 0.6, z: -2.1}
+  m_LocalPosition: {x: 1.53, y: 0.6, z: -2.1}
   m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
   m_Children: []
@@ -1102,20 +1106,20 @@ TextMesh:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1462568251}
-  m_Text: "Plan\xE8te Th\xE9atre\n"
+  m_Text: P2D
   m_OffsetZ: 0
   m_CharacterSize: 1
   m_LineSpacing: 1
   m_Anchor: 0
   m_Alignment: 0
   m_TabSize: 4
-  m_FontSize: 35
-  m_FontStyle: 0
+  m_FontSize: 75
+  m_FontStyle: 1
   m_RichText: 1
-  m_Font: {fileID: 12800000, guid: 32f6edba6606b2249b2931eb5ef1e4cf, type: 3}
+  m_Font: {fileID: 12800000, guid: 59a08dc8fca50e648835ed162177fbf5, type: 3}
   m_Color:
     serializedVersion: 2
-    rgba: 4294967295
+    rgba: 4279096835
 --- !u!23 &1462568254
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1129,7 +1133,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 4352b0284af0f824193d967254408ecc, type: 2}
+  - {fileID: 2100000, guid: 59a08dc8fca50e648835ed162177fbf5, type: 3}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_ProbeAnchor: {fileID: 0}
