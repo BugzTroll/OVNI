@@ -3436,7 +3436,7 @@ Prefab:
     - target: {fileID: 218000011031961084, guid: 73e776afd6bdd494082b848abc8c2ef8,
         type: 2}
       propertyPath: m_DetailObjectDistance
-      value: 229
+      value: 153
       objectReference: {fileID: 0}
     - target: {fileID: 218000011031961084, guid: 73e776afd6bdd494082b848abc8c2ef8,
         type: 2}
@@ -3446,7 +3446,7 @@ Prefab:
     - target: {fileID: 218000011031961084, guid: 73e776afd6bdd494082b848abc8c2ef8,
         type: 2}
       propertyPath: m_DetailObjectDensity
-      value: 0.404
+      value: 0.2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 73e776afd6bdd494082b848abc8c2ef8, type: 2}
