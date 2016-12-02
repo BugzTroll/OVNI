@@ -17,7 +17,7 @@ public class CubeRain : MonoBehaviour {
 	void Update ()
     {
         cadeau++;
-        if(cadeau == 400)
+        if(cadeau == 150)
         {
             GameObject projectile2 = Instantiate(cadeauPrefab);
             Vector3 position2 = new Vector3(Random.Range(-rayon, rayon), 0, Random.Range(-rayon, rayon));
