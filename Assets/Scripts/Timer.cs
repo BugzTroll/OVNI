@@ -1,6 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
-using UnityEditorInternal.VersionControl;
 using UnityEngine.SceneManagement;
 
 public class Timer : MonoBehaviour
