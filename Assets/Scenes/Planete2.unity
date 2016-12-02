@@ -37,7 +37,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44692492, g: 0.4967869, b: 0.57508546, a: 1}
+  m_IndirectSpecularColor: {r: 0.44692534, g: 0.49678725, b: 0.5750856, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -1128,7 +1128,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1102.9, y: 270}
+  m_SizeDelta: {x: 809.6, y: 218.9}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &242229014
 MonoBehaviour:
@@ -1163,8 +1163,9 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "OH mon dieu! notre planete est attaqu\xE9 par des cadeaux.. aidezzzz-noussssss
-    !!!"
+  m_Text: "Votre vache ne semble pas \xEAtre ici, mais les polygla\xE7oniens veulent
+    bien vous donner des informations si vous les aidez \xE0 d\xE9gager le passage
+    !\n\n(Lancer pour continuer)"
 --- !u!222 &242229015
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1460,7 +1461,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1156.38, y: 329}
+  m_SizeDelta: {x: 879.2, y: 286.4}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &281158179
 MonoBehaviour:
@@ -5938,7 +5939,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1101.75, y: 347.3}
+  m_SizeDelta: {x: 787.5, y: 496.2}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1665339170
 MonoBehaviour:
@@ -5973,8 +5974,9 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "OOOHHHH! WAAA!\nVous avez tout d\xE9truit! Quittez imm\xE9diatement notre
-    th\xE9atre!\n\n(Lancez pour continuer)"
+  m_Text: "Les polygla\xE7ioniens vous indiquent que votre vache doit se trouver sur
+    la plan\xE8te meuh-meuh! Cependant Assurez-vous d'avoir un t\xE9l\xE9porteur pour
+    r\xE9cuperer votre vache. \n\n(Lancez pour continuer)"
 --- !u!222 &1665339171
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -6517,7 +6519,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0.5, y: 0}
-  m_SizeDelta: {x: 1156.36, y: 326}
+  m_SizeDelta: {x: 885, y: 306.9}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1821888578
 MonoBehaviour:
@@ -6589,7 +6591,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 500, y: 100}
+  m_SizeDelta: {x: 500, y: 105.86}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1833247973
 MonoBehaviour:
@@ -6624,7 +6626,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\xC0 court de munitions !\nLancez pour recommencer"
+  m_Text: "\xC0 court de munitions !\n\n(Lancez pour recommencer)"
 --- !u!222 &1833247974
 CanvasRenderer:
   m_ObjectHideFlags: 0

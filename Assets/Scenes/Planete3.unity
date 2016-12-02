@@ -37,7 +37,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44692492, g: 0.4967869, b: 0.57508546, a: 1}
+  m_IndirectSpecularColor: {r: 0.44692534, g: 0.49678725, b: 0.5750856, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -249,6 +249,86 @@ Prefab:
         type: 2}
       propertyPath: m_Pivot.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224000011130110664, guid: 1617d466ce790f046ac3922ea1ee7d59,
+        type: 2}
+      propertyPath: m_SizeDelta.x
+      value: 842.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 224000011130110664, guid: 1617d466ce790f046ac3922ea1ee7d59,
+        type: 2}
+      propertyPath: m_SizeDelta.y
+      value: 293.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 224000012002061918, guid: 1617d466ce790f046ac3922ea1ee7d59,
+        type: 2}
+      propertyPath: m_SizeDelta.x
+      value: 708.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000013821246808, guid: 1617d466ce790f046ac3922ea1ee7d59,
+        type: 2}
+      propertyPath: m_Text
+      value: "Les habitant de P2D n'ont aucune information concernant votre vache
+        disparue, mais si vous arrivez \xE0 mettre un peu de couleur dans leur vie,
+        ils sont pr\xEAts \xE0 vous aider.\n\n(Lancez pour commencer)"
+      objectReference: {fileID: 0}
+    - target: {fileID: 224000012002061918, guid: 1617d466ce790f046ac3922ea1ee7d59,
+        type: 2}
+      propertyPath: m_SizeDelta.y
+      value: 248
+      objectReference: {fileID: 0}
+    - target: {fileID: 1000010505118462, guid: 1617d466ce790f046ac3922ea1ee7d59, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1000012525243574, guid: 1617d466ce790f046ac3922ea1ee7d59, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1000011439865406, guid: 1617d466ce790f046ac3922ea1ee7d59, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000013584117808, guid: 1617d466ce790f046ac3922ea1ee7d59,
+        type: 2}
+      propertyPath: m_Text
+      value: "\xC0 court de munitions ! \n\n(Lancez pour recommencer)"
+      objectReference: {fileID: 0}
+    - target: {fileID: 1000011681887016, guid: 1617d466ce790f046ac3922ea1ee7d59, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224000012037049848, guid: 1617d466ce790f046ac3922ea1ee7d59,
+        type: 2}
+      propertyPath: m_SizeDelta.x
+      value: 742.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 224000013952704708, guid: 1617d466ce790f046ac3922ea1ee7d59,
+        type: 2}
+      propertyPath: m_SizeDelta.x
+      value: 819.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 224000013952704708, guid: 1617d466ce790f046ac3922ea1ee7d59,
+        type: 2}
+      propertyPath: m_SizeDelta.y
+      value: 271
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000012963383626, guid: 1617d466ce790f046ac3922ea1ee7d59,
+        type: 2}
+      propertyPath: m_Text
+      value: "BRAVO !\nLes habitants de P2D vous donnent une cargaison de projectiles
+        t\xE9l\xE9porteurs pour vous remercier. Vous pourrez les utiliser pour r\xE9cup\xE9rer
+        votre vache.\n\n(Lancez pour continuer)"
+      objectReference: {fileID: 0}
+    - target: {fileID: 224000010769746464, guid: 1617d466ce790f046ac3922ea1ee7d59,
+        type: 2}
+      propertyPath: m_SizeDelta.x
+      value: 500.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 224000010769746464, guid: 1617d466ce790f046ac3922ea1ee7d59,
+        type: 2}
+      propertyPath: m_SizeDelta.y
+      value: 174.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 1617d466ce790f046ac3922ea1ee7d59, type: 2}

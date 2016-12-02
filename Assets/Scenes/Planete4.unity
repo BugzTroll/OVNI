@@ -1856,7 +1856,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 500, y: 100}
+  m_SizeDelta: {x: 500, y: 164.3}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &670982629
 MonoBehaviour:
@@ -1891,7 +1891,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\xC0 court de munitions !\nLancez pour recommencer"
+  m_Text: "\xC0 court de munitions !\n\n(Lancez pour recommencer)"
 --- !u!222 &670982630
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2426,7 +2426,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &930216363
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3290,7 +3290,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1102.9, y: 270}
+  m_SizeDelta: {x: 778.3, y: 214.3}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1075971852
 MonoBehaviour:
@@ -3325,7 +3325,8 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "Enfin ! \n\nRetrouvez votre vache ."
+  m_Text: "Enfin ! \nVous appercevez votre vache, essayez de l'attraper avec vos projectiles
+    t\xE9l\xE9porteurs.\n\n(Lancez pour commencer)"
 --- !u!222 &1075971853
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3632,7 +3633,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0.5, y: 0}
-  m_SizeDelta: {x: 1156.36, y: 326}
+  m_SizeDelta: {x: 821, y: 207}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1226878383
 MonoBehaviour:
@@ -3804,7 +3805,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1101.75, y: 347.3}
+  m_SizeDelta: {x: 790.7, y: 347.3}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1258932191
 MonoBehaviour:
@@ -3839,7 +3840,8 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: MUCHO BRAVISSIMO YEH
+  m_Text: "F\xE9licitation ! Vous pouvez enfin retourner chez vous! En esp\xE9rant
+    que ce genre d'incidents ne se reproduise plus..."
 --- !u!222 &1258932192
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -4348,7 +4350,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1156.38, y: 329}
+  m_SizeDelta: {x: 815, y: 275.9}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1429555933
 MonoBehaviour:
@@ -4362,7 +4364,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b8fcd46d7325de4a9d0983c489f14e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  secondes: 1
+  secondes: 5
 --- !u!114 &1429555934
 MonoBehaviour:
   m_ObjectHideFlags: 0

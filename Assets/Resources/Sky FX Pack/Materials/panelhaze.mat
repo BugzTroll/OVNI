@@ -7,7 +7,7 @@ Material:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: panelhaze
-  m_Shader: {fileID: 203, guid: 0000000000000000f000000000000000, type: 0}
+  m_Shader: {fileID: 200, guid: 0000000000000000f000000000000000, type: 0}
   m_ShaderKeywords: 
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
@@ -52,7 +52,7 @@ Material:
       second: {r: 1, g: 1, b: 1, a: 0}
     - first:
         name: _TintColor
-      second: {r: 0.78442454, g: 0.56979805, b: 0.86764705, a: 0.335}
+      second: {r: 0.5311677, g: 0.8088235, b: 0.7230769, a: 0.122}
 --- !u!1002 &2100001
 EditorExtensionImpl:
   serializedVersion: 6
