@@ -88,7 +88,7 @@ public class GameManager
         {
             LevelProgression.Add(latestLevelDone);
         }
-        
+
 
     }
 
@@ -185,37 +185,77 @@ public class GameManager
         switch (_currentState)
         {
             case GameState.InGame:
-            {
-                GameObject projectileShooterObject = GameObject.Find("PlayerController");
-                if (projectileShooterObject != null) 
-                    projectileShooterObject.GetComponent<ProjectileShooter>().ShootProjectile(new Vector2(x, y), speed);        
-                break;
-            }
+                {
+                    GameObject projectileShooterObject = GameObject.Find("PlayerController");
+                    if (projectileShooterObject != null)
+                        projectileShooterObject.GetComponent<ProjectileShooter>().ShootProjectile(new Vector2(x, y), speed);
+                    break;
+                }
             case GameState.GameOver:
-            {
-                GameObject gameCont = GameObject.Find("GameLevelController");
-                if (gameCont)            
-                    gameCont.GetComponent<GameLevelController>().RetryLevel();          
-                break;
-            }
+                {
+                    GameObject gameCont = GameObject.Find("GameLevelController");
+                    if (gameCont)
+                        gameCont.GetComponent<GameLevelController>().RetryLevel();
+                    break;
+                }
             case GameState.GameSuccess:
-            {
+                {
                     GameObject gameCont = GameObject.Find("GameLevelController");
                     if (gameCont)
                         gameCont.GetComponent<GameLevelController>().ReturnToLevelSelection();
                     break;
                 }
             case GameState.LevelSelect:
-            {
-                GameObject obj = GameObject.Find("LevelSelector");
-                var lvlselect = obj.GetComponent<LevelSelection>();
-                lvlselect.ShootProjectile(x, y);
-                break;
-            }
+                {
+                    GameObject obj = GameObject.Find("LevelSelector");
+                    var lvlselect = obj.GetComponent<LevelSelection>();
+                    lvlselect.ShootProjectile(x, y);
+                    break;
+                }
+            case GameState.PopUp:
+                {
+                    GameObject startPanel = GameObject.Find("StartLvlPanel");
+                    GameObject tutorialPanel = GameObject.Find("TutorialPanel");
+
+                    if (startPanel || tutorialPanel)
+                    {
+                        // deal with first scene ui
+                        if (_currentScene.name == "Planete1")
+                        {
+                            GameObject ui = GameObject.Find("GameUI");
+                            IntroLevelStart intro = ui.GetComponent<IntroLevelStart>();
+
+                            if (intro.introPanel.activeInHierarchy)
+                            {
+                                intro.HideIntroPanel();
+                                intro.ShowTutorialPanel();
+                            }
+                            else
+                            {
+                                intro.HideTutorialPanel();
+                                Instance.CurrentState = GameState.InGame;
+                            }
+                            
+                        }
+
+                        // rest
+                        else
+                        {
+                            startPanel.SetActive(false);
+                            Instance.CurrentState = GameState.InGame;
+                        }
+                        
+                    }
+
+                    
+
+                    break;
+                }
+
         }
     }
 
-    private void OnSceneChanged (Scene oldScene, Scene newScene)
+    private void OnSceneChanged(Scene oldScene, Scene newScene)
     {
         if (DebugManager.Debug)
             Debug.Log("New scene loaded: " + newScene.buildIndex + ", " + newScene.name);
