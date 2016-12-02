@@ -106,7 +106,8 @@ public class GameManager
                     }
                 case GameState.MainMenu:
                     {
-                        ChangeScene("MainMenu");
+                        GameObject.Find("Fading").GetComponent<Fader>().EndScene("MainMenu");
+                        //ChangeScene("MainMenu");
                         break;
                     }
                 case GameState.GameSuccess:
@@ -220,7 +221,7 @@ public class GameManager
                     if (startPanel || tutorialPanel)
                     {
                         // deal with first scene ui
-                        if (_currentScene.name == "Planete1")
+                        if (SceneManager.GetActiveScene().name == "Planete1")
                         {
                             GameObject ui = GameObject.Find("GameUI");
                             IntroLevelStart intro = ui.GetComponent<IntroLevelStart>();
@@ -251,6 +252,7 @@ public class GameManager
 
                     break;
                 }
+                
 
         }
     }

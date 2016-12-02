@@ -51,7 +51,10 @@ public class GameLevelController : MonoBehaviour
     {
         if (!GameObject.Find("GameUI"))
         {
-            GameManager.Instance.CurrentState = GameManager.GameState.InGame;
+            if (SceneManager.GetActiveScene().name != "animationScene")
+            {
+               GameManager.Instance.CurrentState = GameManager.GameState.InGame;
+            }
         }
         else
         {
