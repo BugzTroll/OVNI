@@ -31,10 +31,7 @@ public class DurabilityManager : MonoBehaviour
 
         if (projectileObject.tag == "Projectile" && proj)
         {
-            if (proj.destroyOnFirstHit)
-            {
-                Destroy(projectileObject);
-            }
+            Destroy(projectileObject);
         }
 
         DamageDealer damageDealer = collision.gameObject.GetComponent<DamageDealer>();
@@ -82,6 +79,7 @@ public class DurabilityManager : MonoBehaviour
                 if (DebugManager.Debug)
                     Debug.Log("Object destroyed! Points earned: " + pointsWhenDestroyed);
             }
+
         }
     }
 }

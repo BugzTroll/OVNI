@@ -85,7 +85,7 @@ public class GameplayUI : MonoBehaviour
             ? _ammoPictures[(int)char.GetNumericValue(_shooter.Ammo[currentProjectileIdx + 4])]
             : _ammoPictures.Last();
 
-        // Image du projectile 4
+        // Image du projectile 5
         Upcoming4.texture = currentProjectileIdx + 5 < _shooter.Ammo.Length
             ? _ammoPictures[(int)char.GetNumericValue(_shooter.Ammo[currentProjectileIdx + 5])]
             : _ammoPictures.Last();

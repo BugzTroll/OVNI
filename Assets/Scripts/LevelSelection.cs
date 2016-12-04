@@ -117,6 +117,8 @@ public class LevelSelection : MonoBehaviour
 
         // Initial Projectile Position
         projectile.transform.position = worldPosition;
+        projectile.transform.position += Vector3.forward * 1.5f + Vector3.down * 1.2f;
+
         var angle = -Mathf.Acos(Vector3.Dot(velocity, Camera.main.transform.forward)) * Mathf.Rad2Deg;
         var axis = Vector3.Cross(velocity, Camera.main.transform.forward);
         Quaternion quat = Quaternion.AngleAxis(angle, axis);
