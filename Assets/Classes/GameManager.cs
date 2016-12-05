@@ -59,6 +59,13 @@ public class GameManager
         }
     }
 
+    public void Reset()
+    {
+        visitedPlanet.Clear();
+        LevelProgression.Clear();
+        CurrentState = GameState.MainMenu;
+    }
+
     public void RestartScene()
     {
         Time.timeScale = 1.0f;
