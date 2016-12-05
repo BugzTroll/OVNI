@@ -1245,7 +1245,7 @@ MonoBehaviour:
     m_LineSpacing: 1
   m_Text: "Votre vache ne semble pas \xEAtre ici, mais les polygla\xE7oniens veulent
     bien vous donner des informations si vous les aidez \xE0 d\xE9gager le passage.
-    D\xE9truisez les cadeaux!\n\n(Lancer pour continuer)"
+    D\xE9truisez les cadeaux!\n\n(Lancez pour continuer)"
 --- !u!222 &242229015
 CanvasRenderer:
   m_ObjectHideFlags: 0
