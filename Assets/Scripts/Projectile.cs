@@ -4,11 +4,12 @@ using System.Collections;
 public class Projectile : MonoBehaviour {
 
     public bool destroyOnFirstHit;
-    private TrailRenderer trail;
+    private TrailRenderer trail ;
 
 	// Use this for initialization
 	void Start () {
-        trail = GetComponent<TrailRenderer>();
+            trail = GetComponent<TrailRenderer>();
+       
     }
 	
 	// Update is called once per frame
@@ -19,7 +20,8 @@ public class Projectile : MonoBehaviour {
     void OnCollisionEnter(Collision col)
     {
         if (col.relativeVelocity.magnitude > 30.0f)
-            trail.Clear();
+            if (trail != null)
+                trail.Clear();
         //trail.enabled = false;
     }
 }
