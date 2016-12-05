@@ -1208,7 +1208,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 809.6, y: 218.9}
+  m_SizeDelta: {x: 809.6, y: 248.1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &242229014
 MonoBehaviour:
@@ -1244,8 +1244,8 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: "Votre vache ne semble pas \xEAtre ici, mais les polygla\xE7oniens veulent
-    bien vous donner des informations si vous les aidez \xE0 d\xE9gager le passage
-    !\n\n(Lancer pour continuer)"
+    bien vous donner des informations si vous les aidez \xE0 d\xE9gager le passage.
+    D\xE9truisez les cadeaux!\n\n(Lancer pour continuer)"
 --- !u!222 &242229015
 CanvasRenderer:
   m_ObjectHideFlags: 0

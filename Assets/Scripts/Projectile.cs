@@ -19,9 +19,9 @@ public class Projectile : MonoBehaviour {
 
     void OnCollisionEnter(Collision col)
     {
-        if (col.relativeVelocity.magnitude > 30.0f)
+       // if (col.relativeVelocity.magnitude > 30.0f)
             if (trail != null)
-                trail.Clear();
-        //trail.enabled = false;
+            trail.enabled = false;
+        // trail.Clear();
     }
 }
