@@ -8,6 +8,8 @@ public class CubeRain : MonoBehaviour {
     public float rayon = 5.0f;
     int cadeau = 0;
     int flocon = 0;
+    public int timer_cadeau = 150;
+    public int timer_flocon = 4;
     // Use this for initialization
     void Start () {
 	
@@ -17,7 +19,7 @@ public class CubeRain : MonoBehaviour {
 	void Update ()
     {
         cadeau++;
-        if(cadeau == 150)
+        if(cadeau == timer_cadeau)
         {
             GameObject projectile2 = Instantiate(cadeauPrefab);
             Vector3 position2 = new Vector3(Random.Range(-rayon, rayon), 0, Random.Range(-rayon, rayon));
@@ -25,7 +27,7 @@ public class CubeRain : MonoBehaviour {
             cadeau = 0;
         }
         flocon++;
-        if (flocon == 4)
+        if (flocon == timer_flocon)
         {
             GameObject projectile = Instantiate(cubePrefab);
         Vector3 position = new Vector3(Random.Range(-rayon, rayon), 0, Random.Range(-rayon, rayon));

@@ -2846,6 +2846,8 @@ MonoBehaviour:
   cadeauPrefab: {fileID: 1000014187425428, guid: 9c5a53ba14b33434c89ab8e2f532331c,
     type: 2}
   rayon: 7
+  timer_cadeau: 130
+  timer_flocon: 3
 --- !u!1 &533114440
 GameObject:
   m_ObjectHideFlags: 0
