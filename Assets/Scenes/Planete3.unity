@@ -336,6 +336,14 @@ Prefab:
       propertyPath: secondes
       value: 20
       objectReference: {fileID: 0}
+    - target: {fileID: 1000014173523144, guid: 1617d466ce790f046ac3922ea1ee7d59, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1000012881801790, guid: 1617d466ce790f046ac3922ea1ee7d59, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 1617d466ce790f046ac3922ea1ee7d59, type: 2}
   m_IsPrefabParent: 0
