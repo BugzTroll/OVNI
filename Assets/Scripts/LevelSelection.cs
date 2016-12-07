@@ -72,7 +72,7 @@ public class LevelSelection : MonoBehaviour
                 break;
 
             case GameManager.GameLevel.Planete4:
-                GameManager.Instance.Reset();
+                GameManager.Instance.ChangeScene("animationSceneFin");
                 //_cameraAnimator.SetTrigger("EnteringPlanet4");
                 // CONGRATS ! do stuff for winning (cool unlocks ? choose order ?)
                 break;
@@ -123,7 +123,6 @@ public class LevelSelection : MonoBehaviour
         var axis = Vector3.Cross(velocity, Vector3.forward);
         Quaternion quat = Quaternion.AngleAxis(angle, axis);
         projectile.transform.rotation *= quat;
-
         //Velocity
         Rigidbody rb = projectile.GetComponent<Rigidbody>();
 

@@ -21,3 +21,5 @@ EditorBuildSettings:
     path: Assets/Scenes/Planete4.unity
   - enabled: 1
     path: Assets/Scenes/animationScene.unity
+  - enabled: 1
+    path: Assets/Scenes/animationSceneFin.unity

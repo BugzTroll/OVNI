@@ -23,6 +23,8 @@ GameObject:
   - 64: {fileID: 64000010816177114}
   - 114: {fileID: 114000010942877804}
   - 114: {fileID: 114000013108061644}
+  - 114: {fileID: 114000010832958076}
+  - 114: {fileID: 114000011523622498}
   m_Layer: 0
   m_Name: Et1
   m_TagString: Untagged
@@ -137,6 +139,19 @@ MeshCollider:
   serializedVersion: 2
   m_Convex: 1
   m_Mesh: {fileID: 4300000, guid: 855f652324c4f0e4f967c7165bf1a56b, type: 3}
+--- !u!114 &114000010832958076
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000010641841410}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f61f86042ee44b14e8b071afdd592121, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pointsWhenDestroyed: 200
+  durability: 1000
 --- !u!114 &114000010942877804
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -150,6 +165,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BaseMaterial: {fileID: 2100000, guid: 2360a53d8cf7ec3498efeb4c4b0c7954, type: 2}
   SplashMaterial: {fileID: 2100000, guid: 67e0f45f4526d7a4688727e94ac1fba9, type: 2}
+--- !u!114 &114000011523622498
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000010641841410}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 503f70b9954d1924f89eb08a127bb7e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseDamage: 10
 --- !u!114 &114000013108061644
 MonoBehaviour:
   m_ObjectHideFlags: 1
