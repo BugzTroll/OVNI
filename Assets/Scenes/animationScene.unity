@@ -1618,7 +1618,7 @@ Prefab:
     - target: {fileID: 114000011292740064, guid: bc536a50c1086984b936ce288555999a,
         type: 2}
       propertyPath: fadeSpeed
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: bc536a50c1086984b936ce288555999a, type: 2}
@@ -2988,6 +2988,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timer: 15
+  Fin: 0
 --- !u!1001 &1036723769
 Prefab:
   m_ObjectHideFlags: 0
@@ -4512,6 +4513,46 @@ Transform:
   m_Children: []
   m_Father: {fileID: 837474657}
   m_RootOrder: 3
+--- !u!1 &1428680677
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1428680679}
+  - 114: {fileID: 1428680678}
+  m_Layer: 0
+  m_Name: SkipScript
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1428680678
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1428680677}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13afbd0f48ae628438b1deead3e869ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &1428680679
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1428680677}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 20
 --- !u!4 &1432740717 stripped
 Transform:
   m_PrefabParentObject: {fileID: 416816, guid: 936422eab196d54458fcc769c0529a9b, type: 2}

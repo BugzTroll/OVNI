@@ -12,7 +12,6 @@ public class MainMenuButtons : MonoBehaviour
     public void StartButtonClicked()
     {
         GameManager.Instance.ChangeScene(startScene);
-        //change music here ?
     }
 
     public void ShowOptions()

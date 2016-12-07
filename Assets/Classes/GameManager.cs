@@ -254,13 +254,8 @@ public class GameManager
                         }
                         
                     }
-
-                    
-
                     break;
                 }
-                
-
         }
     }
 
