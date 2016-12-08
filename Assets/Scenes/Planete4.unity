@@ -4002,7 +4002,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "F\xE9licitation ! Vous pouvez enfin retourner chez vous! En esp\xE9rant
+  m_Text: "F\xE9licitations ! Vous pouvez enfin retourner chez vous! En esp\xE9rant
     que ce genre d'incidents ne se reproduise plus..."
 --- !u!222 &1258932192
 CanvasRenderer:

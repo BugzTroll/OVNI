@@ -269,7 +269,7 @@ Prefab:
     - target: {fileID: 114000013821246808, guid: 1617d466ce790f046ac3922ea1ee7d59,
         type: 2}
       propertyPath: m_Text
-      value: "Les habitant de P2D n'ont aucune information concernant votre vache
+      value: "Les habitants de P2D n'ont aucune information concernant votre vache
         disparue, mais si vous arrivez \xE0 mettre un peu de couleur dans leur vie,
         ils sont pr\xEAts \xE0 vous aider.\n\n(Lancez pour commencer)"
       objectReference: {fileID: 0}

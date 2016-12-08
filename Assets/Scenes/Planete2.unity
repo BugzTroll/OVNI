@@ -6279,8 +6279,8 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "Les polygla\xE7ioniens vous indiquent que votre vache doit se trouver sur
-    la plan\xE8te meuh-meuh! Cependant Assurez-vous d'avoir un t\xE9l\xE9porteur pour
+  m_Text: "Les polygla\xE7oniens vous indiquent que votre vache doit se trouver sur
+    la plan\xE8te meuh-meuh! Cependant assurez-vous d'avoir un t\xE9l\xE9porteur pour
     r\xE9cuperer votre vache. \n\n(Lancez pour continuer)"
 --- !u!222 &1665339171
 CanvasRenderer:

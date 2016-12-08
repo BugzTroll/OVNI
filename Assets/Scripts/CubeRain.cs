@@ -8,7 +8,7 @@ public class CubeRain : MonoBehaviour {
     public float rayon = 5.0f;
     int cadeau = 0;
     int flocon = 0;
-    public int timer_cadeau = 125;
+    public int timer_cadeau = 100;
     public int timer_flocon = 4;
     // Use this for initialization
     void Start () {

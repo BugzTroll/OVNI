@@ -2137,7 +2137,8 @@ MonoBehaviour:
     m_LineSpacing: 1
   m_Text: "Lors de votre r\xE9colte annuelle, votre vache favorite s'est fait kidnapper!
     Vous voulez partir \xE0 sa recherche mais vous ne savez pas o\xF9 chercher!\n
-    Pratiquez vos lancers avant de partir \xE0 sa recherche.\n\n(Lancez pour commencer)"
+    Pratiquez vos lancers avant de partir \xE0 sa recherche.\nVous devez r\xE9ussir
+    au moins trois lancers!\n\n(Lancez pour commencer)"
 --- !u!222 &1007426270
 CanvasRenderer:
   m_ObjectHideFlags: 0
