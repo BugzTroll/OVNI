@@ -3,7 +3,7 @@ using System.Collections;
 
 public class RandomTrajectory : MonoBehaviour
 {
-    public float radius = 10;
+    public float radius = 13;
     private Rigidbody body;
     private Vector3 startPos;
     private bool goingLeft = true;
