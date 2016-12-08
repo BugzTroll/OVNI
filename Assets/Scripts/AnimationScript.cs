@@ -5,6 +5,7 @@ public class AnimationScript : MonoBehaviour {
 
     public float timer = 10;
     private float time = 0;
+    public bool Fin = false;
 
 	// Use this for initialization
 	void Start () {
@@ -18,10 +19,14 @@ public class AnimationScript : MonoBehaviour {
 
         if (time >= timer)
         {
-            GameManager.Instance.CurrentState = GameManager.GameState.MainMenu;
+            if (!Fin)
+            {
+                GameManager.Instance.CurrentState = GameManager.GameState.MainMenu;
+            }
+            else
+            {
+               GameManager.Instance.Reset();
+            }
         }
-        
-
-
     }
 }

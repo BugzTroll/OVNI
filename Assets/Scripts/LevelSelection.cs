@@ -72,7 +72,8 @@ public class LevelSelection : MonoBehaviour
                 break;
 
             case GameManager.GameLevel.Planete4:
-                _cameraAnimator.SetTrigger("EnteringPlanet4");
+                GameManager.Instance.ChangeScene("animationSceneFin");
+                //_cameraAnimator.SetTrigger("EnteringPlanet4");
                 // CONGRATS ! do stuff for winning (cool unlocks ? choose order ?)
                 break;
 
@@ -108,7 +109,7 @@ public class LevelSelection : MonoBehaviour
 
     public void ShootProjectile( float x, float y)
     {
-        Vector3 screenPosition = new Vector3(x, y, 1);
+        Vector3 screenPosition = new Vector3(x, y, 3);
         Vector3 worldPosition = Camera.main.ScreenToWorldPoint(screenPosition);
         Vector3 velocity = worldPosition - Camera.main.gameObject.transform.position;
         velocity.Normalize();
@@ -117,19 +118,16 @@ public class LevelSelection : MonoBehaviour
 
         // Initial Projectile Position
         projectile.transform.position = worldPosition;
-        projectile.transform.position += Vector3.forward * 1.5f + Vector3.down * 1.2f;
 
-        var angle = -Mathf.Acos(Vector3.Dot(velocity, Camera.main.transform.forward)) * Mathf.Rad2Deg;
-        var axis = Vector3.Cross(velocity, Camera.main.transform.forward);
+        var angle = -Mathf.Acos(Vector3.Dot(velocity, Vector3.forward)) * Mathf.Rad2Deg;
+        var axis = Vector3.Cross(velocity, Vector3.forward);
         Quaternion quat = Quaternion.AngleAxis(angle, axis);
         projectile.transform.rotation *= quat;
-
         //Velocity
         Rigidbody rb = projectile.GetComponent<Rigidbody>();
 
         // temp (will come from the "Speed" of the tracking)
         rb.velocity = velocity * speed;
-
     }
 
     private void MoveToPlanets2And3()

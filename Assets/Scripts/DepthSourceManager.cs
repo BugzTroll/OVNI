@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Drawing;
-using System.Drawing.Imaging;
 using UnityEngine;
 using Windows.Kinect;
 using AForge.Imaging.Filters;

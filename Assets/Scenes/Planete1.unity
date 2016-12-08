@@ -1089,7 +1089,7 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
     m_Font: {fileID: 12800000, guid: 0d68cd6e5b7057848963b340042aca65, type: 3}
-    m_FontSize: 32
+    m_FontSize: 30
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 0
@@ -1268,7 +1268,7 @@ Prefab:
     - target: {fileID: 114000012280701770, guid: ff6b655613cbfd14a9701ba4f7cc1da9,
         type: 2}
       propertyPath: ScoreToWin
-      value: 1000
+      value: 3000
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: ff6b655613cbfd14a9701ba4f7cc1da9, type: 2}
@@ -2100,7 +2100,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: -8.2}
-  m_SizeDelta: {x: 618.4, y: 145}
+  m_SizeDelta: {x: 669.1, y: 239.8}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1007426269
 MonoBehaviour:
@@ -2129,14 +2129,15 @@ MonoBehaviour:
     m_BestFit: 0
     m_MinSize: 0
     m_MaxSize: 300
-    m_Alignment: 1
+    m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "Votre vache s'est fait enlever ! Pratiquez vos lancers avant de partir
-    \xE0 sa recherche !\n\n(Lancez pour commencer)"
+  m_Text: "Lors de votre r\xE9colte annuelle, votre vache favorite s'est fait kidnapper!
+    Vous voulez partir \xE0 sa recherche mais vous ne savez pas o\xF9 chercher!\n
+    Pratiquez vos lancers avant de partir \xE0 sa recherche.\n\n(Lancez pour commencer)"
 --- !u!222 &1007426270
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3502,7 +3503,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 608.5, y: 170.4}
+  m_SizeDelta: {x: 700.5, y: 300.4}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1598577039
 MonoBehaviour:
@@ -3516,7 +3517,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b8fcd46d7325de4a9d0983c489f14e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  secondes: 20
+  secondes: 50
 --- !u!114 &1598577040
 MonoBehaviour:
   m_ObjectHideFlags: 0
