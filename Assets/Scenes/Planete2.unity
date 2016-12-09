@@ -2846,8 +2846,8 @@ MonoBehaviour:
   cadeauPrefab: {fileID: 1000014187425428, guid: 9c5a53ba14b33434c89ab8e2f532331c,
     type: 2}
   rayon: 7
-  timer_cadeau: 130
-  timer_flocon: 3
+  timer_cadeau: 1.7
+  timer_flocon: 0.03
 --- !u!1 &533114440
 GameObject:
   m_ObjectHideFlags: 0
@@ -7006,7 +7006,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: ae9d2cce92da4ea4eb57d2b4488f9617, type: 3}
       propertyPath: m_Name
-      value: Cloud_03 (1)
+      value: CloudRain
       objectReference: {fileID: 0}
     - target: {fileID: 2300002, guid: ae9d2cce92da4ea4eb57d2b4488f9617, type: 3}
       propertyPath: m_CastShadows
@@ -8598,7 +8598,7 @@ Prefab:
     - target: {fileID: 114000012280701770, guid: ff6b655613cbfd14a9701ba4f7cc1da9,
         type: 2}
       propertyPath: ScoreToWin
-      value: 600
+      value: 700
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: ff6b655613cbfd14a9701ba4f7cc1da9, type: 2}

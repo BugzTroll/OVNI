@@ -88,6 +88,23 @@ public class GameLevelController : MonoBehaviour
             }
         }
 
+        if (SceneManager.GetActiveScene().name == "Planete1" || SceneManager.GetActiveScene().name == "Planete4")
+        {
+            var blob = GameObject.Find("BlobTracker");
+            if (blob)
+            {
+                blob.GetComponent<BlobTracker>().SpeedMin = 30.0f;
+            }
+        }
+        else
+        {
+            var blob = GameObject.Find("BlobTracker");
+            if (blob)
+            {
+                blob.GetComponent<BlobTracker>().SpeedMin = 20.0f;
+            }
+        }
+
         _score = 0;
     }
 

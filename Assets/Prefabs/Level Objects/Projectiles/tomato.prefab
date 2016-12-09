@@ -26,8 +26,8 @@ GameObject:
   - 114: {fileID: 114000013622548044}
   - 114: {fileID: 114000012906542548}
   - 114: {fileID: 114000013040744258}
-  - 114: {fileID: 114000010259718416}
   - 82: {fileID: 82000011784104742}
+  - 114: {fileID: 114000013646489702}
   m_Layer: 0
   m_Name: tomato
   m_TagString: Projectile
@@ -173,19 +173,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
---- !u!114 &114000010259718416
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000012715797112}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 07f337355cc808d429f34ce57af13c3b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  splatEffect: {fileID: 1000013427507716, guid: aa46ad989726c874ab7efe8d0369bfdd,
-    type: 2}
 --- !u!114 &114000012906542548
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -222,6 +209,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseDamage: 50
+--- !u!114 &114000013646489702
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000012715797112}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f61f86042ee44b14e8b071afdd592121, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pointsWhenDestroyed: 0
+  durability: 10
 --- !u!135 &135000012699093330
 SphereCollider:
   m_ObjectHideFlags: 1

@@ -28,7 +28,7 @@ public class BlobTracker : MonoBehaviour
     [Range(0, 100)] public float PercentThresholdZMiss = 80.0f;
     [Range(0, 10)] public float YawRatio = 1.5f;
     [Range(0, 10)] public float SpeedRatio = 0.07f;
-    [Range(0, 10)] public float SpeedMin = 7f;
+    [Range(0, 60)] public float SpeedMin = 7f;
 
     private KinectSensor _sensor;
     private int _nbFrameBetweenThrow;

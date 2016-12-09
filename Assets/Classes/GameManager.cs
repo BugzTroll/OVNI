@@ -184,11 +184,19 @@ public class GameManager
         {
             Debug.Log("point de click ! " + x + "," + y);
         }
-        HandleInputPoint(x, y, 30.0f);
+
+        if (SceneManager.GetActiveScene().name == "Planete1" || SceneManager.GetActiveScene().name == "Planete4")
+        {
+            HandleInputPoint(x, y, 30.0f);
+        }
+        else
+        {
+            HandleInputPoint(x, y, 20.0f);
+        }
     }
 
     // x and y in normalized screen space 
-    private void HandleInputPoint(float x, float y, float speed = 10.0f)
+    private void HandleInputPoint(float x, float y, float speed)
     {
         switch (_currentState)
         {
