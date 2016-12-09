@@ -19,9 +19,9 @@ public class GameplayUI : MonoBehaviour
     {
         _shooter = GameObject.Find("PlayerController").GetComponent<ProjectileShooter>();
 
-        ScoreText.text = "Score: ";
-        GameLevelController.ScoreUpdated += UpdateScoreText;
-        ProjectileShooter.ProjectileShooted += UpdateAmmoText;
+        //ScoreText.text = "Score: ";
+        //GameLevelController.ScoreUpdated += UpdateScoreText;
+        //ProjectileShooter.ProjectileShooted += UpdateAmmoText;
         ProjectileShooter.ProjectileShooted += UpdateAmmoPictures;
 
         _ammoPictures = new List<Texture2D>();
@@ -33,28 +33,28 @@ public class GameplayUI : MonoBehaviour
         _ammoPictures.Add(Resources.Load("Textures/cowBall") as Texture2D);
         _ammoPictures.Add(Resources.Load("Textures/Red-X") as Texture2D);
 
-        UpdateScoreText(0);
-        UpdateAmmoText(ProjectileShooter.ProjectileType.NONE);
+        //UpdateScoreText(0);
+        //UpdateAmmoText(ProjectileShooter.ProjectileType.NONE);
         UpdateAmmoPictures(ProjectileShooter.ProjectileType.NONE);
     }
 
-    private void OnDestroy()
-    {
-        GameLevelController.ScoreUpdated -= UpdateScoreText;
-        ProjectileShooter.ProjectileShooted -= UpdateAmmoText;
-    }
+    //private void OnDestroy()
+    //{
+    //    GameLevelController.ScoreUpdated -= UpdateScoreText;
+    //    ProjectileShooter.ProjectileShooted -= UpdateAmmoText;
+    //}
 
-    private void UpdateScoreText(float score)
-    {
-        ScoreText.text = "Score: " + score;
-    }
+    //private void UpdateScoreText(float score)
+    //{
+    //    ScoreText.text = "Score: " + score;
+    //}
 
-    private void UpdateAmmoText(ProjectileShooter.ProjectileType projectile)
-    {
-        var shooter = GameObject.Find("PlayerController").GetComponent<ProjectileShooter>();
-        Debug.Assert(shooter);
-        AmmoText.text = "Projectiles restants: " + shooter.GetRemainingAmmoCount();
-    }
+    //private void UpdateAmmoText(ProjectileShooter.ProjectileType projectile)
+    //{
+    //    var shooter = GameObject.Find("PlayerController").GetComponent<ProjectileShooter>();
+    //    Debug.Assert(shooter);
+    //    AmmoText.text = "Projectiles restants: " + shooter.GetRemainingAmmoCount();
+    //}
 
     private void UpdateAmmoPictures(ProjectileShooter.ProjectileType proj)
     {

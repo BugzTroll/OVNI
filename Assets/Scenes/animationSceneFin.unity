@@ -6109,7 +6109,8 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "F\xE9licitation ! \nVous avez sauv\xE9 votre vache pr\xE9f\xE9r\xE9e."
+  m_Text: "F\xE9licitations ! \nVous avez sauv\xE9 votre vache pr\xE9f\xE9r\xE9e.\nMerci
+    d'avoir jou\xE9 !"
 --- !u!222 &1920725043
 CanvasRenderer:
   m_ObjectHideFlags: 0
